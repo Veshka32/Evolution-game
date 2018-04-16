@@ -1,0 +1,24 @@
+<web-app
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+id="Your_WebApp_ID"
+version="2.5">>
+  <display-name>Archetype Created Web Application</display-name>
+  <welcome-file>index.jsp</welcome-file>
+
+   <listener>
+    <listener-class>servlets.ContextConfig</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>game</servlet-name> <!-- secret inside name -->
+    <servlet-class>servlets.LoginServlet</servlet-class> <!-- full class name -->
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>game</servlet-name> <!-- secret inside name -->
+    <url-pattern>/game</url-pattern> <!--url pattern from webapp? -->
+  </servlet-mapping>
+
+</web-app>
