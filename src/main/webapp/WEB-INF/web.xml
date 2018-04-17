@@ -6,7 +6,6 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 id="Your_WebApp_ID"
 version="2.5">>
   <display-name>Archetype Created Web Application</display-name>
-  <welcome-file>index.jsp</welcome-file>
 
    <listener>
     <listener-class>servlets.ContextConfig</listener-class>

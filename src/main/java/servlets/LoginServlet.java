@@ -25,4 +25,5 @@ public class LoginServlet extends HttpServlet {
         req.setAttribute("message","Welcome, "+userName);
         req.getRequestDispatcher("views/game.jsp").forward(req,resp);
     }
+    //<% response.setIntHeader("Refresh", 5); %>
 }

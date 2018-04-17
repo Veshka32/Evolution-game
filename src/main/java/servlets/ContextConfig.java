@@ -1,5 +1,6 @@
 package servlets;
 
+import entities.GameChangeListener;
 import model.Game;
 
 import javax.servlet.ServletContext;
@@ -13,6 +14,7 @@ public class ContextConfig implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         ServletContext servletContext = event.getServletContext();
         Game game=Game.getInstance();
+        game.addPropertyChangeListener(new GameChangeListener());
         servletContext.setAttribute("game",game);
     }
 
