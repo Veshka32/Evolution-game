@@ -1,5 +1,7 @@
 package model;
 
+import javax.json.JsonObject;
+import javax.json.spi.JsonProvider;
 import javax.servlet.http.HttpSession;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -53,5 +55,14 @@ public class Game {
 
     public String printMoves(){
         return moves.stream().collect(Collectors.joining("/"));
+    }
+
+    public JsonObject convertToJson() {
+        JsonProvider provider = JsonProvider.provider();
+        JsonObject json = provider.createObjectBuilder()
+                .add("players", playersList())
+                .add("moves", printMoves())
+                .build();
+        return json;
     }
 }

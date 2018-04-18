@@ -18,23 +18,31 @@ import java.util.logging.Logger;
 @ServerEndpoint(value = "/socket")
 public class WebSocketServer {
 
-    private SocketsHandler socketsHandler=SocketsHandler.getInstance();
+    //private SocketsHandler socketsHandler=SocketsHandler.getInstance();
     private Game game=Game.getInstance();
 
     @OnOpen
     public void open(Session session) {
-        socketsHandler.addSession(session);
+        //socketsHandler.addSession(session);
     }
 
     @OnMessage
     public void handleMessage(String message, Session session) {
         game.makeMove(message);
-        socketsHandler.sendToAllConnectedSessions(game.printMoves());
+        message=game.printMoves();
+        for (Session s : session.getOpenSessions()) {
+            try{
+                s.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }}
+
+            //socketsHandler.sendToAllConnectedSessions(game.printMoves());
     }
 
     @OnClose
     public void close(Session session) {
-        socketsHandler.removeSession(session);
+        //socketsHandler.removeSession(session);
     }
 
     @OnError
