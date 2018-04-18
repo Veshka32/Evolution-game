@@ -29,10 +29,10 @@ public class WebSocketServer {
     @OnMessage
     public void handleMessage(String message, Session session) {
         game.makeMove(message);
-        message=game.printMoves();
+        JsonObject json=game.convertToJson();
         for (Session s : session.getOpenSessions()) {
             try{
-                s.getBasicRemote().sendText(message);
+                s.getBasicRemote().sendText(json.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }}

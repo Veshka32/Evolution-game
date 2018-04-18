@@ -3,13 +3,26 @@ var socket = new WebSocket("ws://localhost:8080/socket");
 socket.onmessage = onMessage;
 
 function onMessage(event) {
-    var message = event.data;
-    printMoves(message);
+    var gameStatus = JSON.parse(event.data);
+
+    printMoves(gameStatus);
 }
 
-function printMoves(message) {
+function printMoves(gameStatus) {
     var content = document.getElementById("content");
-    content.innerHTML=message;
+    content.innerHTML="";
+
+    var deviceDiv = document.createElement("div");
+        content.appendChild(deviceDiv);
+
+        var players = document.createElement("span");
+        players.setAttribute("class", "names");
+        players.innerHTML = "<b>Players: </b> "+gameStatus.players+"<br>";
+        deviceDiv.appendChild(players);
+
+         var moves = document.createElement("span");
+            moves.innerHTML = "<b>Moves: </b> " + gameStatus.moves;
+            deviceDiv.appendChild(moves);
 }
 
 function formSubmit() {
