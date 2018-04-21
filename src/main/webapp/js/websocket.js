@@ -22,6 +22,9 @@ function printMoves(gameStatus) {
          var moves = document.createElement("span");
             moves.innerHTML = "<b>Moves: </b> " + gameStatus.moves;
             deviceDiv.appendChild(moves);
+
+    var player=document.getElementById("player");
+    player.innerText=gameStatus.player;
 }
 
 function formSubmit() {

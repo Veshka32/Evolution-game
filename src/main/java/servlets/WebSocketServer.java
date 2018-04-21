@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.spi.JsonProvider;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-@ServerEndpoint(value = "/socket")
+@ServerEndpoint(value = "/socket",configurator = SocketConfigurator.class)
 public class WebSocketServer {
 
     //private SocketsHandler socketsHandler=SocketsHandler.getInstance();
@@ -25,7 +26,14 @@ public class WebSocketServer {
     private Game game;
 
     @OnOpen
-    public void open(Session session) throws IOException {
+    public void open(Session session, EndpointConfig config) throws IOException {
+
+        String player=(String)config.getUserProperties().get("player");
+        JsonProvider provider = JsonProvider.provider();
+        JsonObject json = provider.createObjectBuilder()
+                .add("player", player)
+                .build();
+        session.getBasicRemote().sendText(json.toString());
         sendToAll(session);
         //socketsHandler.addSession(session);
     }

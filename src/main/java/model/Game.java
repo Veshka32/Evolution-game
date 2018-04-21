@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -24,6 +25,10 @@ public class Game {
     public void addPlayer(HttpSession session, String userName){
         players.put(session.getId(),userName);
         changeFlag.firePropertyChange("game",true,false);
+    }
+
+    public String getPlayerByID(HttpSession session){
+        return players.get(session.getId());
     }
 
     public String playersList(){
