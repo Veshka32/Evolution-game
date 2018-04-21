@@ -39,6 +39,10 @@ public class Game {
         return playersList.stream().collect(Collectors.joining(", "));
     }
 
+    public boolean isFull(){
+        return players.size()>2;
+    }
+
     public void
     addPropertyChangeListener(PropertyChangeListener listener) {
         changeFlag.addPropertyChangeListener(listener);

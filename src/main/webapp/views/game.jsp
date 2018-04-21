@@ -17,7 +17,10 @@
 
 Your session ID: <%=request.getSession().getId() %></br>
 
-<button onclick="location.href='/socket.html'">Start game</button>
+<form action="http://localhost:8080/evo/socket.html">
+      <input type="submit" value="Start game" />
+</form>
+${message}
 
 </body>
 </html>

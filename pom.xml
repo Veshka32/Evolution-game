@@ -2,108 +2,77 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.company.package</groupId>
-  <artifactId>tomcat7</artifactId>
+  <artifactId>evo</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>tomcat7 Maven Webapp</name>
   <url>http://maven.apache.org</url>
 
-  <properties>
-    <maven.compile.source>1.8</maven.compile.source>
-    <maven.compile.target>1.8</maven.compile.target>
-  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>7</source>
+          <target>7</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.0</version>
+        <configuration>
+          <warName>evo</warName>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.glassfish.maven.plugin</groupId>
+        <artifactId>maven-glassfish-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+            <glassfishDirectory>c:\Program Files\glassfish5\glassfish</glassfishDirectory>
+            <user>admin</user>
+            <passwordFile>c:\Program Files\glassfish5\glassfish\domains\domain1\config\domain-passwords</passwordFile>
+            <domain>
+                <name>domain1</name>
+                <host>8080</host>
+                <httpsPort>8443</httpsPort>
+                <adminPort>4848</adminPort>
+            </domain>
+          <echo>false</echo>
+          <debug>true</debug>
+          <terse>true</terse>
+
+
+          <components>
+            <component>
+              <name>evo</name>
+              <artifact>c:\Users\stas\Documents\evo\target\evo.war</artifact>
+            </component>
+          </components>
+        </configuration>
+      </plugin>
+    </plugins>
+    <finalName>evo</finalName>
+
+  </build>
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>7.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>2.2</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.2</version>
+      <groupId>org.glassfish.maven.plugin</groupId>
+      <artifactId>maven-glassfish-plugin</artifactId>
+      <version>2.1</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>tomcat7-websocket</artifactId>
-      <version>7.0.81</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.websocket</groupId>
-      <artifactId>javax.websocket-api</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.json</groupId>
-      <artifactId>javax.json-api</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.json</artifactId>
-      <version>1.0.4</version>
-    </dependency>
-
   </dependencies>
 
-  <build>
-    <finalName>tomcat7</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <port>8080</port>
-          <path>/</path>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-
-    <resources>
-      <resource>
-        <directory>src/main/webapp/js</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-  </build>
 
 
 </project>

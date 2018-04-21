@@ -11,14 +11,4 @@ version="2.5">
     <listener-class>servlets.ContextConfig</listener-class>
   </listener>
 
-
-  <servlet>
-    <servlet-name>game</servlet-name> <!-- secret inside name -->
-    <servlet-class>servlets.LoginServlet</servlet-class> <!-- full class name -->
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>game</servlet-name> <!-- secret inside name -->
-    <url-pattern>/game</url-pattern> <!--url pattern from webapp? -->
-  </servlet-mapping>
-
 </web-app>

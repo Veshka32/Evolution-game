@@ -1,5 +1,5 @@
 
-var socket = new WebSocket("ws://localhost:8080/socket");
+var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
 
 function onMessage(event) {
