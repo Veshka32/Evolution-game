@@ -40,7 +40,7 @@ public class Game {
     }
 
     public boolean isFull(){
-        return players.size()>2;
+        return players.size()>1;
     }
 
     public void
