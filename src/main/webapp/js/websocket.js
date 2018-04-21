@@ -4,7 +4,6 @@ socket.onmessage = onMessage;
 
 function onMessage(event) {
     var gameStatus = JSON.parse(event.data);
-
     printMoves(gameStatus);
 }
 

@@ -2,6 +2,7 @@ package servlets;
 
 import model.Game;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -15,27 +16,24 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@ApplicationScoped
 @ServerEndpoint(value = "/socket")
 public class WebSocketServer {
 
     //private SocketsHandler socketsHandler=SocketsHandler.getInstance();
-    private Game game=Game.getInstance();
+    @Inject
+    private Game game;
 
     @OnOpen
-    public void open(Session session) {
+    public void open(Session session) throws IOException {
+        sendToAll(session);
         //socketsHandler.addSession(session);
     }
 
     @OnMessage
     public void handleMessage(String message, Session session) {
         game.makeMove(message);
-        JsonObject json=game.convertToJson();
-        for (Session s : session.getOpenSessions()) {
-            try{
-                s.getBasicRemote().sendText(json.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }}
+        sendToAll(session);
 
             //socketsHandler.sendToAllConnectedSessions(game.printMoves());
     }
@@ -48,6 +46,16 @@ public class WebSocketServer {
     @OnError
     public void onError(Throwable error) {
         Logger.getLogger(WebSocketServer.class.getName()).log(Level.SEVERE, null, error);
+    }
+
+    private void sendToAll(Session session){
+        JsonObject json=game.convertToJson();
+        for (Session s : session.getOpenSessions()) {
+            try{
+                s.getBasicRemote().sendText(json.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }}
     }
 
 

@@ -1,5 +1,6 @@
 package model;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.servlet.http.HttpSession;
@@ -11,23 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class Game {
-    private static Game ourInstance = new Game();
-    private HashMap<String, String> players;
+
+    private HashMap<String, String> players=new HashMap<>();
     private PropertyChangeSupport changeFlag =
             new PropertyChangeSupport(this);
 
-    private List<String> moves;
-
-
-    public static Game getInstance() {
-        return ourInstance;
-    }
-
-    private Game() {
-        players=new HashMap<>();
-        moves=new ArrayList<>();
-    }
+    private List<String> moves=new ArrayList<>();
 
     public void addPlayer(HttpSession session, String userName){
         players.put(session.getId(),userName);

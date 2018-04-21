@@ -15,7 +15,9 @@ import java.util.logging.Logger;
 public class SocketsHandler {
     private Set<Session> sessions = new HashSet<>();
     private static SocketsHandler instance = new SocketsHandler();
-    Game game = Game.getInstance();
+
+    @Inject
+    private Game game;
 
     private SocketsHandler() {
     }
