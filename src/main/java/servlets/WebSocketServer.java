@@ -8,7 +8,9 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.spi.JsonProvider;
+import javax.servlet.http.HttpSession;
 import javax.websocket.*;
+import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.StringReader;
@@ -27,21 +29,19 @@ public class WebSocketServer {
 
     @OnOpen
     public void open(Session session, EndpointConfig config) throws IOException {
-
-        String player=(String)config.getUserProperties().get("player");
-        JsonProvider provider = JsonProvider.provider();
-        JsonObject json = provider.createObjectBuilder()
-                .add("player", player)
-                .build();
-        session.getBasicRemote().sendText(json.toString());
-        sendToAll(session);
+        HttpSession httpSession=(HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+        String player= (String) httpSession.getAttribute("player");
+        System.out.println(player);
+        JsonObject gameStatus=game.convertToJSon(httpSession);
+        sendToAll(gameStatus,session);
         //socketsHandler.addSession(session);
     }
 
     @OnMessage
     public void handleMessage(String message, Session session) {
         game.makeMove(message);
-        sendToAll(session);
+        JsonObject gameStatus=game.convertToJson();
+        sendToAll(gameStatus,session);
 
             //socketsHandler.sendToAllConnectedSessions(game.printMoves());
     }
@@ -56,8 +56,7 @@ public class WebSocketServer {
         Logger.getLogger(WebSocketServer.class.getName()).log(Level.SEVERE, null, error);
     }
 
-    private void sendToAll(Session session){
-        JsonObject json=game.convertToJson();
+    private void sendToAll(JsonObject json, Session session){
         for (Session s : session.getOpenSessions()) {
             try{
                 s.getBasicRemote().sendText(json.toString());

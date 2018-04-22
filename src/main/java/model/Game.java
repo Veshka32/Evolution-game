@@ -66,4 +66,14 @@ public class Game {
                 .build();
         return json;
     }
+
+    public JsonObject convertToJSon(HttpSession session){
+        JsonProvider provider = JsonProvider.provider();
+        JsonObject json = provider.createObjectBuilder()
+                .add("players", playersList())
+                .add("moves", printMoves())
+                .add("player",players.get(session.getId()))
+                .build();
+        return json;
+    }
 }

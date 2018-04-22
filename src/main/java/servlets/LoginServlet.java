@@ -26,9 +26,9 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("dopost");
         String userName=req.getParameter("userName");
         HttpSession session=req.getSession();
+        session.setAttribute("player",userName);
         game.addPlayer(session,userName);
         req.setAttribute("message","Welcome, "+userName);
         req.setAttribute("playersList",game.playersList());

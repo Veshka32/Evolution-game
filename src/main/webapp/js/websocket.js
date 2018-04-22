@@ -24,7 +24,7 @@ function printMoves(gameStatus) {
             deviceDiv.appendChild(moves);
 
     var player=document.getElementById("player");
-    player.innerText=gameStatus.player;
+    if (gameStatus.player!=null) player.innerText="You are "+gameStatus.player;
 }
 
 function formSubmit() {
