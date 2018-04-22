@@ -17,7 +17,6 @@ Moves so far: <%=game.printMoves() %><br>
 <script src="https://code.jquery.com/jquery-1.10.2.js"
 	type="text/javascript"></script>
 <script src="js/app-ajax.js" type="text/javascript"></script>
-</head>
 <body>
 
 

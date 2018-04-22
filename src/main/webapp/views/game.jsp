@@ -14,12 +14,11 @@
 
 <div id="players">${playersList}</div><br>
 
-Your session ID: <%=request.getSession().getId() %></br>
+Your session ID: <%=request.getSession().getId() %><br>
 
-<form action="http://localhost:8080/evo/socket.html">
-      <input type="submit" value="Start game" />
+<form action="http://localhost:8080/evo/socket.jsp" method="get">
+      <input type="submit" value="Start game"/>
 </form>
-${message}
 
 </body>
 </html>

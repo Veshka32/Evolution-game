@@ -1,5 +1,7 @@
 
-var socket = new WebSocket("ws://localhost:8080/evo/socket");
+var id=document.getElementById("sessionID").innerHTML;
+
+var socket = new WebSocket("ws://localhost:8080/evo/socket/?id="+id);
 socket.onmessage = onMessage;
 
 function onMessage(event) {
