@@ -25,6 +25,9 @@ function printMoves(gameStatus) {
 
     var player=document.getElementById("player");
     player.innerText=getCookie("player");
+
+    var privat=document.getElementById("privat");
+    privat.innerText=gameStatus.cards;
 }
 
 function getCookie(player) {

@@ -32,16 +32,14 @@ public class WebSocketServer {
     public void open(Session session, EndpointConfig config) throws IOException {
         HttpSession httpSession=(HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         player= (String) httpSession.getAttribute("player");
-        JsonObject gameStatus=game.convertToJson();
-        sendToAll(gameStatus,session);
+        sendToAll(session);
         //socketsHandler.addSession(session);
     }
 
     @OnMessage
     public void handleMessage(String message, Session session) {
         game.makeMove(message);
-        JsonObject gameStatus=game.convertToJson();
-        sendToAll(gameStatus,session);
+        sendToAll(session);
 
             //socketsHandler.sendToAllConnectedSessions(game.printMoves());
     }
@@ -56,8 +54,9 @@ public class WebSocketServer {
         Logger.getLogger(WebSocketServer.class.getName()).log(Level.SEVERE, null, error);
     }
 
-    private void sendToAll(JsonObject json, Session session){
+    private void sendToAll(Session session){
         for (Session s : session.getOpenSessions()) {
+            JsonObject json=game.convertToJson(player);
             try{
                 s.getBasicRemote().sendText(json.toString());
             } catch (IOException e) {

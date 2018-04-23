@@ -21,7 +21,7 @@ public class GameStartServlet extends HttpServlet {
         }
         else {
             HttpSession session=req.getSession();
-            game.addPlayer(req.getSession(), (String) session.getAttribute("player"));
+            game.addPlayer((String) session.getAttribute("player"));
             resp.sendRedirect("socket.html");
         }
 
