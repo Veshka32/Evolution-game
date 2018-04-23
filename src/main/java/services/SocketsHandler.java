@@ -1,4 +1,4 @@
-package servlets;
+package services;
 
 import model.Game;
 
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class SocketsHandler {
     private HashMap<Session, String> sessions = new HashMap<>();
 
-    void addSession(Session session, String name) {
+    public void addSession(Session session, String name) {
         sessions.put(session,name);
     }
 

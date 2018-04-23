@@ -1,21 +1,16 @@
 package servlets;
 
 import model.Game;
+import services.SocketConfigurator;
+import services.SocketsHandler;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.spi.JsonProvider;
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
-import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +18,6 @@ import java.util.logging.Logger;
 @ServerEndpoint(value = "/socket",configurator = SocketConfigurator.class)
 public class WebSocketServer {
 
-    //private SocketsHandler socketsHandler=SocketsHandler.getInstance();
     @Inject
     private Game game;
     @Inject

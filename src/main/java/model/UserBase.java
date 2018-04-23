@@ -1,4 +1,4 @@
-package entities;
+package model;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpSession;

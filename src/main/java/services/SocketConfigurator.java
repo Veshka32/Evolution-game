@@ -1,4 +1,4 @@
-package servlets;
+package services;
 
 import model.Game;
 

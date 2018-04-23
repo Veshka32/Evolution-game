@@ -1,11 +1,8 @@
 package servlets;
 
-import entities.UserBase;
-import model.Game;
+import model.UserBase;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
