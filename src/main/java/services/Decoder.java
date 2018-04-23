@@ -14,7 +14,6 @@ import java.util.Set;
 
 public class Decoder implements javax.websocket.Decoder.Text<Move> {
 
-
     @Override
     public Move decode(String message) throws DecodeException {
         JsonReader reader=Json.createReader(new StringReader(message));
