@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/start")
@@ -19,11 +20,12 @@ public class GameStartServlet extends HttpServlet {
 
         if (game.isFull()){
             req.setAttribute("message", "Sorry,game is full");
-            req.getRequestDispatcher("/views/start.jsp").forward(req,resp);
+            req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
         }
         else {
-            game.addPlayer(req.getSession(), (String) req.getAttribute("player"));
-            resp.sendRedirect("/socket.html");
+            HttpSession session=req.getSession();
+            game.addPlayer(req.getSession(), (String) session.getAttribute("player"));
+            resp.sendRedirect("socket.html");
         }
 
     }

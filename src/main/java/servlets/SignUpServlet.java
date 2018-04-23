@@ -24,7 +24,7 @@ public class SignUpServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //req.setAttribute("sessionId",req.getSession().getId());
-        req.getRequestDispatcher("/views/start.jsp").forward(req,resp);
+        req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
     }
 
     @Override
@@ -35,10 +35,7 @@ public class SignUpServlet extends HttpServlet {
         if (userBase.signUp(login,session)) {
             session.setAttribute("player",login);
             req.setAttribute("player",login);
-            RequestDispatcher d=req.getRequestDispatcher("/views/start.jsp");
-            resp.sendRedirect("views/start.jsp");
-            //d.forward(req,resp);
-            //req.getRequestDispatcher("views/start.jsp").forward(req,resp);
+            req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
         }
         else {
             req.setAttribute("signUpError","Sorry, this login is already in use.");
