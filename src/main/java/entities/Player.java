@@ -1,5 +1,8 @@
 package entities;
 
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.spi.JsonProvider;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;

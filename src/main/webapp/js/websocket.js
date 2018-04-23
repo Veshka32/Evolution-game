@@ -16,21 +16,21 @@ function printMoves(gameStatus) {
     var content = document.getElementById("content");
     content.innerText = "";
 
-    var deviceDiv = document.createElement("div");
-    content.appendChild(deviceDiv);
 
     var players = document.createElement("span");
-    players.setAttribute("class", "names");
     players.innerHTML = "<b>Players: </b> " + gameStatus.players + "<br>";
-    deviceDiv.appendChild(players);
+    content.appendChild(players);
 
     var moves = document.createElement("span");
     moves.innerHTML = "<b>Moves: </b> " + gameStatus.moves;
-    deviceDiv.appendChild(moves);
-
+    content.appendChild(moves);
 
     var privat = document.getElementById("privat");
-    privat.innerText = gameStatus.cards;
+    privat.innerText="";
+
+    var cards=document.createElement("span");
+    cards.innerText = gameStatus.cards;
+    privat.appendChild(cards);
 }
 
 function getCookie(player) {
