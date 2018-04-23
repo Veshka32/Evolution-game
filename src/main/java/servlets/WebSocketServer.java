@@ -26,13 +26,13 @@ public class WebSocketServer {
     //private SocketsHandler socketsHandler=SocketsHandler.getInstance();
     @Inject
     private Game game;
+    private String player;
 
     @OnOpen
     public void open(Session session, EndpointConfig config) throws IOException {
         HttpSession httpSession=(HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-        String player= (String) httpSession.getAttribute("player");
-        System.out.println(player);
-        JsonObject gameStatus=game.convertToJSon(httpSession);
+        player= (String) httpSession.getAttribute("player");
+        JsonObject gameStatus=game.convertToJson();
         sendToAll(gameStatus,session);
         //socketsHandler.addSession(session);
     }
