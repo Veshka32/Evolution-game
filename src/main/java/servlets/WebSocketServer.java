@@ -26,27 +26,26 @@ public class WebSocketServer {
     //private SocketsHandler socketsHandler=SocketsHandler.getInstance();
     @Inject
     private Game game;
-    private String player;
+    @Inject
+    private SocketsHandler socketsHandler;
 
     @OnOpen
     public void open(Session session, EndpointConfig config) throws IOException {
         HttpSession httpSession=(HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-        player= (String) httpSession.getAttribute("player");
+        String player= (String) httpSession.getAttribute("player");
+        socketsHandler.addSession(session,player);
         sendToAll(session);
-        //socketsHandler.addSession(session);
     }
 
     @OnMessage
     public void handleMessage(String message, Session session) {
         game.makeMove(message);
         sendToAll(session);
-
-            //socketsHandler.sendToAllConnectedSessions(game.printMoves());
     }
 
     @OnClose
     public void close(Session session) {
-        //socketsHandler.removeSession(session);
+        socketsHandler.removeSession(session);
     }
 
     @OnError
@@ -56,8 +55,10 @@ public class WebSocketServer {
 
     private void sendToAll(Session session){
         for (Session s : session.getOpenSessions()) {
-            JsonObject json=game.convertToJson(player);
+
             try{
+                String player=socketsHandler.getName(s);
+                JsonObject json=game.convertToJson(player);
                 s.getBasicRemote().sendText(json.toString());
             } catch (IOException e) {
                 e.printStackTrace();

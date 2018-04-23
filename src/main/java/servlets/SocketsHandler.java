@@ -2,54 +2,32 @@ package servlets;
 
 import model.Game;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@ApplicationScoped
 public class SocketsHandler {
-    private Set<Session> sessions = new HashSet<>();
-    private static SocketsHandler instance = new SocketsHandler();
+    private HashMap<Session, String> sessions = new HashMap<>();
 
-    @Inject
-    private Game game;
-
-    private SocketsHandler() {
-    }
-
-    public static SocketsHandler getInstance() {
-        return instance;
-    }
-
-
-    void addSession(Session session) {
-        sessions.add(session);
-        String message = game.printMoves();
-        sendToSession(session, message);
+    void addSession(Session session, String name) {
+        sessions.put(session,name);
     }
 
     public void removeSession(Session session) {
         sessions.remove(session);
     }
 
-    public void sendToAllConnectedSessions(String message) {
-        for (Session session : sessions) {
-            sendToSession(session, message);
-        }
-    }
-
-    private void sendToSession(Session session, String message) {
-        try {
-            session.getBasicRemote().sendText(message);
-        } catch (IOException ex) {
-            sessions.remove(session);
-            Logger.getLogger(SocketsHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public String getName(Session session){
+        return sessions.get(session);
     }
 
 
