@@ -1,5 +1,7 @@
 package model;
 
+import entities.Player;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
@@ -8,32 +10,32 @@ import javax.websocket.Session;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class Game {
 
-    private HashMap<String, String> players=new HashMap<>();
+    private HashMap<String, Player> players=new HashMap<>();
     private PropertyChangeSupport changeFlag =
             new PropertyChangeSupport(this);
 
     private List<String> moves=new ArrayList<>();
 
-    public void addPlayer(HttpSession session, String userName){
-        players.put(session.getId(),userName);
+    public void addPlayer(String userName){
+        players.put(userName,new Player(userName));
         changeFlag.firePropertyChange("game",true,false);
     }
 
-    public String getPlayerByID(HttpSession session){
-        return players.get(session.getId());
+    public Player getPlayerByName(String name){
+        return players.get(name);
     }
 
     public String playersList(){
-        List<String> playersList=new ArrayList(players.values());
-        return playersList.stream().collect(Collectors.joining(", "));
+        Set<String> names=players.keySet();
+        String[] names1 = names.toArray(new String[names.size()]);
+        String playersList=Arrays.toString(names1);
+        return playersList;
     }
 
     public boolean isFull(){
@@ -67,7 +69,12 @@ public class Game {
         return json;
     }
 
-//    public JsonObject convertToJson(String name){
-//
-//    }
+    public JsonObject convertToJson(String name){
+        JsonProvider provider = JsonProvider.provider();
+        JsonObject json = provider.createObjectBuilder()
+                .add("player", name)
+                .add("cards", players.get(name).getCards())
+                .build();
+        return json;
+    }
 }
