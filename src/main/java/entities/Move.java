@@ -7,9 +7,9 @@ import java.util.List;
 public class Move {
     String player;
     String opponent;
-    int move;
+    String move;
 
-    public Move(String player,String opponent,int move){
+    public Move(String player,String opponent,String move){
         this.move=move;
         this.opponent=opponent;
         this.player=player;

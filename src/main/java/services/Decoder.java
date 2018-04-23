@@ -12,28 +12,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class Decoder implements javax.websocket.Decoder.Text<Move> {
+public class Decoder {
 
-    @Override
-    public Move decode(String message) throws DecodeException {
+    public Move decode(String message) {
         JsonReader reader=Json.createReader(new StringReader(message));
         JsonObject json=reader.readObject();
-        Move move=new Move(json.getString("player"),json.getString("opponent"),json.getInt("move"));
+        Move move=new Move(json.getString("player"),json.getString("opponent"),json.getString("move"));
         return move;
-    }
-
-    @Override
-    public boolean willDecode(String s) {
-        return false;
-    }
-
-    @Override
-    public void init(EndpointConfig endpointConfig) {
-
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

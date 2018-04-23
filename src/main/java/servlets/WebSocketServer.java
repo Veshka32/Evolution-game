@@ -1,6 +1,8 @@
 package servlets;
 
+import entities.Move;
 import model.Game;
+import services.Decoder;
 import services.SocketConfigurator;
 import services.SocketsHandler;
 
@@ -33,7 +35,8 @@ public class WebSocketServer {
 
     @OnMessage
     public void handleMessage(String message, Session session) {
-        game.makeMove(message);
+        Move mess=new Decoder().decode(message);
+        game.makeMove(mess);
         sendToAll(session);
     }
 

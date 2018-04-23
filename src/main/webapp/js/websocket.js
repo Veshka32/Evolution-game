@@ -41,6 +41,7 @@ function formSubmit() {
     var form = document.getElementById("MakeMove");
     var move = form.elements["move"].value;
     document.getElementById("MakeMove").reset();
-    socket.send(move);
+    var json=JSON.stringify({"player":"pl","opponent":"dsfsf","move":move});
+    socket.send(json);
 }
 

@@ -1,5 +1,6 @@
 package model;
 
+import entities.Move;
 import entities.Player;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -20,7 +21,7 @@ public class Game {
     private PropertyChangeSupport changeFlag =
             new PropertyChangeSupport(this);
 
-    private List<String> moves=new ArrayList<>();
+    private List<Move> moves=new ArrayList<>();
 
     public void addPlayer(String userName){
         players.put(userName,new Player(userName));
@@ -47,12 +48,12 @@ public class Game {
         changeFlag.removePropertyChangeListener(listener);
     }
 
-    public void makeMove(String move){
+    public void makeMove(Move move){
         moves.add(move);
     }
 
     public String printMoves(){
-        return moves.stream().collect(Collectors.joining("/"));
+        return moves.stream().map(Object::toString).collect(Collectors.joining("/"));
     }
 
     public JsonObject convertToJson(String name){
