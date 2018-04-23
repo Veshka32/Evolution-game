@@ -47,7 +47,7 @@ public class WebSocketServer {
 
     @OnError
     public void onError(Throwable error) {
-        Logger.getLogger(WebSocketServer.class.getName()).log(Level.SEVERE, null, error);
+        //Logger.getLogger(WebSocketServer.class.getName()).log(Level.SEVERE, null, error);
     }
 
     private void sendToAll(Session session){
