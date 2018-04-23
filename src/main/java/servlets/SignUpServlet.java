@@ -8,10 +8,7 @@ import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/signUp")
@@ -33,8 +30,10 @@ public class SignUpServlet extends HttpServlet {
         HttpSession session=req.getSession();
 
         if (userBase.signUp(login,session)) {
+
+            Cookie cookie=new Cookie("player",login);
+            resp.addCookie(cookie);
             session.setAttribute("player",login);
-            req.setAttribute("player",login);
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
         }
         else {

@@ -9,7 +9,7 @@ function onMessage(event) {
 
 function printMoves(gameStatus) {
     var content = document.getElementById("content");
-    content.innerHTML="";
+    content.innerText="";
 
     var deviceDiv = document.createElement("div");
         content.appendChild(deviceDiv);
@@ -24,8 +24,14 @@ function printMoves(gameStatus) {
             deviceDiv.appendChild(moves);
 
     var player=document.getElementById("player");
-    if (gameStatus.player!=null) player.innerText="You are "+gameStatus.player;
+    player.innerText=getCookie("player");
 }
+
+function getCookie(player) {
+        match = document.cookie.match(new RegExp(player + '=([^;]+)'));
+        if (match) return match[1];
+    }
+
 
 function formSubmit() {
 
