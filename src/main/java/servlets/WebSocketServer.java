@@ -11,7 +11,6 @@ import javax.json.spi.JsonProvider;
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.StringReader;
@@ -21,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-@ServerEndpoint(value = "/socket/{param}",configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/socket",configurator = SocketConfigurator.class)
 public class WebSocketServer {
 
     //private SocketsHandler socketsHandler=SocketsHandler.getInstance();
@@ -35,7 +34,6 @@ public class WebSocketServer {
         System.out.println(player);
         JsonObject gameStatus=game.convertToJSon(httpSession);
         sendToAll(gameStatus,session);
-        System.out.println("queru="+session.getQueryString().split("=")[1]);
         //socketsHandler.addSession(session);
     }
 
