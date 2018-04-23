@@ -1,0 +1,40 @@
+package services;
+
+import entities.Move;
+import model.Game;
+
+import javax.json.*;
+import javax.websocket.DecodeException;
+import javax.websocket.EncodeException;
+import javax.websocket.EndpointConfig;
+import java.io.StringReader;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+public class Decoder implements javax.websocket.Decoder.Text<Move> {
+
+
+    @Override
+    public Move decode(String message) throws DecodeException {
+        JsonReader reader=Json.createReader(new StringReader(message));
+        JsonObject json=reader.readObject();
+        Move move=new Move(json.getString("player"),json.getString("opponent"),json.getInt("move"));
+        return move;
+    }
+
+    @Override
+    public boolean willDecode(String s) {
+        return false;
+    }
+
+    @Override
+    public void init(EndpointConfig endpointConfig) {
+
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+}

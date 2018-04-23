@@ -27,10 +27,6 @@ public class Game {
         changeFlag.firePropertyChange("game",true,false);
     }
 
-    public Player getPlayerByName(String name){
-        return players.get(name);
-    }
-
     public String playersList(){
         Set<String> names=players.keySet();
         String[] names1 = names.toArray(new String[names.size()]);
@@ -42,8 +38,7 @@ public class Game {
         return players.size()>1;
     }
 
-    public void
-    addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         changeFlag.addPropertyChangeListener(listener);
     }
 
@@ -58,15 +53,6 @@ public class Game {
 
     public String printMoves(){
         return moves.stream().collect(Collectors.joining("/"));
-    }
-
-    public JsonObject convertToJson() {
-        JsonProvider provider = JsonProvider.provider();
-        JsonObject json = provider.createObjectBuilder()
-                .add("players", playersList())
-                .add("moves", printMoves())
-                .build();
-        return json;
     }
 
     public JsonObject convertToJson(String name){
