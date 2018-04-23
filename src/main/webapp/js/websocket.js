@@ -28,9 +28,11 @@ function printMoves(gameStatus) {
     var privat = document.getElementById("privat");
     privat.innerText="";
 
-    var cards=document.createElement("span");
-    cards.innerText = gameStatus.cards;
-    privat.appendChild(cards);
+    var cardsArray=gameStatus.cards.split("/");
+    cardsArray.forEach(function (value) {
+        var child=document.createElement("span");
+        child.innerHTML="card: "+value+"<br>";
+        privat.appendChild(child)});
 }
 
 function getCookie(player) {
