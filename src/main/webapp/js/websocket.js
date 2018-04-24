@@ -4,22 +4,11 @@ socket.onmessage = onMessage;
 
 function onMessage(event) {
     var gameStatus = JSON.parse(event.data);
-    printMoves(gameStatus);
-}
-
-function init() {
-    document.getElementById("player").innerText = getCookie("player");
-    player = getCookie("player");
-    Object.freeze(player);
-}
-
-function printMoves(gameStatus) {
     var content = document.getElementById("content");
     content.innerText = "";
 
-    var players = document.createElement("span");
-    players.innerHTML = "<b>Players: </b> " + gameStatus.players + "<br>";
-    content.appendChild(players);
+    document.getElementById("status").innerText=gameStatus.status;
+    document.getElementById("players").innerText=gameStatus.players;
 
     var privat = document.getElementById("privat");
     privat.innerText = "";
@@ -46,6 +35,12 @@ function printMoves(gameStatus) {
     var today = new Date();
     var move = "<br/>" + gameStatus.moves + "   on " + today.toLocaleString();
     log.innerHTML += move;
+}
+
+function init() {
+    document.getElementById("player").innerText = getCookie("player");
+    player = getCookie("player");
+    Object.freeze(player);
 }
 
 function buildAnimal(an) {

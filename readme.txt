@@ -7,3 +7,8 @@ thread safety game
 session parameters or session cookies
 
 encoder and decoder
+
+Game life:
+- PLayer ente login
+- click "join game" - > Game add player
+-

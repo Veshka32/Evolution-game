@@ -1,9 +1,6 @@
 package model;
 
-import entities.Animal;
-import entities.Card;
-import entities.Move;
-import entities.Player;
+import entities.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
@@ -20,8 +17,11 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class Game {
-    private int START_NUMBER_OF_CARDS=6;
-    private int START_CARD_INDEX=1;
+    final int START_NUMBER_OF_CARDS=6;
+    final int START_CARD_INDEX=1;
+    final int NUMBER_OF_PLAYER=2;
+    private Phase phase= Phase.OFF;
+    private String playerOnMove;
 
     private HashMap<String, Player> players=new HashMap<>();
     private PropertyChangeSupport changeFlag =
@@ -56,7 +56,11 @@ public class Game {
     }
 
     public boolean isFull(){
-        return players.size()>1;
+        return players.size()==NUMBER_OF_PLAYER;
+    }
+
+    public void setStatus(Phase status){
+        phase=status;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -84,6 +88,7 @@ public class Game {
     public String convertToJsonString(String name){
         JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
         builder.add("players", playersList())
+                .add("status",phase.toString())
                 .add("moves",lastMove)
                 .add("cards", players.get(name).getCards());
         if (!animals.isEmpty())

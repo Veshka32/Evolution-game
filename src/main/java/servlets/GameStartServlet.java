@@ -1,5 +1,6 @@
 package servlets;
 
+import entities.Phase;
 import model.Game;
 
 import javax.inject.Inject;
@@ -22,6 +23,8 @@ public class GameStartServlet extends HttpServlet {
         else {
             HttpSession session=req.getSession();
             game.addPlayer((String) session.getAttribute("player"));
+            if (game.isFull()){
+                game.setStatus(Phase.EVOLUTION);}
             resp.sendRedirect("socket.html");
         }
 
