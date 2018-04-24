@@ -10,7 +10,7 @@ function onMessage(event) {
 function init() {
     document.getElementById("player").innerText=getCookie("player");
     player=getCookie("player");
-    player.freeze();
+    Object.freeze(player);
 }
 
 function printMoves(gameStatus) {
@@ -20,10 +20,6 @@ function printMoves(gameStatus) {
     var players = document.createElement("span");
     players.innerHTML = "<b>Players: </b> " + gameStatus.players + "<br>";
     content.appendChild(players);
-
-    var moves = document.createElement("span");
-    moves.innerHTML = "<b>Moves: </b> " + gameStatus.moves;
-    content.appendChild(moves);
 
     var privat = document.getElementById("privat");
     privat.innerText="";
@@ -61,8 +57,11 @@ function buildButton(name){
 
 function playProperty(property){
     var json = JSON.stringify({"player": player, "opponent": "dsfsf", "move": property});
-    document.getElementById("MakeMove").reset();
     socket.send(json);
+
+    var log=document.getElementById("log");
+    var moves= "<br/>" + json;
+    log.innerHTML+=moves;
 }
 
 function formSubmit() {
