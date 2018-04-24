@@ -1,10 +1,12 @@
 package model;
 
+import entities.Animal;
 import entities.Move;
 import entities.Player;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
@@ -21,6 +23,7 @@ public class Game {
     private PropertyChangeSupport changeFlag =
             new PropertyChangeSupport(this);
     private String lastMove="New game started";
+    private List<Animal> animals=new ArrayList<>();
 
     public void addPlayer(String userName){
         players.put(userName,new Player(userName));
@@ -32,6 +35,13 @@ public class Game {
         String[] names1 = names.toArray(new String[names.size()]);
         String playersList=Arrays.toString(names1);
         return playersList;
+    }
+
+    public String getAnimals(){
+        StringBuilder builder=new StringBuilder();
+        builder.append(animals.stream().map(x->x.convertToJsonString()).collect(Collectors.joining("/")));
+        String result=builder.toString();
+        return result;
     }
 
     public boolean isFull(){
@@ -55,13 +65,15 @@ public class Game {
 //        return moves.stream().map(Object::toString).collect(Collectors.joining("/"));
 //    }
 
-    public JsonObject convertToJson(String name){
-        JsonProvider provider = JsonProvider.provider();
-        JsonObject json = provider.createObjectBuilder()
-                .add("players", playersList())
+    public String convertToJsonString(String name){
+        JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
+        builder.add("players", playersList())
                 .add("moves",lastMove)
-                .add("cards", players.get(name).getCards())
-                .build();
-        return json;
+                .add("cards", players.get(name).getCards());
+        if (!animals.isEmpty())
+            builder.add("animals",getAnimals());
+
+        JsonObject json=builder.build();
+        return json.toString();
     }
 }

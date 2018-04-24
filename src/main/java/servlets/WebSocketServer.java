@@ -55,9 +55,8 @@ public class WebSocketServer {
 
             try{
                 String player=socketsHandler.getName(s);
-                JsonObject json=game.convertToJson(player);
-                String m=json.toString();
-                s.getBasicRemote().sendText(m);
+                String message=game.convertToJsonString(player);
+                s.getBasicRemote().sendText(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }}
