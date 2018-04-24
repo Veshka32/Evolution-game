@@ -32,7 +32,7 @@ function printMoves(gameStatus) {
     })
 
     var log=document.getElementById("log");
-    var move= "<br/>" + gameStatus.moves;
+    var move= "<br/>" + gameStatus.moves+Date;
     log.innerHTML+=move;
 
 }

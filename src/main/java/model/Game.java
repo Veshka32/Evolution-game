@@ -20,8 +20,7 @@ public class Game {
     private HashMap<String, Player> players=new HashMap<>();
     private PropertyChangeSupport changeFlag =
             new PropertyChangeSupport(this);
-
-    private List<Move> moves=new ArrayList<>();
+    private String lastMove="New game started";
 
     public void addPlayer(String userName){
         players.put(userName,new Player(userName));
@@ -49,19 +48,18 @@ public class Game {
     }
 
     public void makeMove(Move move){
-        moves.add(move);
+        lastMove=move.toString();
     }
 
-    public String printMoves(){
-        return moves.stream().map(Object::toString).collect(Collectors.joining("/"));
-    }
+//    public String printMoves(){
+//        return moves.stream().map(Object::toString).collect(Collectors.joining("/"));
+//    }
 
     public JsonObject convertToJson(String name){
-
         JsonProvider provider = JsonProvider.provider();
         JsonObject json = provider.createObjectBuilder()
                 .add("players", playersList())
-                .add("moves",printMoves())
+                .add("moves",lastMove)
                 .add("cards", players.get(name).getCards())
                 .build();
         return json;
