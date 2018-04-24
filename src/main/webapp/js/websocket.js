@@ -28,20 +28,35 @@ function printMoves(gameStatus) {
     var privat = document.getElementById("privat");
     privat.innerText="";
 
-    var cardsArray=gameStatus.cards.split("/");
+    /*var cardsArray=gameStatus.cards.split("/");
     cardsArray.forEach(function (value) {
         var child=buildCard(value);
-        privat.appendChild(child)});
+        privat.appendChild(child)});*/
+
+    var cards=gameStatus.cards;
+    var arrayCards=cards.split("/");
+    arrayCards.forEach(function (value) {
+        alert(value);
+        var card=JSON.parse(value);
+        privat.appendChild(buildCard(card));
+    })
+
 }
 
-function buildCard(id) {
+function buildCard(card) {
     var cardDiv=document.createElement("div");
-    cardDiv.setAttribute("class", "card");
+    cardDiv.setAttribute("class", card.id);
 
-    var cardName=document.createElement("span");
-    cardName.setAttribute("class","cardName");
-    cardName.innerHTML="Card: "+id;
-    cardDiv.appendChild(cardName);
+    var property=document.createElement("span");
+    property.innerHTML="Property: "+card.property;
+    cardDiv.appendChild(property);
+
+    var color=document.createElement("span");
+    color.innerHTML="Color: "+card.color;
+    cardDiv.appendChild(color);
+
+    var extraProperty=document.createElement("span");
+    extraProperty.innerHTML="Extra Prop: "+card.extraProperty;
 
     var makeAnimal=document.createElement("span");
     makeAnimal.setAttribute("class","makeAnimal");

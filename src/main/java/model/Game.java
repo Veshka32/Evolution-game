@@ -57,6 +57,7 @@ public class Game {
     }
 
     public JsonObject convertToJson(String name){
+
         JsonProvider provider = JsonProvider.provider();
         JsonObject json = provider.createObjectBuilder()
                 .add("players", playersList())
