@@ -2,13 +2,24 @@ window.onload = init;
 var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
 
+
 function onMessage(event) {
     var game = JSON.parse(event.data);
     var content = document.getElementById("content");
     content.innerText = "";
 
-    document.getElementById("status").innerText=game.status;
+    document.getElementById("phase").innerText=game.phase;
     document.getElementById("players").innerText=game.players;
+    var yourStatus=document.getElementById("status");
+
+    if (game.status==true){
+        yourStatus.innerText="It's your turn!"
+        status=true;
+    }
+    else {
+        yourStatus.innerText="Please, wait...";
+        status=false;
+    }
 
     var privat = document.getElementById("privat");
     privat.innerText = "";
@@ -87,19 +98,6 @@ function playProperty(property) {
     var json = JSON.stringify({"player": player, "opponent": "dsfsf", "move": property});
     socket.send(json);
 }
-
-function formSubmit() {
-    // var form = document.getElementById("MakeMove");
-    // var move = form.elements["move"].value;
-    //
-    // var json = JSON.stringify({"player": "pl", "opponent": "dsfsf", "move": move});
-    // socket.send(json);
-}
-
-// function getDate() {
-//     var date=Date.now();
-//     return date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear()+", "+date
-// }
 
 function getCookie(player) {
     match = document.cookie.match(new RegExp(player + '=([^;]+)'));

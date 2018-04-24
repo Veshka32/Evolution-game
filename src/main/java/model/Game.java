@@ -14,16 +14,17 @@ public class Game {
     final int START_NUMBER_OF_CARDS = 6;
     final int START_CARD_INDEX = 1;
     final int NUMBER_OF_PLAYER = 2;
-    private Phase phase = Phase.OFF;
-    private String playerOnMove;
-
-    private HashMap<String, Player> players = new HashMap<>();
-    private String[] playersNames;
-    //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
-    private String lastMove = "New game started";
-    private List<Animal> animals = new ArrayList<>();
     int animalID = START_CARD_INDEX;
     int cardID = START_CARD_INDEX;
+
+    private Phase phase = Phase.OFF;
+    private int playerOnMoveIndex;
+    private HashMap<String, Player> players = new HashMap<>();
+    private String[] playersNames;
+    private String lastMove = "New game started";
+    private List<Animal> animals = new ArrayList<>();
+    //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
+
 
     public void addPlayer(String userName) {
         Player player = new Player(userName);
@@ -35,6 +36,13 @@ public class Game {
         playersNames  = players.keySet().toArray(new String[players.size()]);
         for (String name : playersNames)
             addCardsOnStart(players.get(name));
+        playerOnMoveIndex=0;
+    }
+
+    public void switchPlayerOnMove(){
+        if (playerOnMoveIndex==0)
+            playerOnMoveIndex=1;
+        else playerOnMoveIndex=0;
     }
 
     void addCardsOnStart(Player player) {
@@ -74,13 +82,18 @@ public class Game {
 
     public String convertToJsonString(String name) {
         JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        builder.add("players", playersNames.toString())
-                .add("status", phase.toString())
+        builder.add("players", Arrays.toString(playersNames))
+                .add("phase", phase.toString())
                 .add("moves", lastMove);
         if (players.get(name).hasCards())
             builder.add("cards", players.get(name).getCards());
+
         if (!animals.isEmpty())
             builder.add("animals", getAnimals());
+
+        if (playersNames[playerOnMoveIndex].equals(name))
+            builder.add("status",true);
+        else builder.add("status",false);
 
         JsonObject json = builder.build();
         return json.toString();
