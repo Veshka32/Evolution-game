@@ -11,8 +11,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Player {
-    String login;
-    //List<Animal> animals;
+    private final String login;
+    List<Animal> animals;
     ArrayList<Card> cards=new ArrayList<>();
 
     public Player(String login){
@@ -33,7 +33,4 @@ public class Player {
    public boolean hasCards(){
         return !cards.isEmpty();
    }
-    //    public String getCards(){
-//        return cards.stream().map(Object::toString).collect(Collectors.joining("/"));
-//    }
 }

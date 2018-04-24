@@ -1,11 +1,7 @@
 package services;
 
-import model.Game;
-
-import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import javax.websocket.HandshakeResponse;
-import javax.websocket.Session;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
 

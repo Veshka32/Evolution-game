@@ -17,7 +17,6 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //req.setAttribute("sessionId",req.getSession().getId());
         req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
     }
 

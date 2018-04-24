@@ -1,18 +1,8 @@
 package services;
 
-import model.Game;
-
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.json.JsonObject;
-import javax.json.spi.JsonProvider;
 import javax.websocket.Session;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 public class SocketsHandler {

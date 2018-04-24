@@ -1,16 +1,11 @@
 package services;
 
 import entities.Move;
-import model.Game;
 
-import javax.json.*;
-import javax.websocket.DecodeException;
-import javax.websocket.EncodeException;
-import javax.websocket.EndpointConfig;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import java.io.StringReader;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 
 public class Decoder {
 

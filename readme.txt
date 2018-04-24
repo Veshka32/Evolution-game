@@ -9,6 +9,6 @@ session parameters or session cookies
 encoder and decoder
 
 Game life:
-- PLayer ente login
+- Player enter login
 - click "join game" - > Game add player
--
+- if number of players in game=2? game starts and players get random cards;

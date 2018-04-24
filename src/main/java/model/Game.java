@@ -6,12 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
-import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.lang.management.PlatformLoggingMXBean;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,8 +18,8 @@ public class Game {
     private String playerOnMove;
 
     private HashMap<String, Player> players = new HashMap<>();
-    private PropertyChangeSupport changeFlag =
-            new PropertyChangeSupport(this);
+    private String[] playersNames;
+    //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
     private String lastMove = "New game started";
     private List<Animal> animals = new ArrayList<>();
     int animalID = START_CARD_INDEX;
@@ -33,17 +27,15 @@ public class Game {
 
     public void addPlayer(String userName) {
         Player player = new Player(userName);
-
         players.put(userName, player);
-        changeFlag.firePropertyChange("game", true, false);
+        //changeFlag.firePropertyChange("game", true, false);
     }
 
     public void start() {
-        String[] names = players.keySet().toArray(new String[players.size()]);
-        for (String name : names)
+        playersNames  = players.keySet().toArray(new String[players.size()]);
+        for (String name : playersNames)
             addCardsOnStart(players.get(name));
     }
-
 
     void addCardsOnStart(Player player) {
         Random r = new Random();
@@ -53,10 +45,7 @@ public class Game {
     }
 
     public String playersList() {
-        Set<String> names = players.keySet();
-        String[] names1 = names.toArray(new String[names.size()]);
-        String playersList = Arrays.toString(names1);
-        return playersList;
+        return Arrays.toString(playersNames);
     }
 
     public String getAnimals() {
@@ -74,15 +63,6 @@ public class Game {
         phase = status;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeFlag.addPropertyChangeListener(listener);
-    }
-
-    public void
-    removePropertyChangeListener(PropertyChangeListener listener) {
-        changeFlag.removePropertyChangeListener(listener);
-    }
-
     public void makeMove(Move move) {
         lastMove = move.toString();
 
@@ -94,7 +74,7 @@ public class Game {
 
     public String convertToJsonString(String name) {
         JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        builder.add("players", playersList())
+        builder.add("players", playersNames.toString())
                 .add("status", phase.toString())
                 .add("moves", lastMove);
         if (players.get(name).hasCards())
@@ -105,4 +85,8 @@ public class Game {
         JsonObject json = builder.build();
         return json.toString();
     }
+
+    //    public void addPropertyChangeListener(PropertyChangeListener listener) {
+//        changeFlag.addPropertyChangeListener(listener);
+//    }
 }

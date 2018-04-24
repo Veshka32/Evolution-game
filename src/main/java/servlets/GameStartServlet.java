@@ -13,21 +13,21 @@ import java.io.IOException;
 public class GameStartServlet extends HttpServlet {
     @Inject
     Game game;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        if (game.isFull()){
+        if (game.isFull()) {
             req.setAttribute("message", "Sorry,game is full");
-            req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
-        }
-        else {
-            HttpSession session=req.getSession();
+            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
+        } else {
+            HttpSession session = req.getSession();
             game.addPlayer((String) session.getAttribute("player"));
-            if (game.isFull()){
+            if (game.isFull()) {
                 game.setStatus(Phase.EVOLUTION);
-            game.start();}
+                game.start();
+            }
             resp.sendRedirect("socket.html");
         }
-
     }
 }
