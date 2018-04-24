@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class Player {
     String login;
-    List<Animal> animals;
+    //List<Animal> animals;
     ArrayList<Integer> cards;
 
     public Player(String login){

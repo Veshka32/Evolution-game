@@ -30,9 +30,24 @@ function printMoves(gameStatus) {
 
     var cardsArray=gameStatus.cards.split("/");
     cardsArray.forEach(function (value) {
-        var child=document.createElement("span");
-        child.innerHTML="card: "+value+"<br>";
+        var child=buildCard(value);
         privat.appendChild(child)});
+}
+
+function buildCard(id) {
+    var cardDiv=document.createElement("div");
+    cardDiv.setAttribute("class", "card");
+
+    var cardName=document.createElement("span");
+    cardName.setAttribute("class","cardName");
+    cardName.innerHTML="Card: "+id;
+    cardDiv.appendChild(cardName);
+
+    var makeAnimal=document.createElement("span");
+    makeAnimal.setAttribute("class","makeAnimal");
+    makeAnimal.innerHTML="<button type=\"button\" onclick=alert(\"You_created_an_animal\")>Make animal</button>";
+    cardDiv.appendChild(makeAnimal);
+    return cardDiv;
 }
 
 function getCookie(player) {
@@ -42,7 +57,6 @@ function getCookie(player) {
 
 
 function formSubmit() {
-
     var form = document.getElementById("MakeMove");
     var move = form.elements["move"].value;
     document.getElementById("MakeMove").reset();
