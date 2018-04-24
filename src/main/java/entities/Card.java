@@ -8,18 +8,21 @@ import javax.json.spi.JsonProvider;
 public class Card {
     String extraProperty;
     String property;
+    int id;
 
-    public Card(Integer id){
-        switch (id) {
+    public Card(int type,int id){
+        switch (type) {
             case 0: property="Swimming";break;
             case 1: property="Big"; break;
             case 2: property="Parasite"; extraProperty="Fat";
         }
+
+        this.id=id;
     }
 
     public String convertToJsonString(){
         JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        builder.add("id","card")
+        builder.add("id",id)
                 .add("property", property);
         if (extraProperty!=null)
             builder.add("extraProperty",extraProperty);

@@ -13,15 +13,14 @@ import java.util.stream.Collectors;
 public class Player {
     String login;
     //List<Animal> animals;
-    ArrayList<Card> cards;
+    ArrayList<Card> cards=new ArrayList<>();
 
     public Player(String login){
         this.login=login;
-        cards=new ArrayList<>(6);
-        Random r=new Random();
-        for (int i=0;i<6;i++){
-            cards.add(new Card(r.nextInt(3)));
-        }
+    }
+
+    public void addCard(Card card){
+        cards.add(card);
     }
 
     public String getCards(){

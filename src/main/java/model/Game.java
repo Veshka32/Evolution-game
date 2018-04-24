@@ -1,6 +1,7 @@
 package model;
 
 import entities.Animal;
+import entities.Card;
 import entities.Move;
 import entities.Player;
 
@@ -13,21 +14,30 @@ import javax.websocket.Session;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.management.PlatformLoggingMXBean;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class Game {
+    private int START_NUMBER_OF_CARDS=6;
+    private int START_CARD_INDEX=1;
 
     private HashMap<String, Player> players=new HashMap<>();
     private PropertyChangeSupport changeFlag =
             new PropertyChangeSupport(this);
     private String lastMove="New game started";
     private List<Animal> animals=new ArrayList<>();
-    int animalID=1;
+    int animalID=START_CARD_INDEX;
+    int cardID=START_CARD_INDEX;
 
     public void addPlayer(String userName){
-        players.put(userName,new Player(userName));
+        Player player=new Player(userName);
+        Random r=new Random();
+        for (int i=0;i<START_NUMBER_OF_CARDS;i++){
+            player.addCard(new Card(r.nextInt(3),cardID++));
+        }
+        players.put(userName,player);
         changeFlag.firePropertyChange("game",true,false);
     }
 
