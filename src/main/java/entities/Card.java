@@ -7,11 +7,10 @@ import javax.json.spi.JsonProvider;
 public class Card {
     String extraProperty="null";
     String property;
-    String color="green";
 
     public Card(Integer id){
         switch (id) {
-            case 0: property="Swimming";color="blue";break;
+            case 0: property="Swimming";break;
             case 1: property="Big"; break;
             case 2: property="Parasite"; extraProperty="fat";
         }
@@ -22,7 +21,6 @@ public class Card {
         JsonObject json = provider.createObjectBuilder()
                 .add("id","card")
                 .add("property", property)
-                .add("color",color)
                 .add("extraProperty",extraProperty)
                 .build();
         String result=json.toString();

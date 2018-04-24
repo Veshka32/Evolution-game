@@ -36,7 +36,6 @@ function printMoves(gameStatus) {
     var cards=gameStatus.cards;
     var arrayCards=cards.split("/");
     arrayCards.forEach(function (value) {
-        alert(value);
         var card=JSON.parse(value);
         privat.appendChild(buildCard(card));
     })
@@ -45,24 +44,29 @@ function printMoves(gameStatus) {
 
 function buildCard(card) {
     var cardDiv=document.createElement("div");
-    cardDiv.setAttribute("class", card.id);
+    cardDiv.setAttribute("class", "card");
 
-    var property=document.createElement("span");
-    property.innerHTML="Property: "+card.property;
-    cardDiv.appendChild(property);
+    cardDiv.appendChild(buildButton(card.property));
 
-    var color=document.createElement("span");
-    color.innerHTML="Color: "+card.color;
-    cardDiv.appendChild(color);
+    if (card.extraProperty!="null"){
+        cardDiv.appendChild(buildButton(card.extraProperty));
+    }
 
-    var extraProperty=document.createElement("span");
-    extraProperty.innerHTML="Extra Prop: "+card.extraProperty;
-
-    var makeAnimal=document.createElement("span");
-    makeAnimal.setAttribute("class","makeAnimal");
-    makeAnimal.innerHTML="<button type=\"button\" onclick=alert(\"You_created_an_animal\")>Make animal</button>";
-    cardDiv.appendChild(makeAnimal);
+    cardDiv.appendChild(buildButton("Make animal"));
     return cardDiv;
+}
+
+function buildButton(name){
+    var property=document.createElement("button");
+    property.addEventListener ("click", function() {
+        playProperty(name);
+    });
+    property.innerHTML=name;
+    return property;
+}
+
+function playProperty(property){
+    alert(property);
 }
 
 function getCookie(player) {
