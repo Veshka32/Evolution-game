@@ -9,8 +9,9 @@ function onMessage(event) {
 
 function init() {
     document.getElementById("player").innerText=getCookie("player");
+    player=getCookie("player");
+    player.freeze();
 }
-
 
 function printMoves(gameStatus) {
     var content = document.getElementById("content");
@@ -44,7 +45,7 @@ function buildCard(card) {
     if (card.hasOwnProperty("extraProperty")){
         cardDiv.appendChild(buildButton(card.extraProperty));
     }
-    
+
     cardDiv.appendChild(buildButton("Make animal"));
     return cardDiv;
 }
@@ -59,7 +60,17 @@ function buildButton(name){
 }
 
 function playProperty(property){
-    alert(property);
+    var json = JSON.stringify({"player": player, "opponent": "dsfsf", "move": property});
+    document.getElementById("MakeMove").reset();
+    socket.send(json);
+}
+
+function formSubmit() {
+    // var form = document.getElementById("MakeMove");
+    // var move = form.elements["move"].value;
+    //
+    // var json = JSON.stringify({"player": "pl", "opponent": "dsfsf", "move": move});
+    // socket.send(json);
 }
 
 function getCookie(player) {
@@ -68,11 +79,5 @@ function getCookie(player) {
 }
 
 
-function formSubmit() {
-    var form = document.getElementById("MakeMove");
-    var move = form.elements["move"].value;
-    document.getElementById("MakeMove").reset();
-    var json = JSON.stringify({"player": "pl", "opponent": "dsfsf", "move": move});
-    socket.send(json);
-}
+
 
