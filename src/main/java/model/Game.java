@@ -78,6 +78,7 @@ public class Game {
             Animal animal = new Animal(animalID++);
             animals.add(animal);
         }
+        switchPlayerOnMove();
     }
 
     public String convertToJsonString(String name) {

@@ -22,7 +22,8 @@ public class GameStartServlet extends HttpServlet {
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         } else {
             HttpSession session = req.getSession();
-            game.addPlayer((String) session.getAttribute("player"));
+            String name=(String) session.getAttribute("player");
+            game.addPlayer(name);
             if (game.isFull()) {
                 game.setStatus(Phase.EVOLUTION);
                 game.start();
