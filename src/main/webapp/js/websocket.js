@@ -30,6 +30,11 @@ function printMoves(gameStatus) {
         var card=JSON.parse(value);
         privat.appendChild(buildCard(card));
     })
+
+    var log=document.getElementById("log");
+    var move= "<br/>" + gameStatus.moves;
+    log.innerHTML+=move;
+
 }
 
 function buildCard(card) {
@@ -59,9 +64,7 @@ function playProperty(property){
     var json = JSON.stringify({"player": player, "opponent": "dsfsf", "move": property});
     socket.send(json);
 
-    var log=document.getElementById("log");
-    var moves= "<br/>" + json;
-    log.innerHTML+=moves;
+
 }
 
 function formSubmit() {
