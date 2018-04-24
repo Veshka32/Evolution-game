@@ -16,7 +16,6 @@ function printMoves(gameStatus) {
     var content = document.getElementById("content");
     content.innerText = "";
 
-
     var players = document.createElement("span");
     players.innerHTML = "<b>Players: </b> " + gameStatus.players + "<br>";
     content.appendChild(players);
@@ -28,18 +27,12 @@ function printMoves(gameStatus) {
     var privat = document.getElementById("privat");
     privat.innerText="";
 
-    /*var cardsArray=gameStatus.cards.split("/");
-    cardsArray.forEach(function (value) {
-        var child=buildCard(value);
-        privat.appendChild(child)});*/
-
     var cards=gameStatus.cards;
     var arrayCards=cards.split("/");
     arrayCards.forEach(function (value) {
         var card=JSON.parse(value);
         privat.appendChild(buildCard(card));
     })
-
 }
 
 function buildCard(card) {
@@ -48,10 +41,10 @@ function buildCard(card) {
 
     cardDiv.appendChild(buildButton(card.property));
 
-    if (card.extraProperty!="null"){
+    if (card.hasOwnProperty("extraProperty")){
         cardDiv.appendChild(buildButton(card.extraProperty));
     }
-
+    
     cardDiv.appendChild(buildButton("Make animal"));
     return cardDiv;
 }

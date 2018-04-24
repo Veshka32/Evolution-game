@@ -2,29 +2,29 @@ package entities;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
 
 public class Card {
-    String extraProperty="null";
+    String extraProperty;
     String property;
 
     public Card(Integer id){
         switch (id) {
             case 0: property="Swimming";break;
             case 1: property="Big"; break;
-            case 2: property="Parasite"; extraProperty="fat";
+            case 2: property="Parasite"; extraProperty="Fat";
         }
     }
 
     public String convertToJsonString(){
-        JsonProvider provider = JsonProvider.provider();
-        JsonObject json = provider.createObjectBuilder()
-                .add("id","card")
-                .add("property", property)
-                .add("extraProperty",extraProperty)
-                .build();
-        String result=json.toString();
-        return result;
+        JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
+        builder.add("id","card")
+                .add("property", property);
+        if (extraProperty!=null)
+            builder.add("extraProperty",extraProperty);
+
+        return builder.build().toString();
     }
 
 //    public Card(Property x, Property y){
