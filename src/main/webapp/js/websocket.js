@@ -3,27 +3,27 @@ var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
 
 function onMessage(event) {
-    var gameStatus = JSON.parse(event.data);
+    var game = JSON.parse(event.data);
     var content = document.getElementById("content");
     content.innerText = "";
 
-    document.getElementById("status").innerText=gameStatus.status;
-    document.getElementById("players").innerText=gameStatus.players;
+    document.getElementById("status").innerText=game.status;
+    document.getElementById("players").innerText=game.players;
 
     var privat = document.getElementById("privat");
     privat.innerText = "";
     var common = document.getElementById("common");
     common.innerText = "";
 
-    var cards = gameStatus.cards;
+    var cards = game.cards;
     var arrayCards = cards.split("/");
     arrayCards.forEach(function (value) {
         var card = JSON.parse(value);
         privat.appendChild(buildCard(card));
     })
 
-    if (gameStatus.hasOwnProperty("animals")) {
-        var animals = gameStatus.animals;
+    if (game.hasOwnProperty("animals")) {
+        var animals = game.animals;
         var animalArray = animals.split("/");
         animalArray.forEach(function (value) {
             var an = JSON.parse(value);
@@ -33,7 +33,7 @@ function onMessage(event) {
 
     var log = document.getElementById("log");
     var today = new Date();
-    var move = "<br/>" + gameStatus.moves + "   on " + today.toLocaleString();
+    var move = "<br/>" + game.moves + "   on " + today.toLocaleString();
     log.innerHTML += move;
 }
 

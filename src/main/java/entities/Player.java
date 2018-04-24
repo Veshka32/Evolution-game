@@ -30,7 +30,10 @@ public class Player {
         return result;
     }
 
-//    public String getCards(){
+   public boolean hasCards(){
+        return !cards.isEmpty();
+   }
+    //    public String getCards(){
 //        return cards.stream().map(Object::toString).collect(Collectors.joining("/"));
 //    }
 }
