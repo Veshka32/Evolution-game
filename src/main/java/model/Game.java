@@ -24,6 +24,7 @@ public class Game {
             new PropertyChangeSupport(this);
     private String lastMove="New game started";
     private List<Animal> animals=new ArrayList<>();
+    int animalID=1;
 
     public void addPlayer(String userName){
         players.put(userName,new Player(userName));
@@ -59,6 +60,11 @@ public class Game {
 
     public void makeMove(Move move){
         lastMove=move.toString();
+
+        if (move.getMove().equals("Make animal")){
+            Animal animal=new Animal(animalID++);
+            animals.add(animal);
+        }
     }
 
 //    public String printMoves(){

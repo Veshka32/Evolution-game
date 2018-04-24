@@ -23,6 +23,8 @@ function printMoves(gameStatus) {
 
     var privat = document.getElementById("privat");
     privat.innerText="";
+    var common=document.getElementById("common");
+    common.innerText="";
 
     var cards=gameStatus.cards;
     var arrayCards=cards.split("/");
@@ -31,9 +33,36 @@ function printMoves(gameStatus) {
         privat.appendChild(buildCard(card));
     })
 
+    if (gameStatus.hasOwnProperty("animals")){
+        var animals=gameStatus.animals;
+        var animalArray=animals.split("/");
+        animalArray.forEach(function (value) {
+            var an=JSON.parse(value);
+            common.appendChild(buildAnimal(an));
+        })
+    }
+
+
     var log=document.getElementById("log");
     var move= "<br/>" + gameStatus.moves+Date;
     log.innerHTML+=move;
+
+}
+
+function buildAnimal(an){
+    var animDiv=document.createElement("div");
+    animDiv.setAttribute("class","animal");
+    var id=an.id;
+    animDiv.innerText+=id;
+
+    if (an.hasOwnProperty("properties")){
+        var properties=an.properties;
+        var propArray=properties.split(",");
+        propArray.forEach(function (value) {
+            animDiv.innerText+=value+"<br/>";
+        })
+    }
+    return animDiv;
 
 }
 

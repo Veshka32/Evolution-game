@@ -28,9 +28,10 @@ public class Animal {
 
     public String convertToJsonString(){
         JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        JsonObject json =builder.add("id",id)
-                .add("properties", getProperties())
-                .build();
+        builder.add("id",id);
+        if (!propertyList.isEmpty())
+            builder.add("properties", getProperties());
+        JsonObject json =builder.build();
         return json.toString();
     }
 }

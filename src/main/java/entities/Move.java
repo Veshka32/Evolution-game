@@ -15,6 +15,15 @@ public class Move {
         this.player=player;
     }
 
+    public String getMove(){
+        return move;
+    }
+
+    public String getPlayer(){
+        return player;
+    }
+
+
     public String toString(){
         ArrayList<String> fields=new ArrayList<>(3);
         for (Field f : Move.class.getDeclaredFields()) {
