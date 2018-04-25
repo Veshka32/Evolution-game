@@ -2,13 +2,16 @@ package model;
 
 import entities.*;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Named
 @ApplicationScoped
 public class Game {
     private final int START_NUMBER_OF_CARDS = 6;
@@ -19,7 +22,7 @@ public class Game {
 
     private Phase[] phases = Phase.values();
     private int currentState; //default 0
-    private Phase phase = Phase.OFF;
+    Phase phase = Phase.OFF;
     private int playerOnMoveIndex;
     private HashMap<String, Player> players = new HashMap<>();
     private String[] playersNames;
@@ -54,8 +57,14 @@ public class Game {
         }
     }
 
-    public String playersList() {
+    //call only after game is started;
+    private String playersList() {
         return Arrays.toString(playersNames);
+    }
+
+    public String getAllPlayers(){
+        String[] all =players.keySet().toArray(new String[players.size()]);
+        return Arrays.toString(all);
     }
 
     private String getAnimals() {
@@ -95,7 +104,7 @@ public class Game {
 
     public String convertToJsonString(String name) {
         JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        builder.add("players", Arrays.toString(playersNames))
+        builder.add("players", getAllPlayers())
                 .add("phase", phase.toString())
                 .add("moves", lastMove);
         if (players.get(name).hasCards())
@@ -104,9 +113,9 @@ public class Game {
         if (!animals.isEmpty())
             builder.add("animals", getAnimals());
 
-        if (playersNames[playerOnMoveIndex].equals(name))
+        try {if (playersNames[playerOnMoveIndex].equals(name))
             builder.add("status", true);
-        else builder.add("status", false);
+        else builder.add("status", false);} catch (NullPointerException e){}
 
         JsonObject json = builder.build();
         return json.toString();

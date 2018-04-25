@@ -6,9 +6,7 @@
 <h1>Welcome, <%=session.getAttribute("player")%>
 </h1><br>
 
-<% Game game = (Game) application.getAttribute("game"); %>
-
-Active players: <span><%=game.playersList() %></span><br/>
+Active players: <span><%=request.getAttribute("playersList") %></span><br/>
 
 ${message}<br>
 <form action="start">

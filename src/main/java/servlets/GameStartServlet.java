@@ -24,6 +24,7 @@ public class GameStartServlet extends HttpServlet {
             HttpSession session = req.getSession();
             String name=(String) session.getAttribute("player");
             game.addPlayer(name);
+            req.setAttribute("playersList",game.getAllPlayers());
             if (game.isFull()) {
                 game.switchStatus();
                 game.start();
