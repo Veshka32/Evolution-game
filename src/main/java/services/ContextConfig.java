@@ -12,13 +12,12 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class ContextConfig implements ServletContextListener {
 
-    @Inject
-    Game game;
+
     @Override
     public void contextInitialized(ServletContextEvent event) {
         //game.addPropertyChangeListener(new GameChangeListener());
-        ServletContext servletContext=event.getServletContext();
-        servletContext.setAttribute("game",game);
+        //ServletContext servletContext=event.getServletContext();
+        //servletContext.setAttribute("game",game);
     }
 
     @Override

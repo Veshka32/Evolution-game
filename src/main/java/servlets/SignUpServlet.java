@@ -26,7 +26,6 @@ public class SignUpServlet extends HttpServlet {
         HttpSession session=req.getSession();
 
         if (userBase.signUp(login,session)) {
-
             Cookie cookie=new Cookie("player",login);
             resp.addCookie(cookie);
             session.setAttribute("player",login);

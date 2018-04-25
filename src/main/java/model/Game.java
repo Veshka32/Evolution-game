@@ -57,11 +57,6 @@ public class Game {
         }
     }
 
-    //call only after game is started;
-    private String playersList() {
-        return Arrays.toString(playersNames);
-    }
-
     public String getAllPlayers(){
         String[] all =players.keySet().toArray(new String[players.size()]);
         return Arrays.toString(all);
@@ -119,10 +114,6 @@ public class Game {
 
         JsonObject json = builder.build();
         return json.toString();
-    }
-
-    public void setStatus(Phase status) {
-        phase = status;
     }
 
     //    public void addPropertyChangeListener(PropertyChangeListener listener) {
