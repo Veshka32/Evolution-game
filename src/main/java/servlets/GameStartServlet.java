@@ -25,7 +25,7 @@ public class GameStartServlet extends HttpServlet {
             String name=(String) session.getAttribute("player");
             game.addPlayer(name);
             if (game.isFull()) {
-                game.setStatus(Phase.EVOLUTION);
+                game.switchStatus();
                 game.start();
             }
             resp.sendRedirect("socket.html");

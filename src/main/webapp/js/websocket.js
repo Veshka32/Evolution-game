@@ -54,6 +54,12 @@ function playProperty(property) {
         socket.send(json);}
 }
 
+function done(){
+    if (status)
+    var json=JSON.stringify({"player":player,"opponent":"dsfss","move":"Done"});
+    socket.send(json);
+}
+
 function init() {
     document.getElementById("player").innerText = getCookie("player");
     player = getCookie("player");

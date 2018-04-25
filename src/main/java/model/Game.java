@@ -17,12 +17,15 @@ public class Game {
     int animalID = START_CARD_INDEX;
     int cardID = START_CARD_INDEX;
 
+    private Phase[] phases=Phase.values();
+    private int currentState=0;
     private Phase phase = Phase.OFF;
     private int playerOnMoveIndex;
     private HashMap<String, Player> players = new HashMap<>();
     private String[] playersNames;
     private String lastMove = "New game started";
     private List<Animal> animals = new ArrayList<>();
+    private int DONE_count=0;
     //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
 
 
@@ -71,14 +74,24 @@ public class Game {
         phase = status;
     }
 
+    public void switchStatus(){
+        if (currentState==phases.length-1)
+            currentState=1;
+        else currentState++;
+        phase=phases[currentState];
+    }
+
     public void makeMove(Move move) {
         lastMove = move.toString();
-
-        if (move.getMove().equals("Make animal")) {
-            Animal animal = new Animal(animalID++);
-            animals.add(animal);
+        switch(move.getMove()){
+            case "Make animal":
+                Animal animal = new Animal(animalID++);
+                animals.add(animal);break;
+            case "Done": DONE_count++; break;
         }
         switchPlayerOnMove();
+        if (DONE_count==NUMBER_OF_PLAYER)
+            switchStatus();
     }
 
     public String convertToJsonString(String name) {
