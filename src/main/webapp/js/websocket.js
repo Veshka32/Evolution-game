@@ -18,7 +18,7 @@ function onMessage(event) {
     }
     else {
         yourStatus.innerText="Please, wait...";
-        status=false;
+        status=""; //mean false in js
     }
 
     var privat = document.getElementById("privat");
@@ -46,6 +46,12 @@ function onMessage(event) {
     var today = new Date();
     var move = "<br/>" + game.moves + "   on " + today.toLocaleString();
     log.innerHTML += move;
+}
+
+function playProperty(property) {
+    if (status){
+        var json = JSON.stringify({"player": player, "opponent": "dsfsf", "move": property});
+        socket.send(json);}
 }
 
 function init() {
@@ -94,10 +100,6 @@ function buildButton(name) {
     return property;
 }
 
-function playProperty(property) {
-    var json = JSON.stringify({"player": player, "opponent": "dsfsf", "move": property});
-    socket.send(json);
-}
 
 function getCookie(player) {
     match = document.cookie.match(new RegExp(player + '=([^;]+)'));

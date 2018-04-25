@@ -13,3 +13,10 @@ Game life:
 - Player enter login
 - click "join game" - > Game add player
 - if number of players in game=2? game starts and players get random cards;
+
+Synchronized:
+methods enable a simple strategy for preventing thread interference and memory consistency errors:
+if an object is visible to more than one thread, all reads or writes to that object's variables are done through
+ synchronized methods.
+
+ HashtAble is synchronized by default
