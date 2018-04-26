@@ -30,6 +30,19 @@ public class Player {
         return result;
     }
 
+    public void deleteCard(int id){
+        for (int i=0;i<cards.size();i++){
+            if (cards.get(i).getId()==id){
+                cards.remove(i);
+                break;
+            }
+        }
+    }
+
+    public void addAnimal(Animal animal){
+        animals.add(animal);
+    }
+
    public boolean hasCards(){
         return !cards.isEmpty();
    }

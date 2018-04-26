@@ -34,5 +34,9 @@ public class Card {
 
         return builder.build().toString();
     }
+
+    public int getId(){
+        return id;
+    }
 }
 

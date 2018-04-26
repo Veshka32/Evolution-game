@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class Move {
     String player;
     String move;
-    String id;
+    int id;
 
-    public Move(String player, String id, String move) {
+    public Move(String player, int id, String move) {
         this.move = move;
         this.id = id;
         this.player = player;
@@ -23,6 +23,8 @@ public class Move {
     public String getPlayer() {
         return player;
     }
+
+    public int getId(){return id;}
 
 
     public String toString() {

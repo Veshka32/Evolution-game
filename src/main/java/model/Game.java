@@ -85,6 +85,9 @@ public class Game {
             case "Make animal":
                 Animal animal = new Animal(animalID++);
                 animals.add(animal);
+                Player player=players.get(move.getPlayer());
+                player.deleteCard(move.getId());
+                player.addAnimal(animal);
                 break;
             case "Done":
                 DONE_count++;
