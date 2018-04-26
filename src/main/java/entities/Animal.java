@@ -9,31 +9,32 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Animal {
-    List<String> propertyList=new ArrayList<>();
+    List<String> propertyList = new ArrayList<>();
     int id;
     int totalHungry;
     int currentHungry;
     String owner;
 
-    public Animal(int id,String player){
-        this.id=id;
-        owner=player;
+    public Animal(int id, String player) {
+        this.id = id;
+        owner = player;
     }
 
-    public void addProperty(String property){
+    public void addProperty(String property) {
         propertyList.add(property);
     }
 
-    public String getProperties(){
+    public String getProperties() {
         return propertyList.stream().collect(Collectors.joining(","));
     }
 
-    public String convertToJsonString(){
+    public String convertToJsonString() {
         JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        builder.add("id",id);
+        builder.add("id", id)
+                .add("owner", owner);
         if (!propertyList.isEmpty())
             builder.add("properties", getProperties());
-        JsonObject json =builder.build();
+        JsonObject json = builder.build();
         return json.toString();
     }
 }

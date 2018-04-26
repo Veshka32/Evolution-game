@@ -83,6 +83,10 @@ function buildAnimal(an) {
     var id = an.id;
     animDiv.innerText += id;
 
+    var owner=document.createElement("span");
+    owner.innerHTML="<br/>Owner: "+an.owner;
+    animDiv.appendChild(owner);
+
     if (an.hasOwnProperty("properties")) {
         var properties = an.properties;
         var propArray = properties.split(",");

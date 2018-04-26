@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class Player {
     private final String name;
-    List<Animal> animals;
+    List<Animal> animals=new ArrayList<>();
     ArrayList<Card> cards=new ArrayList<>();
 
     public Player(String login){
