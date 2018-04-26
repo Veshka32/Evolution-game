@@ -14,7 +14,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 @ApplicationScoped
-@ServerEndpoint(value = "/socket", configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/socket", configurator = SocketConfigurator.class, decoders = {Decoder.class})
 public class WebSocketServer {
 
     @Inject
@@ -32,9 +32,9 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void handleMessage(String message, Session session) {
-        Move mess = new Decoder().decode(message);
-        game.makeMove(mess);
+    public void handleMessage(Move message, Session session) {
+        //Move mess = new Decoder().decode(message);
+        game.makeMove(message);
         sendToAll(session);
     }
 
