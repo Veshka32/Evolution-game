@@ -53,6 +53,7 @@ function onMessage(event) {
 function playProperty(property,id) {
     if (status){
         var json = JSON.stringify({"player": player, "move": property,"id":id});
+        alert(json);
         socket.send(json);}
 }
 

@@ -8,7 +8,6 @@ import javax.websocket.EndpointConfig;
 
 public class Decoder implements javax.websocket.Decoder.Text<Move> {
 
-
     @Override
     public Move decode(String s) throws DecodeException {
         Gson json=new Gson();
@@ -18,11 +17,12 @@ public class Decoder implements javax.websocket.Decoder.Text<Move> {
 
     @Override
     public boolean willDecode(String s) {
-        return false;
+        return true;
     }
 
     @Override
     public void init(EndpointConfig endpointConfig) {
+        System.out.println("decoder init");
 
     }
 
