@@ -11,12 +11,16 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Player {
-    private final String login;
+    private final String name;
     List<Animal> animals;
     ArrayList<Card> cards=new ArrayList<>();
 
     public Player(String login){
-        this.login=login;
+        this.name=login;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public void addCard(Card card){

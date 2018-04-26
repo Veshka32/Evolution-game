@@ -13,9 +13,11 @@ public class Animal {
     int id;
     int totalHungry;
     int currentHungry;
+    String owner;
 
-    public Animal(int id){
+    public Animal(int id,String player){
         this.id=id;
+        owner=player;
     }
 
     public void addProperty(String property){

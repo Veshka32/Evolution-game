@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.Gson;
 import entities.*;
 
 import javax.annotation.PostConstruct;
@@ -66,6 +67,7 @@ public class Game {
         StringBuilder builder = new StringBuilder();
         builder.append(animals.stream().map(x -> x.convertToJsonString()).collect(Collectors.joining("/")));
         return builder.toString();
+
     }
 
     public boolean isFull() {
@@ -83,9 +85,10 @@ public class Game {
         lastMove = move.toString();
         switch (move.getMove()) {
             case "Make animal":
-                Animal animal = new Animal(animalID++);
-                animals.add(animal);
                 Player player=players.get(move.getPlayer());
+                Animal animal = new Animal(animalID++,player.getName());
+                animals.add(animal);
+
                 player.deleteCard(move.getId());
                 player.addAnimal(animal);
                 break;
