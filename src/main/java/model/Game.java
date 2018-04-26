@@ -1,7 +1,9 @@
 package model;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import entities.*;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -64,6 +66,9 @@ public class Game {
         JsonElement element=gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("players",getAllPlayers());
         element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards());
+        if (!animals.isEmpty()){
+            element.getAsJsonObject().add("animals",getAnimals());
+        }
         try {if (playersNames[playerOnMoveIndex].equals(name))
             element.getAsJsonObject().addProperty("status", true);
         else element.getAsJsonObject().addProperty("status", false);} catch (NullPointerException e){}
@@ -104,10 +109,15 @@ public class Game {
         return Arrays.toString(all);
     }
 
-    private String getAnimals() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(animals.stream().map(x -> x.convertToJsonString()).collect(Collectors.joining("/")));
-        return builder.toString();
+    private JsonArray getAnimals() {
+        Gson json=new Gson();
+        JsonElement element=json.toJsonTree(animals, new TypeToken<List<Animal>>() {}.getType());
+        JsonArray jsonArray = element.getAsJsonArray();
+
+        return jsonArray;
+        //        StringBuilder builder = new StringBuilder();
+//        builder.append(animals.stream().map(x -> x.convertToJsonString()).collect(Collectors.joining("/")));
+//        return builder.toString();
 
     }
 

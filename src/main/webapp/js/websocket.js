@@ -8,17 +8,17 @@ function onMessage(event) {
     var content = document.getElementById("content");
     content.innerText = "";
 
-    document.getElementById("phase").innerText=game.phase;
-    document.getElementById("players").innerText=game.players;
-    var yourStatus=document.getElementById("status");
+    document.getElementById("phase").innerText = game.phase;
+    document.getElementById("players").innerText = game.players;
+    var yourStatus = document.getElementById("status");
 
-    if (game.status==true){
-        yourStatus.innerText="It's your turn!"
-        status=true;
+    if (game.status == true) {
+        yourStatus.innerText = "It's your turn!"
+        status = true;
     }
     else {
-        yourStatus.innerText="Please, wait...";
-        status=""; //mean false in js
+        yourStatus.innerText = "Please, wait...";
+        status = ""; //mean false in js
     }
 
     var privat = document.getElementById("privat");
@@ -26,20 +26,18 @@ function onMessage(event) {
     var common = document.getElementById("common");
     common.innerText = "";
 
-    if (game.hasOwnProperty("cards")){
-        for (var i=0;i<game.cards.length;i++){
-            var card=game.cards[i];
+    if (game.hasOwnProperty("cards")) {
+        for (var i = 0; i < game.cards.length; i++) {
+            var card = game.cards[i];
             privat.appendChild(buildCard(card));
         }
     }
 
     if (game.hasOwnProperty("animals")) {
-        var animals = game.animals;
-        var animalArray = animals.split("/");
-        animalArray.forEach(function (value) {
-            var an = JSON.parse(value);
-            common.appendChild(buildAnimal(an));
-        })
+        for (var i = 0; i < game.animals.length; i++) {
+            var animal = game.animals[i];
+            common.appendChild(buildAnimal(animal));
+        }
     }
 
     var log = document.getElementById("log");
@@ -48,25 +46,25 @@ function onMessage(event) {
     log.innerHTML += move;
 }
 
-function playProperty(property,id) {
-    if (status){
-        var json = JSON.stringify({"player": player, "move": property,"id":id});
-        alert(json);
-        socket.send(json);}
+function playProperty(property, id) {
+    if (status) {
+        var json = JSON.stringify({"player": player, "move": property, "id": id});
+        socket.send(json);
+    }
 }
 
-function buildButton(name,id) {
+function buildButton(name, id) {
     var property = document.createElement("button");
     property.addEventListener("click", function () {
-        playProperty(name,id);
+        playProperty(name, id);
     });
     property.innerText = name;
     return property;
 }
 
-function done(){
+function done() {
     if (status)
-    var json=JSON.stringify({"player":player,"move":"Done"});
+        var json = JSON.stringify({"player": player, "move": "Done"});
     socket.send(json);
 }
 
@@ -82,8 +80,8 @@ function buildAnimal(an) {
     var id = an.id;
     animDiv.innerText += id;
 
-    var owner=document.createElement("span");
-    owner.innerHTML="<br/>Owner: "+an.owner;
+    var owner = document.createElement("span");
+    owner.innerHTML = "<br/>Owner: " + an.owner;
     animDiv.appendChild(owner);
 
     if (an.hasOwnProperty("properties")) {
@@ -99,19 +97,17 @@ function buildAnimal(an) {
 function buildCard(card) {
     var cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "card");
-    cardDiv.innerHTML=card.id+"<br/>";
+    cardDiv.innerHTML = card.id + "<br/>";
 
-    cardDiv.appendChild(buildButton(card.property,card.id));
+    cardDiv.appendChild(buildButton(card.property, card.id));
 
     if (card.hasOwnProperty("extraProperty")) {
-        cardDiv.appendChild(buildButton(card.extraProperty,card.id));
+        cardDiv.appendChild(buildButton(card.extraProperty, card.id));
     }
 
-    cardDiv.appendChild(buildButton("Make animal",card.id));
+    cardDiv.appendChild(buildButton("Make animal", card.id));
     return cardDiv;
 }
-
-
 
 
 function getCookie(player) {
