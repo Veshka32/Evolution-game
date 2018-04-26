@@ -26,12 +26,14 @@ function onMessage(event) {
     var common = document.getElementById("common");
     common.innerText = "";
 
-    var cards = game.cards;
+
+    if (game.hasOwnProperty("cards")){
+        var cards = game.cards;
     var arrayCards = cards.split("/");
     arrayCards.forEach(function (value) {
         var card = JSON.parse(value);
         privat.appendChild(buildCard(card));
-    })
+    })}
 
     if (game.hasOwnProperty("animals")) {
         var animals = game.animals;
@@ -48,10 +50,19 @@ function onMessage(event) {
     log.innerHTML += move;
 }
 
-function playProperty(property) {
+function playProperty(property,id) {
     if (status){
-        var json = JSON.stringify({"player": player, "move": property});
+        var json = JSON.stringify({"player": player, "move": property,"id":id});
         socket.send(json);}
+}
+
+function buildButton(name,id) {
+    var property = document.createElement("button");
+    property.addEventListener("click", function () {
+        playProperty(name,id);
+    });
+    property.innerText = name;
+    return property;
 }
 
 function done(){
@@ -87,24 +98,17 @@ function buildCard(card) {
     cardDiv.setAttribute("class", "card");
     cardDiv.innerHTML=card.id+"<br/>";
 
-    cardDiv.appendChild(buildButton(card.property));
+    cardDiv.appendChild(buildButton(card.property,card.id));
 
     if (card.hasOwnProperty("extraProperty")) {
-        cardDiv.appendChild(buildButton(card.extraProperty));
+        cardDiv.appendChild(buildButton(card.extraProperty,card.id));
     }
 
-    cardDiv.appendChild(buildButton("Make animal"));
+    cardDiv.appendChild(buildButton("Make animal",card.id));
     return cardDiv;
 }
 
-function buildButton(name) {
-    var property = document.createElement("button");
-    property.addEventListener("click", function () {
-        playProperty(name);
-    });
-    property.innerHTML = name;
-    return property;
-}
+
 
 
 function getCookie(player) {
