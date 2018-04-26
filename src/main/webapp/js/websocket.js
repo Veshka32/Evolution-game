@@ -26,14 +26,12 @@ function onMessage(event) {
     var common = document.getElementById("common");
     common.innerText = "";
 
-
     if (game.hasOwnProperty("cards")){
-        var cards = game.cards;
-    var arrayCards = cards.split("/");
-    arrayCards.forEach(function (value) {
-        var card = JSON.parse(value);
-        privat.appendChild(buildCard(card));
-    })}
+        for (var i=0;i<game.cards.length;i++){
+            var card=game.cards[i];
+            privat.appendChild(buildCard(card));
+        }
+    }
 
     if (game.hasOwnProperty("animals")) {
         var animals = game.animals;
