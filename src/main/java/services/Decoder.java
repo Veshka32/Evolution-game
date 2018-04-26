@@ -1,5 +1,6 @@
 package services;
 
+import com.google.gson.Gson;
 import entities.Move;
 
 import javax.json.Json;
@@ -10,9 +11,8 @@ import java.io.StringReader;
 public class Decoder {
 
     public Move decode(String message) {
-        JsonReader reader=Json.createReader(new StringReader(message));
-        JsonObject json=reader.readObject();
-        Move move=new Move(json.getString("player"),json.getString("opponent"),json.getString("move"));
+        Gson json=new Gson();
+        Move move=json.fromJson(message,Move.class);
         return move;
     }
 }
