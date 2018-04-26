@@ -50,13 +50,13 @@ function onMessage(event) {
 
 function playProperty(property) {
     if (status){
-        var json = JSON.stringify({"player": player, "opponent": "dsfsf", "move": property});
+        var json = JSON.stringify({"player": player, "move": property});
         socket.send(json);}
 }
 
 function done(){
     if (status)
-    var json=JSON.stringify({"player":player,"opponent":"dsfss","move":"Done"});
+    var json=JSON.stringify({"player":player,"move":"Done"});
     socket.send(json);
 }
 

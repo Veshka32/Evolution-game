@@ -1,16 +1,18 @@
 package entities;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class Move {
     String player;
     String move;
-    String opponent;
+    String id;
 
-    public Move(String player, String opponent,String move) {
+    public Move(String player, String id, String move) {
         this.move = move;
-        this.opponent=opponent;
+        this.id = id;
         this.player = player;
     }
 
@@ -24,14 +26,9 @@ public class Move {
 
 
     public String toString() {
-        ArrayList<String> fields = new ArrayList<>(3);
-        for (Field f : Move.class.getDeclaredFields()) {
-            try {
-                fields.add(f.get(this).toString());
-            } catch (IllegalAccessException ex) {
-            }
-        }
-        return fields.toString();
+        Gson json = new Gson();
+        String s = json.toJson(this);
+        return s;
     }
 
 //    public static void main(String[] args) throws JsonProcessingException,IOException {
