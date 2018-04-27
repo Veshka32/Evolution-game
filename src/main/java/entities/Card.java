@@ -1,7 +1,5 @@
 package entities;
 
-import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
 
@@ -10,19 +8,15 @@ public class Card {
     private String property;
     private final int id;
 
-    public Card(int type, int id) {
-        switch (type) {
-            case 0:
-                property = "Swimming";
-                break;
-            case 1:
-                property = "Big";
-                break;
-            case 2:
-                property = "Parasite";
-                extraProperty = "Fat";
-        }
-        this.id = id;
+    public Card(int id,String property,String extraProperty){
+        this.id=id;
+        this.property=property;
+        this.extraProperty=extraProperty;
+    }
+
+    public Card(int id,String property){
+        this.id=id;
+        this.property=property;
     }
 
     public String convertToJsonString() {

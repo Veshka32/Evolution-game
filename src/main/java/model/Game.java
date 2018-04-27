@@ -26,6 +26,7 @@ public class Game {
     private String[] playersNames;
     private String moves = "New game started";
     private List<Animal> animals = new ArrayList<>();
+    private List<Card> cardList;
     private int DONE_count; //default 0
     //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
 
@@ -70,6 +71,7 @@ public class Game {
     }
 
     public void start() {
+        createCards();
         playersNames = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
         for (String name : playersNames)
             addCardsOnStart(playerHashMap.get(name));
@@ -83,9 +85,8 @@ public class Game {
     }
 
     private void addCardsOnStart(Player player) {
-        Random r = new Random();
-        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++) {
-            player.addCard(new Card(r.nextInt(3), cardID++));
+        for (int i=0;i<Constants.START_NUMBER_OF_CARDS.getValue();i++){
+            player.addCard(cardList.remove(cardList.size()-1));
         }
     }
 
@@ -100,10 +101,6 @@ public class Game {
         }.getType());
         JsonArray jsonArray = element.getAsJsonArray();
         return jsonArray;
-        //StringBuilder builder = new StringBuilder();
-// builder.append(animals.stream().map(x -> x.convertToJsonString()).collect(Collectors.joining("/")));
-//return builder.toString();
-
     }
 
     public boolean isFull() {
@@ -141,6 +138,20 @@ public class Game {
             switchStatus();
             DONE_count = 0;
         }
+    }
+
+    private void createCards(){
+        cardList=new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());
+        for (int i=0;i<4;i++){
+            cardList.add(new Card(cardID++,"Swimming"));
+            cardList.add(new Card(cardID++,"Big"));
+            cardList.add(new Card(cardID++,"Mimicry"));
+            cardList.add(new Card(cardID++,"Fat","Cooperation"));
+            cardList.add(new Card(cardID++,"Parasite","Predator"));
+            cardList.add(new Card(cardID++,"Running"));
+            cardList.add(new Card(cardID++,"Hibernation"));
+        }
+        Collections.shuffle(cardList);
     }
 
 
