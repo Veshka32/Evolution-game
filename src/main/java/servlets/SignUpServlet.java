@@ -17,6 +17,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
     }
 
@@ -30,10 +31,11 @@ public class SignUpServlet extends HttpServlet {
             resp.addCookie(cookie);
             session.setAttribute("player", login);
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
-        }
+        } else{
 
+        //if (((session.getAttribute("player"))).equals(login)) doGet(req,resp);
         req.setAttribute("signUpError", "Sorry, this login is already in use.");
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        req.getRequestDispatcher("/index.jsp").forward(req, resp);}
 
     }
     //<% response.setIntHeader("Refresh", 5); %>
