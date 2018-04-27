@@ -128,11 +128,11 @@ public class Game {
 //        changeFlag.addPropertyChangeListener(listener);
 //    }
     public static void main(String[] args) {
-//        Game g = new Game();
-//        g.addPlayer("test");
-//        g.addPlayer("admin");
-//        g.start();
-//        System.out.println(g.convertToJsonString("test"));
-//        System.out.println(g.convertToJsonString("admin"));
+        Game g = new Game();
+        g.addPlayer("test");
+        g.addPlayer("admin");
+        g.start();
+        System.out.println(g.convertToJsonString("test"));
+        System.out.println(g.convertToJsonString("admin"));
     }
 }

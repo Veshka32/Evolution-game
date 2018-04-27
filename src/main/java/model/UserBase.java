@@ -1,5 +1,6 @@
 package model;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -14,5 +15,10 @@ public class UserBase {
             return true;
         }
         return false;
+    }
+
+    @PostConstruct
+    public void constr(){
+        System.out.println("userbase is created");
     }
 }
