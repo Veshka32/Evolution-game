@@ -28,14 +28,19 @@ public class WebSocketServer {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         String player = (String) httpSession.getAttribute("player");
         socketsHandler.addSession(session, player);
-        game.setMoves(player+" joined game");
+        game.setMoves(player + " joined game");
         sendToAll(session);
     }
 
     @OnMessage
     public void handleMessage(Move message, Session session) {
         //Move mess = new Decoder().decode(message);
-        game.makeMove(message);
+        if (message.getMove().equals("Leave")) {
+            game.deletePlayer(message.getPlayer());
+            socketsHandler.removeSession(session);
+        } else {
+            game.makeMove(message);
+        }
         sendToAll(session);
     }
 

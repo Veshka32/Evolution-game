@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import entities.*;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.util.*;
@@ -27,6 +28,11 @@ public class Game {
     private List<Animal> animals = new ArrayList<>();
     private int DONE_count; //default 0
     //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
+
+    @PostConstruct
+    public void constrc(){
+        System.out.println("game created");
+    }
 
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
@@ -50,7 +56,17 @@ public class Game {
     public void addPlayer(String userName) {
         Player player = new Player(userName);
         playerHashMap.put(userName, player);
+        if (isFull()) {
+            switchStatus();
+            start();
+        }
         //changeFlag.firePropertyChange("game", true, false);
+    }
+
+    public void deletePlayer(String userName){
+        playerHashMap.remove(userName);
+        moves=userName+" has left the game";
+        phase=Phase.OFF;
     }
 
     public void start() {

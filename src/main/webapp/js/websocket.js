@@ -68,6 +68,13 @@ function done() {
     socket.send(json);
 }
 
+function leave() {
+    var json=JSON.stringify({"player":player,"move":"Leave"});
+    socket.send(json);
+    location.assign("/evo/signUp")
+
+}
+
 function init() {
     document.getElementById("player").innerText = getCookie("player");
     player = getCookie("player");

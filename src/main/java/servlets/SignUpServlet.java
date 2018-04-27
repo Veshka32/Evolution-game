@@ -17,24 +17,24 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
+        req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login=req.getParameter("login");
-        HttpSession session=req.getSession();
+        String login = req.getParameter("login");
+        HttpSession session = req.getSession();
 
-        if (userBase.signUp(login,session)) {
-            Cookie cookie=new Cookie("player",login);
+        if (userBase.signUp(login, session)) {
+            Cookie cookie = new Cookie("player", login);
             resp.addCookie(cookie);
-            session.setAttribute("player",login);
-            req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
+            session.setAttribute("player", login);
+            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         }
-        else {
-            req.setAttribute("signUpError","Sorry, this login is already in use.");
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-        }
+
+        req.setAttribute("signUpError", "Sorry, this login is already in use.");
+        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+
     }
     //<% response.setIntHeader("Refresh", 5); %>
 }
