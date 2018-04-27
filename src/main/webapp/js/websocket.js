@@ -1,6 +1,7 @@
 window.onload = init;
 var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
+var player;
 
 
 function onMessage(event) {
@@ -8,6 +9,8 @@ function onMessage(event) {
     var content = document.getElementById("content");
     content.innerText = "";
 
+    player=game.player;
+    document.getElementById("player").innerText =game.player;
     document.getElementById("phase").innerText = game.phase;
     document.getElementById("players").innerText = game.players;
     var yourStatus = document.getElementById("status");
@@ -76,9 +79,9 @@ function leave() {
 }
 
 function init() {
-    document.getElementById("player").innerText = getCookie("player");
-    player = getCookie("player");
-    Object.freeze(player);
+    // document.getElementById("player").innerText = getCookie("player");
+    // player = getCookie("player");
+    // Object.freeze(player);
 }
 
 function buildAnimal(an) {

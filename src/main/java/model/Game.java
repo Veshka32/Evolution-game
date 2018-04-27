@@ -29,14 +29,14 @@ public class Game {
     private int DONE_count; //default 0
     //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
 
-    @PostConstruct
-    public void constrc(){
-        System.out.println("game created");
+    public boolean containsPlayer(String name){
+        return playerHashMap.containsKey(name);
     }
 
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
+        element.getAsJsonObject().addProperty("player",name);
         element.getAsJsonObject().addProperty("players", getAllPlayers());
         element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards());
         element.getAsJsonObject().add("animals", getAnimals());

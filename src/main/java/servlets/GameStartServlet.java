@@ -16,13 +16,15 @@ public class GameStartServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        String name=(String) session.getAttribute("player");
+        if (game.containsPlayer(name)){req.setAttribute("playersList",game.getAllPlayers());
+            resp.sendRedirect("views/socket.html");}
 
-        if (game.isFull()) {
+        else if (game.isFull()) {
             req.setAttribute("message", "Sorry,game is full");
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         } else {
-            HttpSession session = req.getSession();
-            String name=(String) session.getAttribute("player");
             game.addPlayer(name);
             req.setAttribute("playersList",game.getAllPlayers());
             resp.sendRedirect("views/socket.html");
