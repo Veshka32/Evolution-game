@@ -28,6 +28,7 @@ public class WebSocketServer {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         String player = (String) httpSession.getAttribute("player");
         socketsHandler.addSession(session, player);
+        game.setMoves(player+" joined game");
         sendToAll(session);
     }
 

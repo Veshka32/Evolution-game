@@ -15,9 +15,6 @@ public class SignUpServlet extends HttpServlet {
     @Inject
     UserBase userBase;
 
-    @Inject
-    Game game;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/views/cabinet.jsp").forward(req,resp);
@@ -27,7 +24,6 @@ public class SignUpServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login=req.getParameter("login");
         HttpSession session=req.getSession();
-        session.setAttribute("game",game);
 
         if (userBase.signUp(login,session)) {
             Cookie cookie=new Cookie("player",login);

@@ -94,6 +94,10 @@ public class Game {
         return playerHashMap.size() == Constants.NUMBER_OF_PLAYER.getValue();
     }
 
+    public void setMoves(String s){
+        moves=s;
+    }
+
     public void switchStatus() {
         if (currentState == phases.length - 1)
             currentState = 1;
