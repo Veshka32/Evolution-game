@@ -21,11 +21,18 @@ if an object is visible to more than one thread, all reads or writes to that obj
 
  HashtAble is synchronized by default
 
-To connect to H2 DataBase:
-- in Intellij: View - Tool Windows - Database - create new; url like jdbc:h2:C:/Users/stas/Documents/evo/h2 (if localhost)
+Connect to H2 DataBase with glassfish:
+- add h2*.jat to CLASSPATH environment var;
 - copy h28.jar to C:\glassfish3\glassfish\lib ?
 - add maven dependency;
-- To use H2 with Glassfish (or Sun AS), set the Datasource Classname to org.h2.jdbcx.JdbcDataSource. You can set this in the GUI at Application Server - Resources - JDBC - Connection Pools, or by editing the file sun-resources.xml: at element jdbc-connection-pool, set the attribute datasource-classname to org.h2.jdbcx.JdbcDataSource.
+- in glassish admin cabinet: Resources->JDBC->Conn Pools->new connection pool:
+    - set the Datasource Classname to org.h2.jdbcx.JdbcDataSource.
+    - set user, password, url like jdbc:h2:tcp://localhost/~/my_db_name
+//- in Intellij: View - Tool Windows - Database - create new; url like jdbc:h2:C:/Users/stas/Documents/evo/h2 (if localhost)
+
 
 var.stream().map(x -> x.method()).collect(Collectors.joining("/")));
 //return builder.toString();
+
+JSON: to exclude: add transient or static to field or create json as GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().
+The Gson instance created will exclude all fields in a class that are not marked with @Expose annotation. You can write custom ExclusionStrategy

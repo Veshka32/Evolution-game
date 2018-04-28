@@ -22,7 +22,6 @@ public class LoginFilter implements Filter {
         HttpSession session = request.getSession(false); //if there is no session - doesn't create a new one
         String loginURI = request.getContextPath();
         //String loginURI1=request.getContextPath()+"/index.jsp";
-        System.out.println(loginURI);
 
         boolean loggedIn = session != null && session.getAttribute("player") != null;
         boolean loginRequest = request.getRequestURI().equals(loginURI);

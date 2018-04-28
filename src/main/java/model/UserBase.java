@@ -16,9 +16,4 @@ public class UserBase {
         }
         return false;
     }
-
-    @PostConstruct
-    public void constr(){
-        System.out.println("userbase is created");
-    }
 }
