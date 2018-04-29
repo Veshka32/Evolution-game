@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import entities.*;
+import services.dataBaseService.DBService;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -30,6 +31,15 @@ public class Game {
     private int DONE_count; //default 0
     //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
 
+    @PostConstruct
+    public void jdbcServiceTest() {
+        try {
+            new DBService().getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     public boolean containsPlayer(String name){
         return playerHashMap.containsKey(name);
     }
