@@ -31,15 +31,6 @@ public class Game {
     private int DONE_count; //default 0
     //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
 
-    @PostConstruct
-    public void jdbcServiceTest() {
-        try {
-            new DBService().getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
     public boolean containsPlayer(String name){
         return playerHashMap.containsKey(name);
     }
