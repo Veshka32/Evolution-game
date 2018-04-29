@@ -23,13 +23,15 @@ if an object is visible to more than one thread, all reads or writes to that obj
 
 Connect to H2 DataBase with glassfish:
 - add h2*.jat to CLASSPATH environment var;
-- copy h28.jar to C:\glassfish3\glassfish\lib ?
-- add maven dependency;
+- copy h2*.jar to C:\glassfish3\glassfish\lib
+- add maven dependency for h2;
 - in glassish admin cabinet: Resources->JDBC->Conn Pools->new connection pool:
     - set the Datasource Classname to org.h2.jdbcx.JdbcDataSource.
     - set user, password, url like jdbc:h2:tcp://localhost/~/my_db_name
-
-- add resource-ref to web.xml
+    -create new JDBC resource with name jdbc/basename
+- add resource-ref to web.xml (<res-ref-name> =jdbc/basename)
+- get Datasource object from InitContext.lookup(jdbc/basename);
+- Datasource.getConnetction() returns Connection
 
 
 //- in Intellij: View - Tool Windows - Database - create new; url like jdbc:h2:C:/Users/stas/Documents/evo/h2 (if localhost)
