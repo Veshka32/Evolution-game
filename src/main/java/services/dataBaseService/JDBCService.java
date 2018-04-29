@@ -27,8 +27,6 @@ public class JDBCService{
         if (dataSource == null) {
             throw new SQLException("DataSource is null.");
         }
-        //org.h2.Driver.load();
-        Class.forName("org.h2.Driver");
         return dataSource.getConnection();
     }
 

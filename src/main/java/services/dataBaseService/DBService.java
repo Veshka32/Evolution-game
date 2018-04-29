@@ -14,9 +14,10 @@ public class DBService {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = jdbcService.getConnection();
             //Class.forName("org.h2.Driver");
             //connection=DriverManager.getConnection("jdbc:h2:C:/Users/stas/Documents/evo/h2base", "admin", "admin");
+            //connection=DriverManager.getConnection("jdbc:h2:./h2base", "admin", "admin");
+            connection = jdbcService.getConnection();
             System.out.println(connection.isValid(10)); //check connection is open
             statement=connection.createStatement();
             String sql="DROP TABLE IF EXISTS Users";
