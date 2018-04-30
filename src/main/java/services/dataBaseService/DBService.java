@@ -1,8 +1,42 @@
-//package services.dataBaseService;
+package services.dataBaseService;
 //
-//import java.sql.*;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.*;
+
 //
-//public class DBService {
+public class DBService {
+    @Resource(lookup = "jdbc/H2database")
+    DataSource dataSource;
+
+    public DBService() {
+    }
+
+    public void createTable() {
+        try (Connection connection = dataSource.getConnection()) {
+            Statement statement = connection.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean addUser(String name) throws SQLException {
+        createTable();
+        Connection connection = dataSource.getConnection();
+        Statement statement = connection.createStatement();
+        String sql = "SELECT login FROM Users WHERE login=name";
+        ResultSet resultSet = statement.executeQuery(sql);
+        if (!resultSet.isBeforeFirst()) //isBeforeFirst return false if no rows in resultSet
+        {
+            sql = "INSERT INTO Users (login) VALUES(name)";
+            statement.executeUpdate(sql);
+            return true;
+        } else return false;
+    }
+}
 //
 //    public DBService(){}
 //
