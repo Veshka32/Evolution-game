@@ -2,10 +2,11 @@ package services.dataBaseService;
 //
 
 import javax.annotation.Resource;
+import javax.enterprise.context.ApplicationScoped;
 import javax.sql.DataSource;
 import java.sql.*;
 
-//
+@ApplicationScoped
 public class DBService {
     @Resource(lookup = "jdbc/H2database")
     DataSource dataSource;
@@ -16,6 +17,7 @@ public class DBService {
     public void createTable() {
         try (Connection connection = dataSource.getConnection()) {
             Statement statement = connection.createStatement();
+            //String sql = "DROP TABLE IF EXISTS Users";
             String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
             statement.executeUpdate(sql);
         } catch (SQLException e) {
@@ -27,11 +29,11 @@ public class DBService {
         createTable();
         Connection connection = dataSource.getConnection();
         Statement statement = connection.createStatement();
-        String sql = "SELECT login FROM Users WHERE login=name";
+        String sql = "SELECT * FROM Users WHERE login='" + name + "'";
         ResultSet resultSet = statement.executeQuery(sql);
         if (!resultSet.isBeforeFirst()) //isBeforeFirst return false if no rows in resultSet
         {
-            sql = "INSERT INTO Users (login) VALUES(name)";
+            sql = "INSERT INTO Users (login) VALUES('" + name + "')";
             statement.executeUpdate(sql);
             return true;
         } else return false;
