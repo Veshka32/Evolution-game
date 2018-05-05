@@ -19,7 +19,7 @@ public class DBService {
         Statement statement = null;
         Connection connection = null;
         //String sql = "DROP TABLE IF EXISTS Users";
-        String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
+        String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
         //classic way to close resource
         try {
             connection = dataSource.getConnection();
@@ -55,12 +55,30 @@ public class DBService {
         }
     }
 
-    public void addUser(String login) throws SQLException {
+    public boolean isUserValid(String login, String password) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE login=?";
 
-        String sql = "INSERT INTO Users (login) VALUES(?)";
+        //use try-with resource https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
+        try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, login);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    String passwordStored = resultSet.getString("password");
+                    return (password.equals(passwordStored));
+                }
+                return false;
+            }
+        }
+    }
+
+    public void addUser(String login, String password) throws SQLException {
+
+        String sql = "INSERT INTO Users (login,password) VALUES(?,?)";
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement prStatement = connection.prepareStatement(sql)) {
             prStatement.setString(1, login);
+            prStatement.setString(2, password);
             prStatement.executeUpdate();
         }
     }

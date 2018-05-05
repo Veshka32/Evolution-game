@@ -23,11 +23,12 @@ public class SignUpServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
+        String password=req.getParameter("password");
         HttpSession session = req.getSession();
 
         try {
             if (!dbService.isUserExist(login)) {
-                dbService.addUser(login);
+                dbService.addUser(login,password);
                 Cookie cookie = new Cookie("player", login);
                 resp.addCookie(cookie);
                 session.setAttribute("player", login);

@@ -23,10 +23,11 @@ public class SignInServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
+        String password=req.getParameter("password");
         HttpSession session = req.getSession();
 
         try {
-            if (dbService.isUserExist(login)) {
+            if (dbService.isUserValid(login,password)) {
                 Cookie cookie = new Cookie("player", login);
                 resp.addCookie(cookie);
                 session.setAttribute("player", login);
@@ -34,7 +35,7 @@ public class SignInServlet extends HttpServlet {
             } else{
 
                 //if (((session.getAttribute("player"))).equals(login)) doGet(req,resp);
-                req.setAttribute("signInError", "Sorry, invalid login");
+                req.setAttribute("signInError", "Sorry, invalid login or password");
                 req.getRequestDispatcher("/index.jsp").forward(req, resp);}
         } catch (SQLException e) {
             e.printStackTrace();

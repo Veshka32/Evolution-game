@@ -51,5 +51,7 @@ To avoid infinite loop while do filter on index.jsp, use req.getRequestDispatche
 prepared statement: http://www.h2database.com/html/advanced.html#sql_injection
 transaction?
 
+security for jsp (authentification)
+
 userdao?
 security?
