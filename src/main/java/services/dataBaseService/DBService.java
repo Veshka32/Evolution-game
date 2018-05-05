@@ -31,37 +31,37 @@ public class DBService {
 
     public boolean isUserExist(String login) throws SQLException {
         Connection connection = null;
-        Statement statement = null;
-        String sql = "SELECT * FROM Users WHERE login='" + login + "'";
+        PreparedStatement preparedStatement=null;
+        //String sql = "SELECT * FROM Users WHERE login='" + login + "'";
+        String sql="SELECT * FROM Users WHERE login=?";
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            preparedStatement=connection.prepareStatement(sql);
+            preparedStatement.setString(1,login);
+            resultSet = preparedStatement.executeQuery(); //http://www.h2database.com/html/advanced.html#sql_injection
+            return resultSet.isBeforeFirst(); ////isBeforeFirst return false if no rows in resultSet
+
         } finally {
             if (resultSet != null) resultSet.close();
-            if (statement != null) statement.close();
+            if (preparedStatement != null) preparedStatement.close();
             if (connection != null) connection.close();
-            return resultSet.isBeforeFirst(); ////isBeforeFirst return false if no rows in resultSet
         }
     }
 
     public void addUser(String login) throws SQLException {
         Connection connection = null;
-        Statement statement = null;
-        String sql = "INSERT INTO Users (login) VALUES('" + login + "')";
+        PreparedStatement preparedStatement = null;
+        String sql = "INSERT INTO Users (login) VALUES(?)";
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            statement = connection.createStatement();
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,login);
+            preparedStatement.executeUpdate();
         } finally {
             if (resultSet != null) resultSet.close();
-            if (statement != null) statement.close();
+            if (preparedStatement != null) preparedStatement.close();
             if (connection != null) connection.close();
         }
     }
