@@ -72,14 +72,23 @@ public class DBService {
         }
     }
 
-    public void addUser(String login, String password) throws SQLException {
+    public boolean addUser(String login, String password) throws SQLException {
 
-        String sql = "INSERT INTO Users (login,password) VALUES(?,?)";
+        String checkUser="SELECT * FROM Users WHERE login=?";
+        String add = "INSERT INTO Users (login,password) VALUES(?,?)";
 
-        try (Connection connection = dataSource.getConnection(); PreparedStatement prStatement = connection.prepareStatement(sql)) {
-            prStatement.setString(1, login);
-            prStatement.setString(2, password);
-            prStatement.executeUpdate();
+        try (Connection connection = dataSource.getConnection(); PreparedStatement p1 = connection.prepareStatement(checkUser); PreparedStatement p2=connection.prepareStatement(add)) {
+            connection.setAutoCommit(false);
+            p1.setString(1, login);
+            try (ResultSet resultSet = p1.executeQuery()) {
+                if (resultSet.isBeforeFirst()) return false;//isBeforeFirst return false if no rows in resultSet
+            }
+            p2.setString(1,login);
+            p2.setString(2, password);
+            p2.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
         }
     }
 }
