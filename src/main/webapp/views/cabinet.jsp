@@ -11,6 +11,10 @@ Active players: <span><%=((Game)application.getAttribute("game")).getAllPlayers(
 ${message}<br>
 <form action="start">
     <input type="submit" value="Join game"/>
+</form><br/>
+
+<form action="signOut">
+    <input type="submit" value="Sign Out"/>
 </form>
 </body>
 </html>

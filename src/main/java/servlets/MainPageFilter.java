@@ -25,7 +25,7 @@ public class MainPageFilter implements Filter {
         if (loggedIn) {
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         } else {
-            req.getRequestDispatcher("/index.jsp").forward(req, resp);;
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
         }
 
     }

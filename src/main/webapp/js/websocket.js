@@ -74,7 +74,7 @@ function done() {
 function leave() {
     var json=JSON.stringify({"player":player,"move":"Leave"});
     socket.send(json);
-    location.assign("/evo/signUp")
+    location.assign("/evo/signIn")
 
 }
 
