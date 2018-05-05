@@ -1,4 +1,4 @@
-package servlets;
+package filters;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -21,7 +21,6 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
         HttpSession session = request.getSession(false); //if there is no session - doesn't create a new one
         String loginURI = request.getContextPath();
-        //String loginURI1=request.getContextPath()+"/index.jsp";
 
         boolean loggedIn = session != null && session.getAttribute("player") != null;
         boolean loginRequest = request.getRequestURI().equals(loginURI);

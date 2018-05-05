@@ -1,6 +1,5 @@
 package servlets;
 
-import entities.Phase;
 import model.Game;
 
 import javax.inject.Inject;

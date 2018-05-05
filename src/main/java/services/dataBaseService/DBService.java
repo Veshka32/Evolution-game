@@ -10,36 +10,60 @@ import java.sql.*;
 public class DBService {
     @Resource(lookup = "jdbc/H2database")
     DataSource dataSource;
+    //https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html
 
     public DBService() {
     }
 
-    public void createTable() {
+    public void createTable() throws SQLException {
+        Statement statement = null;
+        //String sql = "DROP TABLE IF EXISTS Users";
+        String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
         try (Connection connection = dataSource.getConnection()) {
-            Statement statement = connection.createStatement();
-            //String sql = "DROP TABLE IF EXISTS Users";
-            String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
+            statement = connection.createStatement();
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (statement != null) statement.close();
         }
     }
 
     public boolean isUserExist(String login) throws SQLException {
-        createTable();
-        Connection connection = dataSource.getConnection();
-        Statement statement = connection.createStatement();
+        Connection connection = null;
+        Statement statement = null;
         String sql = "SELECT * FROM Users WHERE login='" + login + "'";
-        ResultSet resultSet = statement.executeQuery(sql);
-        return resultSet.isBeforeFirst(); ////isBeforeFirst return false if no rows in resultSet
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+            return resultSet.isBeforeFirst(); ////isBeforeFirst return false if no rows in resultSet
+        }
     }
 
-    public void addUser(String name) throws SQLException {
-        createTable();
-        Connection connection = dataSource.getConnection();
-        Statement statement = connection.createStatement();
-        String sql = "INSERT INTO Users (login) VALUES('" + name + "')";
-        statement.executeUpdate(sql);
+    public void addUser(String login) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        String sql = "INSERT INTO Users (login) VALUES('" + login + "')";
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
     }
 }
 //
