@@ -9,15 +9,14 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/signUp")
-public class SignUpServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/signIn")
+public class SignInServlet extends HttpServlet {
 
     @Inject
     DBService dbService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 
@@ -27,22 +26,21 @@ public class SignUpServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         try {
-            if (!dbService.isUserExist(login)) {
-                dbService.addUser(login);
+            if (dbService.isUserExist(login)) {
                 Cookie cookie = new Cookie("player", login);
                 resp.addCookie(cookie);
                 session.setAttribute("player", login);
                 req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
             } else{
 
-            //if (((session.getAttribute("player"))).equals(login)) doGet(req,resp);
-            req.setAttribute("signUpError", "Sorry, this login is already in use.");
-            req.getRequestDispatcher("/index.jsp").forward(req, resp);}
+                //if (((session.getAttribute("player"))).equals(login)) doGet(req,resp);
+                req.setAttribute("signInError", "Sorry, invalid login");
+                req.getRequestDispatcher("/index.jsp").forward(req, resp);}
         } catch (SQLException e) {
             e.printStackTrace();
-            req.setAttribute("signUpError", "System error, try again");
+            req.setAttribute("signInError", "System error, try again");
             req.getRequestDispatcher("/index.jsp").forward(req, resp);}
-        }
-
     }
-    //<% response.setIntHeader("Refresh", 5); %>
+
+}
+//<% response.setIntHeader("Refresh", 5); %>

@@ -25,18 +25,21 @@ public class DBService {
         }
     }
 
-    public boolean addUser(String name) throws SQLException {
+    public boolean isUserExist(String login) throws SQLException {
         createTable();
         Connection connection = dataSource.getConnection();
         Statement statement = connection.createStatement();
-        String sql = "SELECT * FROM Users WHERE login='" + name + "'";
+        String sql = "SELECT * FROM Users WHERE login='" + login + "'";
         ResultSet resultSet = statement.executeQuery(sql);
-        if (!resultSet.isBeforeFirst()) //isBeforeFirst return false if no rows in resultSet
-        {
-            sql = "INSERT INTO Users (login) VALUES('" + name + "')";
-            statement.executeUpdate(sql);
-            return true;
-        } else return false;
+        return resultSet.isBeforeFirst(); ////isBeforeFirst return false if no rows in resultSet
+    }
+
+    public void addUser(String name) throws SQLException {
+        createTable();
+        Connection connection = dataSource.getConnection();
+        Statement statement = connection.createStatement();
+        String sql = "INSERT INTO Users (login) VALUES('" + name + "')";
+        statement.executeUpdate(sql);
     }
 }
 //
