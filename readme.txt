@@ -48,9 +48,8 @@ The Gson instance created will exclude all fields in a class that are not marked
 
 To avoid infinite loop while do filter on index.jsp, use req.getRequestDispatcher instead of resp.sendRedirect
 
-prepared statement;
+prepared statement: http://www.h2database.com/html/advanced.html#sql_injection
 transaction?
-when and where close?
 
 userdao?
 security?

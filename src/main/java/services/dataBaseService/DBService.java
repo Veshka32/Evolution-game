@@ -17,52 +17,51 @@ public class DBService {
 
     public void createTable() throws SQLException {
         Statement statement = null;
+        Connection connection = null;
         //String sql = "DROP TABLE IF EXISTS Users";
         String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
-        try (Connection connection = dataSource.getConnection()) {
+        //classic way to close resource
+        try {
+            connection = dataSource.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (statement != null) statement.close();
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
         }
     }
 
     public boolean isUserExist(String login) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement=null;
-        //String sql = "SELECT * FROM Users WHERE login='" + login + "'";
-        String sql="SELECT * FROM Users WHERE login=?";
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            preparedStatement=connection.prepareStatement(sql);
-            preparedStatement.setString(1,login);
-            resultSet = preparedStatement.executeQuery(); //http://www.h2database.com/html/advanced.html#sql_injection
-            return resultSet.isBeforeFirst(); ////isBeforeFirst return false if no rows in resultSet
+        String sql = "SELECT * FROM Users WHERE login=?";
 
-        } finally {
-            if (resultSet != null) resultSet.close();
-            if (preparedStatement != null) preparedStatement.close();
-            if (connection != null) connection.close();
+        //use try-with resource https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
+        try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, login);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.isBeforeFirst(); //isBeforeFirst return false if no rows in resultSet
+            }
         }
     }
 
     public void addUser(String login) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
+
         String sql = "INSERT INTO Users (login) VALUES(?)";
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,login);
-            preparedStatement.executeUpdate();
-        } finally {
-            if (resultSet != null) resultSet.close();
-            if (preparedStatement != null) preparedStatement.close();
-            if (connection != null) connection.close();
+
+        try (Connection connection = dataSource.getConnection(); PreparedStatement prStatement = connection.prepareStatement(sql)) {
+            prStatement.setString(1, login);
+            prStatement.executeUpdate();
         }
     }
 }
