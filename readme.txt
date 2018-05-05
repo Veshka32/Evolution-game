@@ -46,9 +46,9 @@ var.stream().map(x -> x.method()).collect(Collectors.joining("/")));
 JSON: to exclude: add transient or static to field or create json as GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().
 The Gson instance created will exclude all fields in a class that are not marked with @Expose annotation. You can write custom ExclusionStrategy
 
+To avoid infinite loop while do filter on index.jsp, use req.getRequestDispatcher instead of resp.sendRedirect
+
 prepared statement;
-sign in and sign up;
-filter to main page;
 when and where close?
 
 userdao?
