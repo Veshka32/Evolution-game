@@ -56,18 +56,14 @@ public class DBService {
     }
 
     public boolean isUserValid(String login, String password) throws SQLException {
-        String sql = "SELECT password FROM Users WHERE login=?";
+        String sql = "SELECT id FROM Users WHERE login=? AND password=?";
 
         //use try-with resource https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
+            preparedStatement.setString(2,password);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-
-                while (resultSet.next()) {
-                    String passwordStored = resultSet.getString("password");
-                    return (password.equals(passwordStored));
-                }
-                return false;
+                return resultSet.next();
             }
         }
     }
