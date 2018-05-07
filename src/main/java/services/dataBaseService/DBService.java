@@ -1,9 +1,13 @@
 package services.dataBaseService;
 //
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.sql.DataSource;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 
 @ApplicationScoped
@@ -19,7 +23,7 @@ public class DBService {
         Statement statement = null;
         Connection connection = null;
         //String sql = "DROP TABLE IF EXISTS Users";
-        String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(login))";
+        String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, password VARBINARY(160) NOT NULL, salt VARBINARY(160) NOT NULL, PRIMARY KEY(login))";
         //classic way to close resource
         try {
             connection = dataSource.getConnection();
@@ -55,23 +59,28 @@ public class DBService {
         }
     }
 
-    public boolean isUserValid(String login, String password) throws SQLException {
-        String sql = "SELECT id FROM Users WHERE login=? AND password=?";
+    public boolean isUserValid(String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
+        String sql = "SELECT password,salt FROM Users WHERE login=?";
 
         //use try-with resource https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
-            preparedStatement.setString(2,password);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return resultSet.next();
+                while(resultSet.next()){
+                    byte[] storedPassword=resultSet.getBytes("password");
+                    byte[] salt=resultSet.getBytes("salt");
+                    return PasswordEncryptionService.authenticate(password,storedPassword,salt);
+                }
+                return false;
             }
         }
     }
 
-    public boolean addUser(String login, String password) throws SQLException {
+
+    public boolean addUser(String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
 
         String checkUser="SELECT id FROM Users WHERE login=?";
-        String add = "INSERT INTO Users (login,password) VALUES(?,?)";
+        String add = "INSERT INTO Users (login,password,salt) VALUES(?,?,?)";
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement p1 = connection.prepareStatement(checkUser);
@@ -81,8 +90,11 @@ public class DBService {
             p1.setString(1, login);
             try (ResultSet resultSet = p1.executeQuery()) {
                 if (resultSet.isBeforeFirst()) return false;//isBeforeFirst return false if no rows in resultSet
+
+            byte[] salt=PasswordEncryptionService.generateSalt();
             p2.setString(1,login);
-            p2.setString(2, password);
+            p2.setBytes(2, PasswordEncryptionService.getEncryptedPassword(password,salt));
+            p2.setBytes(3,salt);
             p2.executeUpdate();}
             connection.commit();
             return true;
