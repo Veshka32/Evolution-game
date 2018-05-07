@@ -17,9 +17,7 @@ public class MainPageFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) resp;
         HttpSession session = request.getSession(false); //if there is no session - doesn't create a new one
-        String loginURI = request.getContextPath();
         boolean loggedIn = session != null && session.getAttribute("player") != null;
 
         if (loggedIn) {

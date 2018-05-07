@@ -52,6 +52,7 @@ prepared statement: http://www.h2database.com/html/advanced.html#sql_injection
 
 
 security for jsp (authentification)
+when create db?
 
 userdao?
 
