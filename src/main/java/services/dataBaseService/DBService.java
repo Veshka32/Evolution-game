@@ -44,7 +44,7 @@ public class DBService {
     }
 
     public boolean isUserExist(String login) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE login=?";
+        String sql = "SELECT id FROM Users WHERE login=?";
 
         //use try-with resource https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -56,7 +56,7 @@ public class DBService {
     }
 
     public boolean isUserValid(String login, String password) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE login=?";
+        String sql = "SELECT password FROM Users WHERE login=?";
 
         //use try-with resource https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -74,20 +74,21 @@ public class DBService {
 
     public boolean addUser(String login, String password) throws SQLException {
 
-        String checkUser="SELECT * FROM Users WHERE login=?";
+        String checkUser="SELECT id FROM Users WHERE login=?";
         String add = "INSERT INTO Users (login,password) VALUES(?,?)";
 
-        try (Connection connection = dataSource.getConnection(); PreparedStatement p1 = connection.prepareStatement(checkUser); PreparedStatement p2=connection.prepareStatement(add)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement p1 = connection.prepareStatement(checkUser);
+             PreparedStatement p2=connection.prepareStatement(add);
+             SQLCloseable finish = connection::rollback) { //This will always call rollback(), but after a successful completion of commit(), the rollback will become a no-op as it resets the state to that after the last successful completion of commit()
             connection.setAutoCommit(false);
             p1.setString(1, login);
             try (ResultSet resultSet = p1.executeQuery()) {
                 if (resultSet.isBeforeFirst()) return false;//isBeforeFirst return false if no rows in resultSet
-            }
             p2.setString(1,login);
             p2.setString(2, password);
-            p2.executeUpdate();
+            p2.executeUpdate();}
             connection.commit();
-            connection.setAutoCommit(true);
             return true;
         }
     }
