@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/signUp")
@@ -25,7 +27,10 @@ public class SignUpServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password=req.getParameter("password");
         HttpSession session = req.getSession();
-
+        if (login.isEmpty() || password.isEmpty()) {
+            req.setAttribute("signUpError", "Put both login and password");
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        }
         try {
             if (dbService.addUser(login,password)) {
                 Cookie cookie = new Cookie("player", login);
@@ -33,15 +38,21 @@ public class SignUpServlet extends HttpServlet {
                 session.setAttribute("player", login);
                 req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
             } else{
-
-            //if (((session.getAttribute("player"))).equals(login)) doGet(req,resp);
             req.setAttribute("signUpError", "Sorry, this login is already in use.");
             req.getRequestDispatcher("/index.jsp").forward(req, resp);}
         } catch (SQLException e) {
-            e.printStackTrace();
-            req.setAttribute("signUpError", "System error, try again");
-            req.getRequestDispatcher("/index.jsp").forward(req, resp);}
+            sendError(req,resp);
+        } catch (InvalidKeySpecException e) {
+                sendError(req,resp);
+        } catch (NoSuchAlgorithmException e) {
+            sendError(req, resp);
         }
+    }
+
+    void sendError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("signUpError", "System error, try again");
+        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+    }
 
     }
     //<% response.setIntHeader("Refresh", 5); %>
