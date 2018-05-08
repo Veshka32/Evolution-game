@@ -12,7 +12,8 @@ import java.sql.*;
 
 @ApplicationScoped
 public class DBService {
-    @Resource(lookup = "jdbc/H2database")
+    //@Resource(lookup = "jdbc/H2database") //using web.xml
+    @Resource(lookup = "java:app/jdbc/h2test") //using glassfish-resource.xml
     DataSource dataSource;
     //https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html
 
