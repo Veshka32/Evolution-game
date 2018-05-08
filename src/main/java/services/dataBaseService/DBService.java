@@ -19,10 +19,9 @@ public class DBService {
     public DBService() {
     }
 
-    public void createTable() throws SQLException {
+    public void createTable() {
         Statement statement = null;
         Connection connection = null;
-        //String sql = "DROP TABLE IF EXISTS Users";
         String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, password BINARY(20) NOT NULL, salt BINARY(8) NOT NULL, PRIMARY KEY(login))";
         //classic way to close resource
         try {

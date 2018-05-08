@@ -23,11 +23,7 @@ public class ContextConfig implements ServletContextListener {
         //game.addPropertyChangeListener(new GameChangeListener());
         ServletContext servletContext = event.getServletContext();
         servletContext.setAttribute("game", game);
-        try {
-            dbService.createTable();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        dbService.createTable();
 
     }
 
