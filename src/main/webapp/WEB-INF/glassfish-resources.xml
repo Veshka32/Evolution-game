@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+
+<resources>
+    <jdbc-connection-pool
+            name="h2test"
+            res-type="javax.sql.DataSource"
+            datasource-classname="org.h2.jdbcx.JdbcDataSource">
+        <property name="User" value="admin"/>
+        <property name="Password" value="admin"/>
+        <property name="Url" value="jdbc:h2:c:\Users\stas\Documents\evo\h2test"></property>
+        <property name="driverClass" value="org.h2.Driver"/>
+
+    </jdbc-connection-pool>
+    <jdbc-resource pool-name="h2test" jndi-name="jdbc/h2test"></jdbc-resource>
+</resources>

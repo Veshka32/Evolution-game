@@ -2,6 +2,7 @@ window.onload = init;
 var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
 var player;
+var draggedProperty;
 
 function onMessage(event) {
     var game = JSON.parse(event.data);
@@ -50,8 +51,10 @@ function onMessage(event) {
 
 function playProperty(property, id) {
     if (status) {
-        var json = JSON.stringify({"player": player, "move": property, "id": id});
-        socket.send(json);
+        if (property==="Make animal")
+        {var json = JSON.stringify({"player": player, "move": property, "id": id});
+        socket.send(json);}
+        else {draggedProperty=property;alert("Click animal");}
     }
 }
 
@@ -99,6 +102,7 @@ function buildAnimal(an) {
             animDiv.innerText += value + "<br/>";
         })
     }
+    addEventListener("click",function (ev) { alert(draggedProperty) })
     return animDiv;
 }
 

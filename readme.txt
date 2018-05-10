@@ -30,11 +30,16 @@ Connect to H2 DataBase with glassfish:
     - set the Datasource Classname to org.h2.jdbcx.JdbcDataSource.
     - set user, password, url like jdbc:h2:C~/my_db_name (embedded mode)
     -create new JDBC resource with name jdbc/basename
-- add resource-ref to web.xml (<res-ref-name> =jdbc/basename)
+- add resource-ref to web.xml (<res-ref-name> =jdbc/basename) (to insert @Resources)
 - get Datasource object from InitContext.lookup(jdbc/basename);
 - Datasource.getConnetction() returns Connection
 
 or, instead of glassfish admin and web.xml, set up glassfish-resource.xml
+
+or, using asadmin:
+asadmin create-jdbc-connection-pool --datasourceclassname org.h2.jdbcx.JdbcDataSource --restype javax.sql.DataSource --property user=admin:password=admin:url="jdbc\\:h2\\:C\\:/Users/stas/Documents/evo/h2test" h2test
+asadmin create-jdbc-resource --connectionpoolid h2test --jndi_name jdbc/h2test
+asadmin ping-connection-pool --appname evo-1.0-SNAPSHOT java:app/h2test
 
 ---
 
