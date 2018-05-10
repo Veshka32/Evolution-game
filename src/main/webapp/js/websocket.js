@@ -3,7 +3,6 @@ var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
 var player;
 
-
 function onMessage(event) {
     var game = JSON.parse(event.data);
     var content = document.getElementById("content");
@@ -75,7 +74,6 @@ function leave() {
     var json=JSON.stringify({"player":player,"move":"Leave"});
     socket.send(json);
     location.assign("/evo/signIn")
-
 }
 
 function init() {

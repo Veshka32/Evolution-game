@@ -24,6 +24,10 @@ public class Animal {
         propertyList.add(property);
     }
 
+    public String getOwner(){
+        return owner;
+    }
+
     public String getProperties() {
         return propertyList.stream().collect(Collectors.joining(","));
     }

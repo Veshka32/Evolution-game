@@ -118,12 +118,7 @@ public class Game {
         moves = move.toString();
         switch (move.getMove()) {
             case "Make animal":
-                Player player = playerHashMap.get(move.getPlayer());
-                Animal animal = new Animal(animalID++, player.getName());
-
-                animals.add(animal);
-                player.deleteCard(move.getId());
-                player.addAnimal(animal);
+                makeAnimal(move);
                 break;
             case "Done":
                 DONE_count++;
@@ -135,6 +130,16 @@ public class Game {
             switchStatus();
             DONE_count = 0;
         }
+    }
+
+    public void makeAnimal(Move move){
+        Player player = playerHashMap.get(move.getPlayer());
+        Animal animal = new Animal(animalID++, player.getName());
+
+        animals.add(animal);
+        animals.sort(Comparator.comparing(Animal::getOwner));
+        player.deleteCard(move.getId());
+        player.addAnimal(animal);
     }
 
     private void createCards() {
