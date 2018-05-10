@@ -31,14 +31,14 @@ public class Game {
     private int DONE_count; //default 0
     //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
 
-    public boolean containsPlayer(String name){
+    public boolean containsPlayer(String name) {
         return playerHashMap.containsKey(name);
     }
 
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
-        element.getAsJsonObject().addProperty("player",name);
+        element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("players", getAllPlayers());
         element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards());
         element.getAsJsonObject().add("animals", getAnimals());
@@ -50,25 +50,22 @@ public class Game {
         } catch (NullPointerException e) {
         }
 
-        String result = gson.toJson(element);
-        return result;
+        return gson.toJson(element);
 
     }
 
     public void addPlayer(String userName) {
-        Player player = new Player(userName);
-        playerHashMap.put(userName, player);
+        playerHashMap.put(userName, new Player(userName));
         if (isFull()) {
             switchStatus();
             start();
         }
-        //changeFlag.firePropertyChange("game", true, false);
     }
 
-    public void deletePlayer(String userName){
+    public void deletePlayer(String userName) {
         playerHashMap.remove(userName);
-        moves=userName+" has left the game";
-        phase=Phase.OFF;
+        moves = userName + " has left the game";
+        phase = Phase.OFF;
     }
 
     public void start() {
@@ -80,14 +77,12 @@ public class Game {
     }
 
     private void switchPlayerOnMove() {
-        if (playerOnMoveIndex == 0)
-            playerOnMoveIndex = 1;
-        else playerOnMoveIndex = 0;
+        playerOnMoveIndex=(playerOnMoveIndex==0) ? 1 : 0;
     }
 
     private void addCardsOnStart(Player player) {
-        for (int i=0;i<Constants.START_NUMBER_OF_CARDS.getValue();i++){
-            player.addCard(cardList.remove(cardList.size()-1));
+        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++) {
+            player.addCard(cardList.remove(cardList.size() - 1));
         }
     }
 
@@ -108,8 +103,8 @@ public class Game {
         return playerHashMap.size() == Constants.NUMBER_OF_PLAYER.getValue();
     }
 
-    public void setMoves(String s){
-        moves=s;
+    public void setMoves(String s) {
+        moves = s;
     }
 
     public void switchStatus() {
@@ -125,8 +120,8 @@ public class Game {
             case "Make animal":
                 Player player = playerHashMap.get(move.getPlayer());
                 Animal animal = new Animal(animalID++, player.getName());
-                animals.add(animal);
 
+                animals.add(animal);
                 player.deleteCard(move.getId());
                 player.addAnimal(animal);
                 break;
@@ -134,6 +129,7 @@ public class Game {
                 DONE_count++;
                 break;
         }
+
         switchPlayerOnMove();
         if (DONE_count == Constants.NUMBER_OF_PLAYER.getValue()) {
             switchStatus();
@@ -141,45 +137,31 @@ public class Game {
         }
     }
 
-    private void createCards(){
-        cardList=new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());
-        for (int i=0;i<4;i++){
-            cardList.add(new Card(cardID++,"Camouflage"));
-            cardList.add(new Card(cardID++,"Burrowing"));
-            cardList.add(new Card(cardID++,"Sharp Vision"));
-            cardList.add(new Card(cardID++,"Symbiosis"));
-            cardList.add(new Card(cardID++,"Piracy"));
-            cardList.add(new Card(cardID++,"Grazing"));
-            cardList.add(new Card(cardID++,"Tail loss"));
-            cardList.add(new Card(cardID++,"Hibernation"));
-            cardList.add(new Card(cardID++,"Poisonous"));
-            cardList.add(new Card(cardID++,"Communication"));
-            cardList.add(new Card(cardID++,"Scavenger"));
-            cardList.add(new Card(cardID++,"Running"));
-            cardList.add(new Card(cardID++,"Mimicry"));
-            cardList.add(new Card(cardID++,"Parasite","Predator"));
-            cardList.add(new Card(cardID++,"Parasite","Fat"));
-            cardList.add(new Card(cardID++,"Cooperation","Predator"));
-            cardList.add(new Card(cardID++,"Cooperation","Fat"));
-            cardList.add(new Card(cardID++,"Big","Predator"));
-            cardList.add(new Card(cardID++,"Big","Fat"));
-            cardList.add(new Card(cardID++,"Swimming"));
-            cardList.add(new Card(cardID++,"Swimming"));
-
+    private void createCards() {
+        cardList = new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());
+        for (int i = 0; i < 4; i++) {
+            cardList.add(new Card(cardID++, "Camouflage"));
+            cardList.add(new Card(cardID++, "Burrowing"));
+            cardList.add(new Card(cardID++, "Sharp Vision"));
+            cardList.add(new Card(cardID++, "Symbiosis"));
+            cardList.add(new Card(cardID++, "Piracy"));
+            cardList.add(new Card(cardID++, "Grazing"));
+            cardList.add(new Card(cardID++, "Tail loss"));
+            cardList.add(new Card(cardID++, "Hibernation"));
+            cardList.add(new Card(cardID++, "Poisonous"));
+            cardList.add(new Card(cardID++, "Communication"));
+            cardList.add(new Card(cardID++, "Scavenger"));
+            cardList.add(new Card(cardID++, "Running"));
+            cardList.add(new Card(cardID++, "Mimicry"));
+            cardList.add(new Card(cardID++, "Parasite", "Predator"));
+            cardList.add(new Card(cardID++, "Parasite", "Fat"));
+            cardList.add(new Card(cardID++, "Cooperation", "Predator"));
+            cardList.add(new Card(cardID++, "Cooperation", "Fat"));
+            cardList.add(new Card(cardID++, "Big", "Predator"));
+            cardList.add(new Card(cardID++, "Big", "Fat"));
+            cardList.add(new Card(cardID++, "Swimming"));
+            cardList.add(new Card(cardID++, "Swimming"));
         }
         Collections.shuffle(cardList);
-    }
-
-
-    //    public void addPropertyChangeListener(PropertyChangeListener listener) {
-//        changeFlag.addPropertyChangeListener(listener);
-//    }
-    public static void main(String[] args) {
-        Game g = new Game();
-        g.addPlayer("test");
-        g.addPlayer("admin");
-        g.start();
-        System.out.println(g.convertToJsonString("test"));
-        System.out.println(g.convertToJsonString("admin"));
     }
 }

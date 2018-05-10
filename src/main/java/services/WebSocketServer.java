@@ -1,11 +1,7 @@
-package servlets;
+package services;
 
 import entities.Move;
 import model.Game;
-import services.Decoder;
-import services.SocketConfigurator;
-import services.SocketsHandler;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -34,7 +30,6 @@ public class WebSocketServer {
 
     @OnMessage
     public void handleMessage(Move message, Session session) {
-        //Move mess = new Decoder().decode(message);
         if (message.getMove().equals("Leave")) {
             game.deletePlayer(message.getPlayer());
             socketsHandler.removeSession(session);
@@ -67,6 +62,4 @@ public class WebSocketServer {
             }
         }
     }
-
-
 }

@@ -17,6 +17,7 @@ public class GameStartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String name=(String) session.getAttribute("player");
+
         if (game.containsPlayer(name)){req.setAttribute("playersList",game.getAllPlayers());
             resp.sendRedirect("views/socket.html");}
 
