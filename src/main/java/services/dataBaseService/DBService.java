@@ -1,10 +1,13 @@
 package services.dataBaseService;
 //
 
+import entities.Users;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -13,7 +16,7 @@ import java.sql.*;
 @ApplicationScoped
 public class DBService {
     //@Resource(lookup = "jdbc/H2database") //using web.xml
-    @Resource(lookup = "java:app/jdbc/h2test")
+    @Resource(lookup = "jdbc/h2test")
     DataSource dataSource;
     //https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html
 
