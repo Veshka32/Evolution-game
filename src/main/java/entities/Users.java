@@ -6,12 +6,13 @@ import java.io.Serializable;
 @Entity
 //@Table(name="Users") //by default, table name=Classname
 public class Users implements Serializable {
-    @Id //primary key
+
     @GeneratedValue
-    @Column(nullable = false) //default column name=field name
+    @Column() //default column name=field name
     private Integer id;
 
-    @Column(nullable =false,unique = true)
+    @Id //primary key
+    @Column()
     private String login;
 
     @Column(length = 20)

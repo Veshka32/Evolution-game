@@ -16,8 +16,11 @@ import java.sql.*;
 @ApplicationScoped
 public class DBService {
     //@Resource(lookup = "jdbc/H2database") //using web.xml
-    @Resource(lookup = "jdbc/h2test")
+    @Resource(lookup = "java:app/jdbc/h2test")
     DataSource dataSource;
+
+    @PersistenceContext
+    EntityManager em;
     //https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html
 
     public DBService() {
