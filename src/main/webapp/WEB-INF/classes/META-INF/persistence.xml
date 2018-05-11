@@ -7,7 +7,7 @@
         <jta-data-source>java:app/jdbc/h2test</jta-data-source>
 
         <properties>
-            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/>
         </properties>
