@@ -7,7 +7,7 @@ import java.io.Serializable;
 //@Table(name="Users") //by default, table name=Classname
 public class Users implements Serializable {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column() //default column name=field name
     private Integer id;
 
