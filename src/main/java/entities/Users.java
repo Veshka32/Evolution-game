@@ -11,7 +11,7 @@ public class Users implements Serializable {
     @Id //primary key
     @Column //default column name=field name
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
 
     @Column(unique = true,nullable = false,updatable = false)

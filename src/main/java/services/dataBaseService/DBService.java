@@ -6,12 +6,17 @@ import org.omg.CORBA.PUBLIC_MEMBER;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
+import javax.transaction.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
+import java.util.List;
 
 @ApplicationScoped
 public class DBService {
@@ -72,13 +77,30 @@ public class DBService {
 
 
 
-    public boolean addUser1(String login, String password) throws NoSuchAlgorithmException,InvalidKeySpecException{
+    public boolean addUser (String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        if (!isLoginValid(login)) return false;
         byte[] salt=PasswordEncryptionService.generateSalt();
         Users user=new Users(login,PasswordEncryptionService.getEncryptedPassword(password,salt),salt);
+        UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+        transaction.begin();
         em.persist(user);
+        transaction.commit();
+
+        //
+        //transaction.begin();
+        //em.joinTransaction();
         return true;
     }
-    public boolean addUser (String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+    public boolean isLoginValid(String login){
+        TypedQuery<Long> tq=em.createQuery("SELECT c.id FROM Users c where c.login=?1",Long.class);
+        tq.setParameter(1,login);
+        List<Long> sameLogin=tq.getResultList();
+        if (sameLogin.size()>0) return false;
+        return true;
+    }
+
+    public boolean addUser1 (String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
 
         String checkUser="SELECT id FROM Users WHERE login=?";
         String add = "INSERT INTO Users (login,password,salt) VALUES(?,?,?)";

@@ -3,9 +3,11 @@ package servlets;
 import services.dataBaseService.DBService;
 
 import javax.inject.Inject;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import javax.transaction.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -43,14 +45,32 @@ public class SignUpServlet extends HttpServlet {
                 sendLoginError(req, resp);
             }
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-            sendError(req, resp);
-        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//            sendError(req, resp);
+//        }
         catch (InvalidKeySpecException e) {
             sendError(req, resp);
         } catch (NoSuchAlgorithmException e) {
             sendError(req, resp);
+        } catch (SystemException e) {
+            sendError(req, resp);
+            e.printStackTrace();
+        } catch (NamingException e) {
+            sendError(req, resp);
+            e.printStackTrace();
+        } catch (NotSupportedException e) {
+            sendError(req, resp);
+            e.printStackTrace();
+        } catch (HeuristicMixedException e) {
+            sendError(req, resp);
+            e.printStackTrace();
+        } catch (HeuristicRollbackException e) {
+            sendError(req, resp);
+            e.printStackTrace();
+        } catch (RollbackException e) {
+            sendError(req, resp);
+            e.printStackTrace();
         }
     }
 

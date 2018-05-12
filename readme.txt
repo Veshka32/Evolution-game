@@ -61,8 +61,6 @@ To avoid infinite loop while do filter on index.jsp, use req.getRequestDispatche
 prepared statement: http://www.h2database.com/html/advanced.html#sql_injection
 
 
-security for jsp (authentification)
-when create db?
-
 userdao?
-
+@test
+@EJB vs @applicationScoped
