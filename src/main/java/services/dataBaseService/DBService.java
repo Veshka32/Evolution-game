@@ -31,99 +31,110 @@ public class DBService {
     public DBService() {
     }
 
-    public void createTable() {
-        Statement statement = null;
-        Connection connection = null;
-        String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, password BINARY(20) NOT NULL, salt BINARY(8) NOT NULL, PRIMARY KEY(login))";
-        //classic way to close resource
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.createStatement();
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
-    }
 
-    public boolean isUserValid(String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
+    public boolean isUserValid1(String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
         String sql = "SELECT password,salt FROM Users WHERE login=?";
 
         //use try-with resource https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while(resultSet.next()){
-                    byte[] storedPassword=resultSet.getBytes("password");
-                    byte[] salt=resultSet.getBytes("salt");
-                    return PasswordEncryptionService.authenticate(password,storedPassword,salt);
+                while (resultSet.next()) {
+                    byte[] storedPassword = resultSet.getBytes("password");
+                    byte[] salt = resultSet.getBytes("salt");
+                    return PasswordEncryptionService.authenticate(password, storedPassword, salt);
                 }
                 return false;
             }
         }
     }
 
+    public boolean isUserValid(String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+        TypedQuery<byte[]> storedPasswordQuery=em.createQuery("select c.password from Users c where c.login=?1",byte[].class);
+        storedPasswordQuery.setParameter(1,login);
+        byte[] storedPassword=storedPasswordQuery.getSingleResult();
+
+        TypedQuery<byte[]> saltQuery=em.createQuery("select c.salt from Users c where c.login=?1",byte[].class);
+        saltQuery.setParameter(1,login);
+        byte[] salt=saltQuery.getSingleResult();
+
+        return PasswordEncryptionService.authenticate(password,storedPassword,salt);
+    }
 
 
-    public boolean addUser (String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public boolean addUser(String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         if (!isLoginValid(login)) return false;
-        byte[] salt=PasswordEncryptionService.generateSalt();
-        Users user=new Users(login,PasswordEncryptionService.getEncryptedPassword(password,salt),salt);
-        UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+        byte[] salt = PasswordEncryptionService.generateSalt();
+        Users user = new Users(login, PasswordEncryptionService.getEncryptedPassword(password, salt), salt);
+        UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         transaction.begin();
         em.persist(user);
         transaction.commit();
-
-        //
-        //transaction.begin();
-        //em.joinTransaction();
         return true;
     }
 
-    public boolean isLoginValid(String login){
-        TypedQuery<Long> tq=em.createQuery("SELECT c.id FROM Users c where c.login=?1",Long.class);
-        tq.setParameter(1,login);
-        List<Long> sameLogin=tq.getResultList();
-        if (sameLogin.size()>0) return false;
+    public boolean isLoginValid(String login) {
+        TypedQuery<Long> tq = em.createQuery("SELECT c.id FROM Users c where c.login=?1", Long.class);
+        tq.setParameter(1, login);
+        List<Long> sameLogin = tq.getResultList();
+        if (sameLogin.size() > 0) return false;
         return true;
-    }
-
-    public boolean addUser1 (String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
-
-        String checkUser="SELECT id FROM Users WHERE login=?";
-        String add = "INSERT INTO Users (login,password,salt) VALUES(?,?,?)";
-
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement p1 = connection.prepareStatement(checkUser);
-             PreparedStatement p2=connection.prepareStatement(add);
-             SQLCloseable finish = connection::rollback) { //This will always call rollback(), but after a successful completion of commit(), the rollback will become a no-op as it resets the state to that after the last successful completion of commit()
-            connection.setAutoCommit(false);
-            p1.setString(1, login);
-            try (ResultSet resultSet = p1.executeQuery()) {
-                if (resultSet.isBeforeFirst()) return false;//isBeforeFirst return false if no rows in resultSet
-
-            byte[] salt=PasswordEncryptionService.generateSalt();
-            p2.setString(1,login);
-            p2.setBytes(2, PasswordEncryptionService.getEncryptedPassword(password,salt));
-            p2.setBytes(3,salt);
-            p2.executeUpdate();}
-            connection.commit();
-            return true;
-        }
     }
 }
+
+//    public void createTable() {
+//        Statement statement = null;
+//        Connection connection = null;
+//        String sql = "CREATE TABLE IF NOT EXISTS Users (id INTEGER not NULL AUTO_INCREMENT, login VARCHAR(255) NOT NULL, password BINARY(20) NOT NULL, salt BINARY(8) NOT NULL, PRIMARY KEY(login))";
+//        //classic way to close resource
+//        try {
+//            connection = dataSource.getConnection();
+//            statement = connection.createStatement();
+//            statement.executeUpdate(sql);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (statement != null) {
+//                try {
+//                    statement.close();
+//                } catch (SQLException e) {
+//                }
+//            }
+//            if (connection != null) {
+//                try {
+//                    connection.close();
+//                } catch (SQLException e) {
+//                }
+//            }
+//        }
+//    }
+
+
+//    public boolean addUser1 (String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
+//
+//        String checkUser="SELECT id FROM Users WHERE login=?";
+//        String add = "INSERT INTO Users (login,password,salt) VALUES(?,?,?)";
+//
+//        try (Connection connection = dataSource.getConnection();
+//             PreparedStatement p1 = connection.prepareStatement(checkUser);
+//             PreparedStatement p2=connection.prepareStatement(add);
+//             SQLCloseable finish = connection::rollback) { //This will always call rollback(), but after a successful completion of commit(), the rollback will become a no-op as it resets the state to that after the last successful completion of commit()
+//            connection.setAutoCommit(false);
+//            p1.setString(1, login);
+//            try (ResultSet resultSet = p1.executeQuery()) {
+//                if (resultSet.isBeforeFirst()) return false;//isBeforeFirst return false if no rows in resultSet
+//
+//            byte[] salt=PasswordEncryptionService.generateSalt();
+//            p2.setString(1,login);
+//            p2.setBytes(2, PasswordEncryptionService.getEncryptedPassword(password,salt));
+//            p2.setBytes(3,salt);
+//            p2.executeUpdate();}
+//            connection.commit();
+//            return true;
+//        }
+//    }
+
 //
 //    public DBService(){}
 //
