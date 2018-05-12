@@ -4,18 +4,20 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table
 //@Table(name="Users") //by default, table name=Classname
 public class Users implements Serializable {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column() //default column name=field name
-    private Integer id;
-
     @Id //primary key
-    @Column()
+    @Column //default column name=field name
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+
+    @Column(unique = true,nullable = false,updatable = false)
     private String login;
 
-    @Column(length = 20)
+    @Column(length = 20,nullable = false)
     private byte[] password;
 
     @Column(length = 8)
@@ -57,11 +59,11 @@ public class Users implements Serializable {
         this.salt = salt;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 

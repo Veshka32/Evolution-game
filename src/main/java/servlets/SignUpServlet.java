@@ -42,9 +42,12 @@ public class SignUpServlet extends HttpServlet {
             } else {
                 sendLoginError(req, resp);
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
             sendError(req, resp);
-        } catch (InvalidKeySpecException e) {
+        }
+        catch (InvalidKeySpecException e) {
             sendError(req, resp);
         } catch (NoSuchAlgorithmException e) {
             sendError(req, resp);

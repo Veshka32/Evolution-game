@@ -71,7 +71,14 @@ public class DBService {
     }
 
 
-    public boolean addUser(String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+    public boolean addUser1(String login, String password) throws NoSuchAlgorithmException,InvalidKeySpecException{
+        byte[] salt=PasswordEncryptionService.generateSalt();
+        Users user=new Users(login,PasswordEncryptionService.getEncryptedPassword(password,salt),salt);
+        em.persist(user);
+        return true;
+    }
+    public boolean addUser (String login, String password) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
 
         String checkUser="SELECT id FROM Users WHERE login=?";
         String add = "INSERT INTO Users (login,password,salt) VALUES(?,?,?)";
