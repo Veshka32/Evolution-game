@@ -63,4 +63,4 @@ prepared statement: http://www.h2database.com/html/advanced.html#sql_injection
 
 userdao?
 @test
-@EJB vs @applicationScoped
+@EJB

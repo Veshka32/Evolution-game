@@ -18,16 +18,14 @@ public class AsyncServlet extends HttpServlet {
     private List<AsyncContext> contexts = new LinkedList<>();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         final AsyncContext asyncContext = request.startAsync(request, response);
         asyncContext.setTimeout(10 * 60 * 1000);
         contexts.add(asyncContext);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<AsyncContext> asyncContexts = new ArrayList<>(this.contexts);
         this.contexts.clear();
         String name = request.getParameter("name");
@@ -45,7 +43,6 @@ public class AsyncServlet extends HttpServlet {
                 writer.println(htmlMessage);
                 writer.flush();
                 asyncContext.complete();
-            } catch (Exception ex) {
             }
         }
 

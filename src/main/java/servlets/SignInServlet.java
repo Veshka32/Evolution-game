@@ -1,6 +1,5 @@
 package servlets;
 
-import services.dataBaseService.DBService;
 import services.dataBaseService.UsersDAO;
 
 import javax.inject.Inject;
@@ -18,7 +17,7 @@ public class SignInServlet extends HttpServlet {
 //    @Inject
 //    DBService dbService;
     @Inject
-    UsersDAO usersDAO;
+    private UsersDAO usersDAO;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,21 +39,17 @@ public class SignInServlet extends HttpServlet {
             } else {
                 sendLoginError(req, resp);
             }
-        } catch (SQLException e) {
-            sendSystemError(req, resp);
-        } catch (InvalidKeySpecException e) {
-            sendSystemError(req, resp);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             sendSystemError(req, resp);
         }
     }
 
-    void sendSystemError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void sendSystemError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("signUpError", "System error, try again");
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 
-    void sendLoginError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void sendLoginError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("signInError", "Sorry,invalid login or password");
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }

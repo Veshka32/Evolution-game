@@ -11,7 +11,7 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/start")
 public class GameStartServlet extends HttpServlet {
     @Inject
-    Game game;
+    private Game game;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -24,7 +24,8 @@ public class GameStartServlet extends HttpServlet {
         else if (game.isFull()) {
             req.setAttribute("message", "Sorry,game is full");
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
-        } else {
+        }
+        else {
             game.addPlayer(name);
             req.setAttribute("playersList",game.getAllPlayers());
             resp.sendRedirect("views/socket.html");

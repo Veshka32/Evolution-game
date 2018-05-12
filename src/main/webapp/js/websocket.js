@@ -16,7 +16,7 @@ function onMessage(event) {
     var yourStatus = document.getElementById("status");
 
     if (game.status == true) {
-        yourStatus.innerText = "It's your turn!"
+        yourStatus.innerText = "It's your turn!";
         status = true;
     }
     else {
@@ -88,8 +88,7 @@ function init() {
 function buildAnimal(an) {
     var animDiv = document.createElement("div");
     animDiv.setAttribute("class", "animal");
-    var id = an.id;
-    animDiv.innerText += id;
+    animDiv.innerText += an.id;
 
     var owner = document.createElement("span");
     owner.innerHTML = "<br/>Owner: " + an.owner;
@@ -102,7 +101,7 @@ function buildAnimal(an) {
             animDiv.innerText += value + "<br/>";
         })
     }
-    addEventListener("click",function (ev) { alert(draggedProperty) })
+    addEventListener("click",function (ev) { alert(draggedProperty) });
     return animDiv;
 }
 
@@ -122,10 +121,10 @@ function buildCard(card) {
 }
 
 
-function getCookie(player) {
-    match = document.cookie.match(new RegExp(player + '=([^;]+)'));
-    if (match) return match[1];
-}
+// function getCookie(player) {
+//     match = document.cookie.match(new RegExp(player + '=([^;]+)'));
+//     if (match) return match[1];
+// }
 
 
 

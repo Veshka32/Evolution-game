@@ -13,14 +13,13 @@ import java.sql.SQLException;
 @WebListener
 public class ContextConfig implements ServletContextListener {
     @Inject
-    Game game;
+    private Game game;
 
-    @Inject
-    DBService dbService;
+//    @Inject
+//    DBService dbService;
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        //game.addPropertyChangeListener(new GameChangeListener());
         ServletContext servletContext = event.getServletContext();
         servletContext.setAttribute("game", game);
         //dbService.createTable();

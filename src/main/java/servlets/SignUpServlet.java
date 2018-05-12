@@ -1,6 +1,5 @@
 package servlets;
 
-import services.dataBaseService.DBService;
 import services.dataBaseService.UsersDAO;
 
 import javax.inject.Inject;
@@ -12,7 +11,6 @@ import javax.transaction.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/signUp")
 public class SignUpServlet extends HttpServlet {
@@ -20,7 +18,7 @@ public class SignUpServlet extends HttpServlet {
 //    @Inject
 //    DBService dbService;
     @Inject
-    UsersDAO usersDAO;
+    private UsersDAO usersDAO;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,37 +46,18 @@ public class SignUpServlet extends HttpServlet {
                 sendLoginError(req, resp);
             }
         }
-        catch (InvalidKeySpecException e) {
-            sendError(req, resp);
-        } catch (NoSuchAlgorithmException e) {
-            sendError(req, resp);
-        } catch (SystemException e) {
-            sendError(req, resp);
-            e.printStackTrace();
-        } catch (NamingException e) {
-            sendError(req, resp);
-            e.printStackTrace();
-        } catch (NotSupportedException e) {
-            sendError(req, resp);
-            e.printStackTrace();
-        } catch (HeuristicMixedException e) {
-            sendError(req, resp);
-            e.printStackTrace();
-        } catch (HeuristicRollbackException e) {
-            sendError(req, resp);
-            e.printStackTrace();
-        } catch (RollbackException e) {
+        catch (InvalidKeySpecException | NoSuchAlgorithmException | SystemException | NamingException | NotSupportedException | HeuristicRollbackException | HeuristicMixedException | RollbackException e) {
             sendError(req, resp);
             e.printStackTrace();
         }
     }
 
-    void sendError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void sendError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("signUpError", "System error, try again");
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 
-    void sendLoginError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void sendLoginError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("signUpError", "Sorry, this login is already in use.");
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }

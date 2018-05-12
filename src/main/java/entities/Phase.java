@@ -5,6 +5,6 @@ public enum Phase {
     OFF,
     EVOLUTION,
     FEED,
-    DEAD;
+    DEAD
 
 }

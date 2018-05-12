@@ -49,7 +49,7 @@
                             var contentElement = document.getElementById("content");
                             contentElement.innerHTML = xmlhttp.responseText + contentElement.innerHTML;
                         }
-                    }
+                    };
                     xmlhttp.open("GET", "async?t="+new Date(), true);
                     xmlhttp.send();
                 }

@@ -10,7 +10,7 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "/index.jsp")
 public class MainPageFilter implements Filter {
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         //System.out.println("filter go");
     }
 

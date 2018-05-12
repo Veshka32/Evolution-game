@@ -10,7 +10,7 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "/views/*")
 public class LoginFilter implements Filter {
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         //System.out.println("filter go");
     }
 
