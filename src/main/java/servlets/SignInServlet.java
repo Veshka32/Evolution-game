@@ -1,6 +1,7 @@
 package servlets;
 
 import services.dataBaseService.DBService;
+import services.dataBaseService.UsersDAO;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -14,8 +15,10 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/signIn")
 public class SignInServlet extends HttpServlet {
 
+//    @Inject
+//    DBService dbService;
     @Inject
-    DBService dbService;
+    UsersDAO usersDAO;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,7 +32,7 @@ public class SignInServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         try {
-            if (dbService.isUserValid(login, password)) {
+            if (usersDAO.isUserValid(login, password)) {
                 Cookie cookie = new Cookie("player", login);
                 resp.addCookie(cookie);
                 session.setAttribute("player", login);

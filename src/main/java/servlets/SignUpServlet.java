@@ -1,6 +1,7 @@
 package servlets;
 
 import services.dataBaseService.DBService;
+import services.dataBaseService.UsersDAO;
 
 import javax.inject.Inject;
 import javax.naming.NamingException;
@@ -16,8 +17,10 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/signUp")
 public class SignUpServlet extends HttpServlet {
 
+//    @Inject
+//    DBService dbService;
     @Inject
-    DBService dbService;
+    UsersDAO usersDAO;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,7 +39,7 @@ public class SignUpServlet extends HttpServlet {
         }
 
         try {
-            if (dbService.addUser(login, password)) {
+            if (usersDAO.addUser(login, password)) {
                 Cookie cookie = new Cookie("player", login);
                 resp.addCookie(cookie);
                 session.setAttribute("player", login);
@@ -45,10 +48,6 @@ public class SignUpServlet extends HttpServlet {
                 sendLoginError(req, resp);
             }
         }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//            sendError(req, resp);
-//        }
         catch (InvalidKeySpecException e) {
             sendError(req, resp);
         } catch (NoSuchAlgorithmException e) {
