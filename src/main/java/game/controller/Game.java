@@ -18,7 +18,6 @@ public class Game {
     private transient Phase[] phases = Phase.values();
     private transient int currentState; //default 0
     private transient HashMap<String, Player> playerHashMap = new HashMap<>();
-
     private transient int playerOnMoveIndex;
     private transient List<Card> cardList;
     private transient int DONE_count; //default 0
@@ -106,9 +105,6 @@ public class Game {
     public void makeMove(Move move) {
         moves = move.toString();
         switch (move.getMove()) {
-            case "MakeAnimal":
-                makeAnimal(move);
-                break;
             case "EndPhase":
                 DONE_count++;
                 break;
@@ -125,10 +121,12 @@ public class Game {
     }
 
     public void playProperty(Move move) {
+        if (move.getProperty().equals("MakeAnimal")) makeAnimal(move);
+        else{
         Player player = playerHashMap.get(move.getPlayer());
         player.deleteCard(move.getCardId());
         Animal animal = player.getAnimal(move.getAnimalId());
-        animal.addProperty(move.getProperty());
+        animal.addProperty(move.getProperty());}
 
     }
 

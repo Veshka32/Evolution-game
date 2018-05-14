@@ -53,9 +53,11 @@ function onMessage(event) {
 
 function playProperty(property, cardId) {
     if (status) {
-        if (property==="Make animal") {
-            var json = JSON.stringify({"player": player, "move": "MakeAnimal", "cardId": cardId});
-        socket.send(json);
+        if (property==="MakeAnimal") {
+            draggedProperty=property;
+            document.getElementById("doing").innerHTML="Make animal from card # "+cardId;
+            //var json = JSON.stringify({"player": player, "move": "MakeAnimal", "cardId": cardId});
+        //socket.send(json);
         }
         else {
             draggedProperty=property;
@@ -113,7 +115,7 @@ function buildCard(card) {
         cardDiv.appendChild(buildButton(card.extraProperty, card.id));
     }
 
-    cardDiv.appendChild(buildButton("Make animal", card.id));
+    cardDiv.appendChild(buildButton("MakeAnimal", card.id));
     return cardDiv;
 }
 
@@ -121,9 +123,11 @@ function makeMove() {
     if(status)
     {
         var json = JSON.stringify({"player": player, "cardId":playedCardId, "animalId":targedAnimalId,"move": "PlayProperty","property":draggedProperty});
+        alert("Your move is: "+json);
     socket.send(json);
     targedAnimalId=null;
     draggedProperty=null;
+    playedCardId=null;
     document.getElementById("doing").innerHTML="";
     }
 
@@ -131,7 +135,8 @@ function makeMove() {
 function endPhase() {
     if (status)
     {var json = JSON.stringify({"player": player, "move": "EndPhase"});
-    socket.send(json);}
+    socket.send(json);
+    }
 }
 
 function leave() {

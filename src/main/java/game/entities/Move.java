@@ -9,13 +9,6 @@ public class Move {
     int cardId;
     int animalId;
 
-
-    public Move(String player, int cardId, String move) {
-        this.move = move;
-        this.cardId = cardId;
-        this.player = player;
-    }
-
     public Move(String player,int cardId,int animalId,String move,String property){
         this.move = move;
         this.cardId = cardId;
