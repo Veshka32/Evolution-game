@@ -21,9 +21,7 @@ public class Player {
         return name;
     }
 
-    public void addCard(Card card){
-        cards.add(card);
-    }
+
 
     public JsonArray getCards(){
 //        StringBuilder builder=new StringBuilder();
@@ -37,6 +35,10 @@ public class Player {
         return jsonArray;
     }
 
+    public void addCard(Card card){
+        cards.add(card);
+    }
+
     public void deleteCard(int id){
         for (int i=0;i<cards.size();i++){
             if (cards.get(i).getId()==id){
@@ -48,6 +50,15 @@ public class Player {
 
     public void addAnimal(Animal animal){
         animals.add(animal);
+    }
+
+    public Animal getAnimal(int id){
+        for (int i=0;i<animals.size();i++){
+            if (animals.get(i).getId()==id){
+                return animals.get(i);
+            }
+        }
+        return null;
     }
 
    public boolean hasCards(){

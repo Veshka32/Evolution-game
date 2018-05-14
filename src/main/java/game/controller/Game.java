@@ -14,19 +14,20 @@ import java.util.*;
 @ApplicationScoped
 public class Game {
 
-    private int animalID = Constants.START_CARD_INDEX.getValue();
-    private int cardID = Constants.START_CARD_INDEX.getValue();
-    private Phase[] phases = Phase.values();
-    private int currentState; //default 0
-    Phase phase = Phase.OFF;
-    private int playerOnMoveIndex;
-    private HashMap<String, Player> playerHashMap = new HashMap<>();
-    private String[] playersNames;
+    private transient int animalID = Constants.START_CARD_INDEX.getValue();
+    private transient int cardID = Constants.START_CARD_INDEX.getValue();
+    private transient Phase[] phases = Phase.values();
+    private transient int currentState; //default 0
+    private transient int playerOnMoveIndex;
+    private transient HashMap<String, Player> playerHashMap = new HashMap<>();
+    private transient String[] playersNames;
+    private transient List<Animal> animalList;
+    private transient List<Card> cardList;
+    private transient int DONE_count; //default 0
+
+    //go to json
     private String moves = "New game started";
-    private List<Animal> animals = new ArrayList<>();
-    private List<Card> cardList;
-    private int DONE_count; //default 0
-    //private PropertyChangeSupport changeFlag =new PropertyChangeSupport(this);
+    Phase phase = Phase.OFF;
 
     public boolean containsPlayer(String name) {
         return playerHashMap.containsKey(name);
@@ -35,10 +36,10 @@ public class Game {
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
-        element.getAsJsonObject().addProperty("player", name);
+        element.getAsJsonObject().addProperty("player", name); //with string
         element.getAsJsonObject().addProperty("players", getAllPlayers());
-        element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards());
-        element.getAsJsonObject().add("animals", getAnimals());
+        element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards()); //with json array
+        element.getAsJsonObject().add("animals", getAnimalList());
 
         try {
             if (playersNames[playerOnMoveIndex].equals(name))
@@ -67,6 +68,7 @@ public class Game {
 
     public void start() {
         createCards();
+        animalList=new ArrayList<>();
         playersNames = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
         for (String name : playersNames)
             addCardsOnStart(playerHashMap.get(name));
@@ -88,9 +90,9 @@ public class Game {
         return Arrays.toString(all);
     }
 
-    private JsonArray getAnimals() {
+    private JsonArray getAnimalList() {
         Gson json = new Gson();
-        JsonElement element = json.toJsonTree(animals, new TypeToken<List<Animal>>() {
+        JsonElement element = json.toJsonTree(animalList, new TypeToken<List<Animal>>() {
         }.getType());
         JsonArray jsonArray = element.getAsJsonArray();
         return jsonArray;
@@ -114,11 +116,14 @@ public class Game {
     public void makeMove(Move move) {
         moves = move.toString();
         switch (move.getMove()) {
-            case "Make animal":
+            case "MakeAnimal":
                 makeAnimal(move);
                 break;
-            case "Done":
+            case "EndPhase":
                 DONE_count++;
+                break;
+            case "PlayProperty":
+                playProperty(move);
                 break;
         }
 
@@ -129,13 +134,21 @@ public class Game {
         }
     }
 
+    public void playProperty(Move move){
+        Player player=playerHashMap.get(move.getPlayer());
+        player.deleteCard(move.getCardId());
+        Animal animal=player.getAnimal(move.getAnimalId());
+        animal.addProperty(move.getProperty());
+
+    }
+
     public void makeAnimal(Move move){
         Player player = playerHashMap.get(move.getPlayer());
         Animal animal = new Animal(animalID++, player.getName());
 
-        animals.add(animal);
-        animals.sort(Comparator.comparing(Animal::getOwner));
-        player.deleteCard(move.getId());
+        animalList.add(animal);
+        animalList.sort(Comparator.comparing(Animal::getOwner));
+        player.deleteCard(move.getCardId());
         player.addAnimal(animal);
     }
 
@@ -165,5 +178,13 @@ public class Game {
             cardList.add(new Card(cardID++, "Swimming"));
         }
         Collections.shuffle(cardList);
+    }
+
+    public static void main(String[] args) {
+        Game game=new Game();
+        game.addPlayer("test");
+        game.start();
+        String str=game.convertToJsonString("test");
+        System.out.println(str);
     }
 }

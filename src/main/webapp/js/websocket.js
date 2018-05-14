@@ -4,6 +4,7 @@ socket.onmessage = onMessage;
 var player;
 var draggedProperty;
 var targedAnimalId;
+var playedCardId;
 
 function onMessage(event) {
     var game = JSON.parse(event.data);
@@ -11,7 +12,7 @@ function onMessage(event) {
     content.innerText = "";
 
     player=game.player;
-    document.getElementById("player").innerText =game.player;
+    document.getElementById("player").innerText =player;
     document.getElementById("phase").innerText = game.phase;
     document.getElementById("players").innerText = game.players;
     var yourStatus = document.getElementById("status");
@@ -50,23 +51,24 @@ function onMessage(event) {
     log.innerHTML += move;
 }
 
-function playProperty(property, id) {
+function playProperty(property, cardId) {
     if (status) {
         if (property==="Make animal") {
-            var json = JSON.stringify({"player": player, "move": property, "id": id});
+            var json = JSON.stringify({"player": player, "move": "MakeAnimal", "cardId": cardId});
         socket.send(json);
         }
         else {
             draggedProperty=property;
+            playedCardId=cardId;
             alert("Click animal");
         }
     }
 }
 
-function buildButton(name, id) {
+function buildButton(name, cardId) {
     var property = document.createElement("button");
     property.addEventListener("click", function () {
-        playProperty(name, id);
+        playProperty(name, cardId);
     });
     property.innerText = name;
     return property;
@@ -75,22 +77,26 @@ function buildButton(name, id) {
 function buildAnimal(an) {
     var animDiv = document.createElement("div");
     animDiv.setAttribute("class", "animal");
-    animDiv.innerText += an.id;
+    animDiv.innerHTML += an.id+"<br/>";
 
     var owner = document.createElement("span");
-    owner.innerHTML = "<br/>Owner: " + an.owner;
+    owner.innerHTML = "Owner: " + an.owner+"<br/>";
     animDiv.appendChild(owner);
 
-    if (an.hasOwnProperty("properties")) {
-        var properties = an.properties;
-        var propArray = properties.split(",");
-        propArray.forEach(function (value) {
-            animDiv.innerText += value + "<br/>";
-        })
+    var props=document.createElement("span");
+    props.innerHTML="Properties:<br/>";
+    animDiv.appendChild(props);
+
+    if (an.hasOwnProperty("propertyList")) {
+
+        for (var i = 0; i < an.propertyList.length; i++) {
+            var prop = an.propertyList[i];
+            props.innerHTML+=prop+"<br/>";
+        }
     }
     animDiv.addEventListener("click",function () {
         targedAnimalId=an.id;
-        document.getElementById("doing").innerHTML+="property="+draggedProperty+"<br/>"+"animal="+targedAnimalId+"<br/>";
+        document.getElementById("doing").innerHTML+="property="+draggedProperty+"<br/>"+"animal="+targedAnimalId;
         //alert("an="+targedAnimalId+" , prop="+draggedProperty);
     });
     return animDiv;
@@ -114,16 +120,17 @@ function buildCard(card) {
 function makeMove() {
     if(status)
     {
-        var json = JSON.stringify({"player": player, "move": "makeMove"});
+        var json = JSON.stringify({"player": player, "cardId":playedCardId, "animalId":targedAnimalId,"move": "PlayProperty","property":draggedProperty});
     socket.send(json);
     targedAnimalId=null;
     draggedProperty=null;
+    document.getElementById("doing").innerHTML="";
     }
 
 }
-function done() {
+function endPhase() {
     if (status)
-    {var json = JSON.stringify({"player": player, "move": "Done"});
+    {var json = JSON.stringify({"player": player, "move": "EndPhase"});
     socket.send(json);}
 }
 

@@ -27,17 +27,7 @@ public class Animal {
         return owner;
     }
 
-    public String getProperties() {
-        return propertyList.stream().collect(Collectors.joining(","));
-    }
+    public int getId(){return id;}
 
-    public String convertToJsonString() {
-        JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        builder.add("id", id)
-                .add("owner", owner);
-        if (!propertyList.isEmpty())
-            builder.add("properties", getProperties());
-        JsonObject json = builder.build();
-        return json.toString();
-    }
+
 }

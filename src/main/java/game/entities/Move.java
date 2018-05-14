@@ -5,12 +5,23 @@ import com.google.gson.Gson;
 public class Move {
     String player;
     String move;
-    int id;
+    String property;
+    int cardId;
+    int animalId;
 
-    public Move(String player, int id, String move) {
+
+    public Move(String player, int cardId, String move) {
         this.move = move;
-        this.id = id;
+        this.cardId = cardId;
         this.player = player;
+    }
+
+    public Move(String player,int cardId,int animalId,String move,String property){
+        this.move = move;
+        this.cardId = cardId;
+        this.animalId=animalId;
+        this.player = player;
+        this.property=property;
     }
 
     public String getMove() {
@@ -21,7 +32,9 @@ public class Move {
         return player;
     }
 
-    public int getId(){return id;}
+    public int getCardId(){return cardId;}
+    public int getAnimalId(){return animalId;}
+    public String getProperty(){return property;}
 
 
     public String toString() {
