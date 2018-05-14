@@ -1,11 +1,10 @@
 package game.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
 import game.entities.*;
 import game.constants.Constants;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.util.*;
@@ -18,16 +17,17 @@ public class Game {
     private transient int cardID = Constants.START_CARD_INDEX.getValue();
     private transient Phase[] phases = Phase.values();
     private transient int currentState; //default 0
-    private transient int playerOnMoveIndex;
     private transient HashMap<String, Player> playerHashMap = new HashMap<>();
-    private transient String[] playersNames;
+
+    private transient int playerOnMoveIndex;
     private transient List<Card> cardList;
     private transient int DONE_count; //default 0
 
     //go to json
     private String moves = "New game started";
     private Phase phase = Phase.OFF;
-    private  List<Animal> animalList;
+    private List<Animal> animalList;
+    private ArrayList<String> players =new ArrayList<>();
 
     public boolean containsPlayer(String name) {
         return playerHashMap.containsKey(name);
@@ -37,11 +37,10 @@ public class Game {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
-        element.getAsJsonObject().addProperty("players", getAllPlayers());
         element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards()); //with json array
 
         try {
-            if (playersNames[playerOnMoveIndex].equals(name))
+            if (players.get(playerOnMoveIndex).equals(name))
                 element.getAsJsonObject().addProperty("status", true);
             else element.getAsJsonObject().addProperty("status", false);
         } catch (NullPointerException e) {
@@ -53,6 +52,7 @@ public class Game {
 
     public void addPlayer(String userName) {
         playerHashMap.put(userName, new Player(userName));
+        players.add(userName);
         if (isFull()) {
             switchStatus();
             start();
@@ -67,15 +67,15 @@ public class Game {
 
     public void start() {
         createCards();
-        animalList=new ArrayList<>();
-        playersNames = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
-        for (String name : playersNames)
+        animalList = new ArrayList<>();
+        //players = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
+        for (String name : players)
             addCardsOnStart(playerHashMap.get(name));
         playerOnMoveIndex = 0;
     }
 
     private void switchPlayerOnMove() {
-        playerOnMoveIndex=(playerOnMoveIndex==0) ? 1 : 0;
+        playerOnMoveIndex = (playerOnMoveIndex == 0) ? 1 : 0;
     }
 
     private void addCardsOnStart(Player player) {
@@ -85,8 +85,7 @@ public class Game {
     }
 
     public String getAllPlayers() {
-        String[] all = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
-        return Arrays.toString(all);
+        return players.toString();
     }
 
     public boolean isFull() {
@@ -125,15 +124,15 @@ public class Game {
         }
     }
 
-    public void playProperty(Move move){
-        Player player=playerHashMap.get(move.getPlayer());
+    public void playProperty(Move move) {
+        Player player = playerHashMap.get(move.getPlayer());
         player.deleteCard(move.getCardId());
-        Animal animal=player.getAnimal(move.getAnimalId());
+        Animal animal = player.getAnimal(move.getAnimalId());
         animal.addProperty(move.getProperty());
 
     }
 
-    public void makeAnimal(Move move){
+    public void makeAnimal(Move move) {
         Player player = playerHashMap.get(move.getPlayer());
         Animal animal = new Animal(animalID++, player.getName());
 
@@ -172,13 +171,13 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game game=new Game();
+        Game game = new Game();
         //Move move=new Move("test",1,"MakeAnimal");
         game.addPlayer("test");
         game.addPlayer("pop");
         game.start();
         //game.makeMove(move);
-        String str=game.convertToJsonString("test");
+        String str = game.convertToJsonString("test");
         System.out.println(str);
     }
 }
