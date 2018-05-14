@@ -64,3 +64,6 @@ prepared statement: http://www.h2database.com/html/advanced.html#sql_injection
 userdao?
 @test
 @EJB
+
+Maven dependency scopes: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Dependency_Scope
+

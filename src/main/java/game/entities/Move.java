@@ -1,9 +1,6 @@
-package entities;
+package game.entities;
 
 import com.google.gson.Gson;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 
 public class Move {
     String player;

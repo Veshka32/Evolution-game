@@ -1,4 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@page import="model.Game" %>
+<%@page import="game.controller.Game" %>
 <% Game game=(Game)application.getAttribute("game");%>
 <%=game.playersList() %>

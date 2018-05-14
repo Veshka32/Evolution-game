@@ -1,14 +1,12 @@
-package services;
+package servlets;
 
-import model.Game;
-import services.dataBaseService.DBService;
+import game.controller.Game;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.sql.SQLException;
 
 @WebListener
 public class ContextConfig implements ServletContextListener {

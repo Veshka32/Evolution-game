@@ -1,19 +1,12 @@
-package entities;
+package game.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.spi.JsonProvider;
-import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class Player {
     private final String name;

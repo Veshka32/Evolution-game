@@ -101,7 +101,7 @@ function buildAnimal(an) {
             animDiv.innerText += value + "<br/>";
         })
     }
-    addEventListener("click",function (ev) { alert(draggedProperty) });
+    addEventListener("click",function (v) { alert(draggedProperty) });
     return animDiv;
 }
 

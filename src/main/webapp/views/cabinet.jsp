@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.Game" %>
+<%@ page import="game.controller.Game" %>
 
 <html>
 <body>

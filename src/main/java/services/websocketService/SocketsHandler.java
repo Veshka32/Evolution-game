@@ -1,4 +1,4 @@
-package services;
+package services.websocketService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.Session;

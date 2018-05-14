@@ -1,7 +1,8 @@
-package services;
+package services.websocketService;
 
-import entities.Move;
-import model.Game;
+import game.entities.Move;
+import game.controller.Game;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;

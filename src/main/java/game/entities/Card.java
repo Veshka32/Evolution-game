@@ -1,4 +1,4 @@
-package entities;
+package game.entities;
 
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;

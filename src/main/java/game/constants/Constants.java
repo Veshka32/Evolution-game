@@ -1,4 +1,4 @@
-package model;
+package game.constants;
 
 public enum Constants {
     START_NUMBER_OF_CARDS (6),

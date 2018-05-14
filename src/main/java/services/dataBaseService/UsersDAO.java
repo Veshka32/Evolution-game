@@ -1,6 +1,6 @@
 package services.dataBaseService;
 
-import entities.Users;
+import game.entities.Users;
 
 import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;

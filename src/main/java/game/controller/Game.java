@@ -1,17 +1,14 @@
-package model;
+package game.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import entities.*;
-import services.dataBaseService.DBService;
-
-import javax.annotation.PostConstruct;
+import game.entities.*;
+import game.constants.Constants;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Named
 @ApplicationScoped

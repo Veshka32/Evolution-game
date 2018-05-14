@@ -1,7 +1,7 @@
-package services;
+package services.websocketService;
 
 import com.google.gson.Gson;
-import entities.Move;
+import game.entities.Move;
 
 import javax.websocket.EndpointConfig;
 

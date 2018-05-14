@@ -1,4 +1,4 @@
-package servlets;
+package services.asyncExample;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletContext;

@@ -1,6 +1,6 @@
 package servlets;
 
-import model.Game;
+import game.controller.Game;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
