@@ -21,13 +21,13 @@ public class Game {
     private transient int playerOnMoveIndex;
     private transient HashMap<String, Player> playerHashMap = new HashMap<>();
     private transient String[] playersNames;
-    private transient List<Animal> animalList;
     private transient List<Card> cardList;
     private transient int DONE_count; //default 0
 
     //go to json
     private String moves = "New game started";
-    Phase phase = Phase.OFF;
+    private Phase phase = Phase.OFF;
+    private  List<Animal> animalList;
 
     public boolean containsPlayer(String name) {
         return playerHashMap.containsKey(name);
@@ -39,7 +39,6 @@ public class Game {
         element.getAsJsonObject().addProperty("player", name); //with string
         element.getAsJsonObject().addProperty("players", getAllPlayers());
         element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards()); //with json array
-        element.getAsJsonObject().add("animals", getAnimalList());
 
         try {
             if (playersNames[playerOnMoveIndex].equals(name))
@@ -88,14 +87,6 @@ public class Game {
     public String getAllPlayers() {
         String[] all = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
         return Arrays.toString(all);
-    }
-
-    private JsonArray getAnimalList() {
-        Gson json = new Gson();
-        JsonElement element = json.toJsonTree(animalList, new TypeToken<List<Animal>>() {
-        }.getType());
-        JsonArray jsonArray = element.getAsJsonArray();
-        return jsonArray;
     }
 
     public boolean isFull() {
@@ -182,8 +173,11 @@ public class Game {
 
     public static void main(String[] args) {
         Game game=new Game();
+        //Move move=new Move("test",1,"MakeAnimal");
         game.addPlayer("test");
+        game.addPlayer("pop");
         game.start();
+        //game.makeMove(move);
         String str=game.convertToJsonString("test");
         System.out.println(str);
     }

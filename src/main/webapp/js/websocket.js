@@ -38,9 +38,9 @@ function onMessage(event) {
         }
     }
 
-    if (game.hasOwnProperty("animals")) {
-        for (var i = 0; i < game.animals.length; i++) {
-            var animal = game.animals[i];
+    if (game.hasOwnProperty("animalList")) {
+        for (var i = 0; i < game.animalList.length; i++) {
+            var animal = game.animalList[i];
             common.appendChild(buildAnimal(animal));
         }
     }
