@@ -3,6 +3,7 @@ var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
 var player;
 var draggedProperty;
+var targedAnimalId;
 
 function onMessage(event) {
     var game = JSON.parse(event.data);
@@ -51,10 +52,14 @@ function onMessage(event) {
 
 function playProperty(property, id) {
     if (status) {
-        if (property==="Make animal")
-        {var json = JSON.stringify({"player": player, "move": property, "id": id});
-        socket.send(json);}
-        else {draggedProperty=property;alert("Click animal");}
+        if (property==="Make animal") {
+            var json = JSON.stringify({"player": player, "move": property, "id": id});
+        socket.send(json);
+        }
+        else {
+            draggedProperty=property;
+            alert("Click animal");
+        }
     }
 }
 
@@ -65,24 +70,6 @@ function buildButton(name, id) {
     });
     property.innerText = name;
     return property;
-}
-
-function done() {
-    if (status)
-        var json = JSON.stringify({"player": player, "move": "Done"});
-    socket.send(json);
-}
-
-function leave() {
-    var json=JSON.stringify({"player":player,"move":"Leave"});
-    socket.send(json);
-    location.assign("/evo/signIn")
-}
-
-function init() {
-    // document.getElementById("player").innerText = getCookie("player");
-    // player = getCookie("player");
-    // Object.freeze(player);
 }
 
 function buildAnimal(an) {
@@ -101,7 +88,11 @@ function buildAnimal(an) {
             animDiv.innerText += value + "<br/>";
         })
     }
-    addEventListener("click",function (v) { alert(draggedProperty) });
+    animDiv.addEventListener("click",function () {
+        targedAnimalId=an.id;
+        document.getElementById("doing").innerHTML+="property="+draggedProperty+"<br/>"+"animal="+targedAnimalId+"<br/>";
+        //alert("an="+targedAnimalId+" , prop="+draggedProperty);
+    });
     return animDiv;
 }
 
@@ -118,6 +109,34 @@ function buildCard(card) {
 
     cardDiv.appendChild(buildButton("Make animal", card.id));
     return cardDiv;
+}
+
+function makeMove() {
+    if(status)
+    {
+        var json = JSON.stringify({"player": player, "move": "makeMove"});
+    socket.send(json);
+    targedAnimalId=null;
+    draggedProperty=null;
+    }
+
+}
+function done() {
+    if (status)
+    {var json = JSON.stringify({"player": player, "move": "Done"});
+    socket.send(json);}
+}
+
+function leave() {
+    var json=JSON.stringify({"player":player,"move":"Leave"});
+    socket.send(json);
+    location.assign("/evo/signIn")
+}
+
+function init() {
+    // document.getElementById("player").innerText = getCookie("player");
+    // player = getCookie("player");
+    // Object.freeze(player);
 }
 
 
