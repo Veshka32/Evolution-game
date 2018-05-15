@@ -19,7 +19,7 @@ public class GameStartServlet extends HttpServlet {
         String name=(String) session.getAttribute("player");
 
         if (game.containsPlayer(name)){req.setAttribute("playersList",game.getAllPlayers());
-            resp.sendRedirect("views/socket.html");}
+        resp.sendRedirect("views/socket.html");}
 
         else if (game.isFull()) {
             req.setAttribute("message", "Sorry,game is full");
@@ -27,6 +27,7 @@ public class GameStartServlet extends HttpServlet {
         }
         else {
             game.addPlayer(name);
+            game.setMoves(name + " joined game");
             req.setAttribute("playersList",game.getAllPlayers());
             resp.sendRedirect("views/socket.html");
         }

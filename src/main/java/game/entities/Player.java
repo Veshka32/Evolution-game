@@ -24,14 +24,9 @@ public class Player {
 
 
     public JsonArray getCards(){
-//        StringBuilder builder=new StringBuilder();
-//        builder.append(cards.stream().map(x->x.convertToJsonString()).collect(Collectors.joining("/")));
-//        String result=builder.toString();
-//        return result;
         Gson json=new Gson();
         JsonElement element=json.toJsonTree(cards, new TypeToken<List<Card>>() {}.getType());
         JsonArray jsonArray = element.getAsJsonArray();
-
         return jsonArray;
     }
 

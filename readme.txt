@@ -67,3 +67,5 @@ userdao?
 
 Maven dependency scopes: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Dependency_Scope
 
+more about filters
+who and how can destroy game

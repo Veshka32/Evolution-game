@@ -8,6 +8,10 @@ var playedCardId;
 
 function onMessage(event) {
     var game = JSON.parse(event.data);
+    if (game.hasOwnProperty("Error")){
+        alert(game.Error);
+        return;
+    }
     var content = document.getElementById("content");
     content.innerText = "";
 

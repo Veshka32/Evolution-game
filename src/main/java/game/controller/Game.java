@@ -7,6 +7,8 @@ import game.constants.Constants;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.util.*;
 
 @Named
@@ -23,10 +25,10 @@ public class Game {
     private transient int DONE_count; //default 0
 
     //go to json
-    private String moves = "New game started";
+    private String moves;
     private Phase phase = Phase.OFF;
     private List<Animal> animalList;
-    private ArrayList<String> players =new ArrayList<>();
+    private String[] players;
 
     public boolean containsPlayer(String name) {
         return playerHashMap.containsKey(name);
@@ -39,19 +41,25 @@ public class Game {
         element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards()); //with json array
 
         try {
-            if (players.get(playerOnMoveIndex).equals(name))
+            if (players[playerOnMoveIndex].equals(name))
                 element.getAsJsonObject().addProperty("status", true);
             else element.getAsJsonObject().addProperty("status", false);
         } catch (NullPointerException e) {
         }
 
         return gson.toJson(element);
+    }
 
+    public String generateError(String errorText){
+        JsonObject jo= Json.createObjectBuilder()
+                .add("Error",errorText)
+                .build();
+        return jo.toString();
     }
 
     public void addPlayer(String userName) {
         playerHashMap.put(userName, new Player(userName));
-        players.add(userName);
+
         if (isFull()) {
             switchStatus();
             start();
@@ -67,7 +75,7 @@ public class Game {
     public void start() {
         createCards();
         animalList = new ArrayList<>();
-        //players = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
+        players = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
         for (String name : players)
             addCardsOnStart(playerHashMap.get(name));
         playerOnMoveIndex = 0;
