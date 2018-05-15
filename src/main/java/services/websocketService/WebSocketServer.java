@@ -51,6 +51,7 @@ public class WebSocketServer {
         for (Session s : session.getOpenSessions()) {
             try {
                 String message = game.convertToJsonString(socketsHandler.getName(s));
+                System.out.println(message);
                 s.getBasicRemote().sendText(message);
             } catch (IOException e) {
                 e.printStackTrace();

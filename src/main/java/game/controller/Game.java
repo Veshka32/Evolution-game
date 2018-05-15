@@ -19,7 +19,7 @@ public class Game {
     private transient int cardID = Constants.START_CARD_INDEX.getValue();
     private transient Phase[] phases = Phase.values();
     private transient int currentState; //default 0
-    private transient HashMap<String, Player> playerHashMap = new HashMap<>();
+    private transient String[] playersTurn;
     private transient int playerOnMoveIndex;
     private transient List<Card> cardList;
     private transient int DONE_count; //default 0
@@ -27,21 +27,22 @@ public class Game {
     //go to json
     private String moves;
     private Phase phase = Phase.OFF;
-    private List<Animal> animalList;
-    private String[] players;
+    private HashMap<String, Player> players = new HashMap<>();
+    //private List<Animal> animalList;
+
 
     public boolean containsPlayer(String name) {
-        return playerHashMap.containsKey(name);
+        return players.containsKey(name);
     }
 
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
-        element.getAsJsonObject().add("cards", playerHashMap.get(name).getCards()); //with json array
+        //element.getAsJsonObject().add("cards", players.get(name).getCards()); //with json array
 
         try {
-            if (players[playerOnMoveIndex].equals(name))
+            if (playersTurn[playerOnMoveIndex].equals(name))
                 element.getAsJsonObject().addProperty("status", true);
             else element.getAsJsonObject().addProperty("status", false);
         } catch (NullPointerException e) {
@@ -58,7 +59,7 @@ public class Game {
     }
 
     public void addPlayer(String userName) {
-        playerHashMap.put(userName, new Player(userName));
+        players.put(userName, new Player(userName));
 
         if (isFull()) {
             switchStatus();
@@ -67,17 +68,17 @@ public class Game {
     }
 
     public void deletePlayer(String userName) {
-        playerHashMap.remove(userName);
+        players.remove(userName);
         moves = userName + " has left the game";
         phase = Phase.OFF;
     }
 
     public void start() {
         createCards();
-        animalList = new ArrayList<>();
-        players = playerHashMap.keySet().toArray(new String[playerHashMap.size()]);
-        for (String name : players)
-            addCardsOnStart(playerHashMap.get(name));
+        //animalList = new ArrayList<>();
+        playersTurn = players.keySet().toArray(new String[players.size()]);
+        for (String name : playersTurn)
+            addCardsOnStart(players.get(name));
         playerOnMoveIndex = 0;
     }
 
@@ -92,11 +93,11 @@ public class Game {
     }
 
     public String getAllPlayers() {
-        return players.toString();
+        return Arrays.toString(players.keySet().toArray(new String[players.size()]));
     }
 
     public boolean isFull() {
-        return playerHashMap.size() == Constants.NUMBER_OF_PLAYER.getValue();
+        return players.size() == Constants.NUMBER_OF_PLAYER.getValue();
     }
 
     public void setMoves(String s) {
@@ -131,7 +132,7 @@ public class Game {
     public void playProperty(Move move) {
         if (move.getProperty().equals("MakeAnimal")) makeAnimal(move);
         else{
-        Player player = playerHashMap.get(move.getPlayer());
+        Player player = players.get(move.getPlayer());
         player.deleteCard(move.getCardId());
         Animal animal = player.getAnimal(move.getAnimalId());
         animal.addProperty(move.getProperty());}
@@ -139,11 +140,8 @@ public class Game {
     }
 
     public void makeAnimal(Move move) {
-        Player player = playerHashMap.get(move.getPlayer());
+        Player player = players.get(move.getPlayer());
         Animal animal = new Animal(animalID++, player.getName());
-
-        animalList.add(animal);
-        animalList.sort(Comparator.comparing(Animal::getOwner));
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
     }

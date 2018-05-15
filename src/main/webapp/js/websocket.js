@@ -1,7 +1,7 @@
 window.onload = init;
 var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
-var player;
+var playerName;
 var draggedProperty;
 var targedAnimalId;
 var playedCardId;
@@ -15,10 +15,10 @@ function onMessage(event) {
     var content = document.getElementById("content");
     content.innerText = "";
 
-    player=game.player;
-    document.getElementById("player").innerText =player;
+    playerName=game.player;
+    document.getElementById("player").innerText =playerName;
     document.getElementById("phase").innerText = game.phase;
-    document.getElementById("players").innerText = game.players;
+    document.getElementById("players").innerText = "";
     var yourStatus = document.getElementById("status");
 
     if (game.status == true) {
@@ -35,17 +35,19 @@ function onMessage(event) {
     var common = document.getElementById("common");
     common.innerText = "";
 
-    if (game.hasOwnProperty("cards")) {
-        for (var i = 0; i < game.cards.length; i++) {
-            var card = game.cards[i];
-            privat.appendChild(buildCard(card));
-        }
-    }
-
-    if (game.hasOwnProperty("animalList")) {
-        for (var i = 0; i < game.animalList.length; i++) {
-            var animal = game.animalList[i];
+    for (var key in game.players){
+        var name=key;
+        var player=game.players[key];
+        for (var i = 0; i < player.animals.length; i++) {
+            var animal = player.animals[i];
             common.appendChild(buildAnimal(animal));
+        }
+        document.getElementById("players").innerText += player.name+",";
+        if (player.name==playerName){
+            for (var i = 0; i < player.cards.length; i++) {
+                var card = player.cards[i];
+                privat.appendChild(buildCard(card));
+            }
         }
     }
 
@@ -60,7 +62,7 @@ function playProperty(property, cardId) {
         if (property==="MakeAnimal") {
             draggedProperty=property;
             document.getElementById("doing").innerHTML="Make animal from card # "+cardId;
-            //var json = JSON.stringify({"player": player, "move": "MakeAnimal", "cardId": cardId});
+            //var json = JSON.stringify({"player": playerName, "move": "MakeAnimal", "cardId": cardId});
         //socket.send(json);
         }
         else {
@@ -126,7 +128,7 @@ function buildCard(card) {
 function makeMove() {
     if(status)
     {
-        var json = JSON.stringify({"player": player, "cardId":playedCardId, "animalId":targedAnimalId,"move": "PlayProperty","property":draggedProperty});
+        var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"move": "PlayProperty","property":draggedProperty});
         alert("Your move is: "+json);
     socket.send(json);
     targedAnimalId=null;
@@ -138,13 +140,13 @@ function makeMove() {
 }
 function endPhase() {
     if (status)
-    {var json = JSON.stringify({"player": player, "move": "EndPhase"});
+    {var json = JSON.stringify({"player": playerName, "move": "EndPhase"});
     socket.send(json);
     }
 }
 
 function leave() {
-    var json=JSON.stringify({"player":player,"move":"Leave"});
+    var json=JSON.stringify({"player":playerName,"move":"Leave"});
     socket.send(json);
     location.assign("/evo/signIn")
 }
