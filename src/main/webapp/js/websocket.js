@@ -8,8 +8,9 @@ var playedCardId;
 
 function onMessage(event) {
     var game = JSON.parse(event.data);
-    if (game.hasOwnProperty("Error")){
-        alert(game.Error);
+    if (game.hasOwnProperty("error")){
+        alert(game.error);
+        clearFields();
         return;
     }
     var content = document.getElementById("content");
@@ -62,8 +63,6 @@ function playProperty(property, cardId) {
         if (property==="MakeAnimal") {
             draggedProperty=property;
             document.getElementById("doing").innerHTML="Make animal from card # "+cardId;
-            //var json = JSON.stringify({"player": playerName, "move": "MakeAnimal", "cardId": cardId});
-        //socket.send(json);
         }
         else {
             draggedProperty=property;
@@ -131,9 +130,7 @@ function makeMove() {
         var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"move": "PlayProperty","property":draggedProperty});
         alert("Your move is: "+json);
     socket.send(json);
-    targedAnimalId=null;
-    draggedProperty=null;
-    playedCardId=null;
+    clearFields();
     document.getElementById("doing").innerHTML="";
     }
 
@@ -143,6 +140,12 @@ function endPhase() {
     {var json = JSON.stringify({"player": playerName, "move": "EndPhase"});
     socket.send(json);
     }
+}
+
+function clearFields(){
+    targedAnimalId=null;
+    draggedProperty=null;
+    playedCardId=null;
 }
 
 function leave() {

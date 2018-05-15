@@ -23,12 +23,12 @@ public class Player {
 
 
 
-    public JsonArray getCards(){
-        Gson json=new Gson();
-        JsonElement element=json.toJsonTree(cards, new TypeToken<List<Card>>() {}.getType());
-        JsonArray jsonArray = element.getAsJsonArray();
-        return jsonArray;
-    }
+//    public JsonArray getCards(){
+//        Gson json=new Gson();
+//        JsonElement element=json.toJsonTree(cards, new TypeToken<List<Card>>() {}.getType());
+//        JsonArray jsonArray = element.getAsJsonArray();
+//        return jsonArray;
+//    }
 
     public void addCard(Card card){
         cards.add(card);
@@ -59,4 +59,5 @@ public class Player {
    public boolean hasCards(){
         return !cards.isEmpty();
    }
+   public boolean hasAnimals(){return !animals.isEmpty();}
 }

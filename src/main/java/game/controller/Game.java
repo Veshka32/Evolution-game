@@ -15,20 +15,20 @@ import java.util.*;
 @ApplicationScoped
 public class Game {
 
+    private transient List<Card> cardList;
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
     private transient int cardID = Constants.START_CARD_INDEX.getValue();
     private transient Phase[] phases = Phase.values();
     private transient int currentState; //default 0
     private transient String[] playersTurn;
     private transient int playerOnMoveIndex;
-    private transient List<Card> cardList;
     private transient int DONE_count; //default 0
+    private transient String error;
 
     //go to json
     private String moves;
     private Phase phase = Phase.OFF;
     private HashMap<String, Player> players = new HashMap<>();
-    //private List<Animal> animalList;
 
 
     public boolean containsPlayer(String name) {
@@ -39,7 +39,10 @@ public class Game {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
-        //element.getAsJsonObject().add("cards", players.get(name).getCards()); //with json array
+        if (error!=null){
+            element.getAsJsonObject().addProperty("error",error);
+            error=null;
+        }
 
         try {
             if (playersTurn[playerOnMoveIndex].equals(name))
@@ -51,11 +54,11 @@ public class Game {
         return gson.toJson(element);
     }
 
-    public String generateError(String errorText){
-        JsonObject jo= Json.createObjectBuilder()
-                .add("Error",errorText)
+    public void generateError(String errorText) {
+        JsonObject jo = Json.createObjectBuilder()
+                .add("Error", errorText)
                 .build();
-        return jo.toString();
+        error=jo.toString();
     }
 
     public void addPlayer(String userName) {
@@ -75,7 +78,6 @@ public class Game {
 
     public void start() {
         createCards();
-        //animalList = new ArrayList<>();
         playersTurn = players.keySet().toArray(new String[players.size()]);
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));
@@ -104,6 +106,22 @@ public class Game {
         moves = s;
     }
 
+    public void evolution(Move move) {
+        switch (move.getMove()) {
+            case "EndPhase":
+                DONE_count++;
+                break;
+            case "PlayProperty":
+                evolutionPlayProperty(move);
+                break;
+        }
+        switchPlayerOnMove();
+        if (DONE_count == Constants.NUMBER_OF_PLAYER.getValue()) {
+            switchStatus();
+            DONE_count = 0;
+        }
+    }
+
     public void switchStatus() {
         if (currentState == phases.length - 1)
             currentState = 1;
@@ -113,30 +131,24 @@ public class Game {
 
     public void makeMove(Move move) {
         moves = move.toString();
-        switch (move.getMove()) {
-            case "EndPhase":
-                DONE_count++;
-                break;
-            case "PlayProperty":
-                playProperty(move);
-                break;
-        }
-
-        switchPlayerOnMove();
-        if (DONE_count == Constants.NUMBER_OF_PLAYER.getValue()) {
-            switchStatus();
-            DONE_count = 0;
+        switch (phase) {
+            case EVOLUTION:
+                evolution(move);
         }
     }
 
-    public void playProperty(Move move) {
+    public void evolutionPlayProperty(Move move) {
         if (move.getProperty().equals("MakeAnimal")) makeAnimal(move);
-        else{
-        Player player = players.get(move.getPlayer());
-        player.deleteCard(move.getCardId());
-        Animal animal = player.getAnimal(move.getAnimalId());
-        animal.addProperty(move.getProperty());}
-
+        else {
+            Player player = players.get(move.getPlayer());
+            Animal animal = player.getAnimal(move.getAnimalId());
+            if (animal == null) {
+                generateError("It's not your animal!");
+                return;
+            }
+            player.deleteCard(move.getCardId());
+            animal.addProperty(move.getProperty());
+        }
     }
 
     public void makeAnimal(Move move) {
