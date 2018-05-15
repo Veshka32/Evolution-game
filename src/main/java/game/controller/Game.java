@@ -19,10 +19,10 @@ public class Game {
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
     private transient int cardID = Constants.START_CARD_INDEX.getValue();
     private transient Phase[] phases = Phase.values();
-    private transient int currentState; //default 0
-    private transient String[] playersTurn;
+    private transient int currentPhase; //default 0
+    private int whoStartPhase; //default 0
+    private transient List<String> playersTurn = new ArrayList<>();
     private transient int playerOnMoveIndex;
-    private transient int DONE_count; //default 0
     private transient String error;
 
     //go to json
@@ -38,28 +38,18 @@ public class Game {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
-        if (error!=null){
-            element.getAsJsonObject().addProperty("error",error);
-            error=null;
+        if (error != null) {
+            element.getAsJsonObject().addProperty("error", error);
+            error = null;
         }
 
-        try {
-            if (playersTurn[playerOnMoveIndex].equals(name))
-                element.getAsJsonObject().addProperty("status", true);
-            else element.getAsJsonObject().addProperty("status", false);
-        } catch (NullPointerException e) {
-        }
+        if (playersTurn.get(playerOnMoveIndex).equals(name))
+            element.getAsJsonObject().addProperty("status", true);
+        else element.getAsJsonObject().addProperty("status", false);
 
         return gson.toJson(element);
     }
-
-    public void generateError(String errorText) {
-        JsonObject jo = Json.createObjectBuilder()
-                .add("Error", errorText)
-                .build();
-        error=jo.toString();
-    }
-
+    
     public void addPlayer(String userName) {
         players.put(userName, new Player(userName));
 
@@ -77,7 +67,7 @@ public class Game {
 
     public void start() {
         createCards();
-        playersTurn = players.keySet().toArray(new String[players.size()]);
+        playersTurn = new ArrayList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));
         playerOnMoveIndex = 0;
@@ -106,30 +96,30 @@ public class Game {
     }
 
     public void evolution(Move move) {
-        try{
-        switch (move.getMove()) {
-            case "EndPhase":
-                DONE_count++;
-                break;
-            case "PlayProperty":
+        try {
+            switch (move.getMove()) {
+                case "EndPhase":
+                    playersTurn.remove(move.getPlayer());
+                    break;
+                case "PlayProperty":
                     evolutionPlayProperty(move);
-                break;
-        }
-        switchPlayerOnMove();
-        if (DONE_count == Constants.NUMBER_OF_PLAYER.getValue()) {
-            switchStatus();
-            DONE_count = 0;
-        }}
-        catch (GameException e) {
-            error=e.getMessage();
+                    break;
+            }
+            switchPlayerOnMove();
+            if (playersTurn.isEmpty()) {
+                switchStatus();
+                playersTurn = new ArrayList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
+            }
+        } catch (GameException e) {
+            error = e.getMessage();
         }
     }
 
     public void switchStatus() {
-        if (currentState == phases.length - 1)
-            currentState = 1;
-        else currentState++;
-        phase = phases[currentState];
+        if (currentPhase == phases.length - 1)
+            currentPhase = 1;
+        else currentPhase++;
+        phase = phases[currentPhase];
     }
 
     public void makeMove(Move move) {
