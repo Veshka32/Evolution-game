@@ -69,3 +69,5 @@ Maven dependency scopes: https://maven.apache.org/guides/introduction/introducti
 
 more about filters
 who and how can destroy game
+
+clear playerlist after endPhase;

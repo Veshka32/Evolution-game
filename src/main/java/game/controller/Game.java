@@ -30,7 +30,6 @@ public class Game {
     private Phase phase = Phase.OFF;
     private HashMap<String, Player> players = new HashMap<>();
 
-
     public boolean containsPlayer(String name) {
         return players.containsKey(name);
     }
@@ -107,18 +106,22 @@ public class Game {
     }
 
     public void evolution(Move move) {
+        try{
         switch (move.getMove()) {
             case "EndPhase":
                 DONE_count++;
                 break;
             case "PlayProperty":
-                evolutionPlayProperty(move);
+                    evolutionPlayProperty(move);
                 break;
         }
         switchPlayerOnMove();
         if (DONE_count == Constants.NUMBER_OF_PLAYER.getValue()) {
             switchStatus();
             DONE_count = 0;
+        }}
+        catch (GameException e) {
+            error=e.getMessage();
         }
     }
 
@@ -137,14 +140,13 @@ public class Game {
         }
     }
 
-    public void evolutionPlayProperty(Move move) {
+    public void evolutionPlayProperty(Move move) throws GameException {
         if (move.getProperty().equals("MakeAnimal")) makeAnimal(move);
         else {
             Player player = players.get(move.getPlayer());
             Animal animal = player.getAnimal(move.getAnimalId());
             if (animal == null) {
-                generateError("It's not your animal!");
-                return;
+                throw new GameException("this is not your animal");
             }
             player.deleteCard(move.getCardId());
             animal.addProperty(move.getProperty());

@@ -8,7 +8,7 @@ var playedCardId;
 
 function onMessage(event) {
     var game = JSON.parse(event.data);
-    if (game.hasOwnProperty("error")){
+    if (game.hasOwnProperty("error") & game.player==playerName){
         alert(game.error);
         clearFields();
         return;
