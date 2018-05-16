@@ -17,6 +17,8 @@ public class Animal {
     String owner;
     int cooperateToAnimal; //default 0
     int communicateToAnimal;
+    int symbiosToAnimal;
+
     int fat;
     int flagForSort;
 
@@ -43,21 +45,25 @@ public class Animal {
     }
 
     public void addDoubleProperty(String property, int id) throws GameException {
-        String[] coops = {"Symbiosis", "Cooperation", "Communication"};
-        if (!Collections.disjoint(Arrays.asList(coops), propertyList))
-            throw new GameException("These animals are already helping each other!");
 
         if (property.equals("Cooperation")) {
+            checkIfCooperate(id);
             cooperateToAnimal = id;
             flagForSort = Constants.FLAG_FOR_COOPERATION.getValue();
         }
 
         if (property.equals("Communication")) {
-            communicateToAnimal = id;
+            checkIfCooperate(id);
+            communicateToAnimal=id;
             flagForSort = Constants.FLAG_FOR_COMMUNICATION.getValue();
         }
 
         propertyList.add(property);
+    }
+
+    private void checkIfCooperate(int id) throws GameException {
+        if  (cooperateToAnimal==id || communicateToAnimal==id)
+            throw new GameException("These animals are already helping each other!");
     }
 
     public String getOwner() {

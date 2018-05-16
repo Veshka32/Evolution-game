@@ -33,7 +33,7 @@ public class EvolutionPhase {
     }
 
     private boolean isDouble(String property) {
-        return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
+        return property.equals("Cooperation") || property.equals("Communication");
     }
 
     private void processDoubleProperty(Game game, Move move) throws GameException {

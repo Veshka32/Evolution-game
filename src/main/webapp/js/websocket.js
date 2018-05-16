@@ -10,10 +10,10 @@ var secondAnimalId;
 var playedCardId;
 
 function onMessage(event) {
+    clearFields();
     var game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")){
         alert(game.error);
-        clearFields();
         return;
     }
     var content = document.getElementById("content");
@@ -162,6 +162,7 @@ function clearFields(){
     draggedProperty=null;
     playedCardId=null;
     document.getElementById("doing").innerHTML="";
+    move=null;
 }
 
 function leave() {
