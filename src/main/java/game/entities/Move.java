@@ -8,11 +8,13 @@ public class Move {
     String property;
     int cardId;
     int animalId;
+    int secondAnimalId;
 
-    public Move(String player,int cardId,int animalId,String move,String property){
+    public Move(String player,int cardId,int animalId,int secondAnimalId,String move,String property){
         this.move = move;
         this.cardId = cardId;
         this.animalId=animalId;
+        this.secondAnimalId=secondAnimalId;
         this.player = player;
         this.property=property;
     }
@@ -28,6 +30,8 @@ public class Move {
     public int getCardId(){return cardId;}
 
     public int getAnimalId(){return animalId;}
+
+    public int getSecondAnimalId(){return secondAnimalId;}
 
     public String getProperty(){return property;}
 

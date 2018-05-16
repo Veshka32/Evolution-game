@@ -6,6 +6,7 @@ var playerName;
 var move;
 var draggedProperty;
 var targedAnimalId;
+var secondAnimalId;
 var playedCardId;
 
 function onMessage(event) {
@@ -104,6 +105,11 @@ function buildAnimal(an) {
             props.innerHTML+=prop+"<br/>";
         }
     }
+
+    var totalHungry=document.createElement("span");
+    totalHungry.innerHTML="Total Hungry: "+an.totalHungry+"<br/>";
+    animDiv.appendChild(totalHungry);
+
     animDiv.addEventListener("click",function () {
         targedAnimalId=an.id;
         document.getElementById("doing").innerHTML+="property="+draggedProperty+"<br/>"+"animal="+targedAnimalId;
@@ -144,7 +150,7 @@ function endPhase() {
 }
 
 function buildMessage() {
-    var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"move": move,"property":draggedProperty});
+    var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"secondAnimalId":secondAnimalId,"move": move,"property":draggedProperty});
     alert("Your move is: "+json);
     return json;
 }

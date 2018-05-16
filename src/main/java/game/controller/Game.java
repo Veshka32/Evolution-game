@@ -48,6 +48,14 @@ public class Game {
         playersTurn.remove(name);
     }
 
+    public void sort(){
+        Collection<Player> all=players.values();
+        for (Player pl:all
+             ) {
+            pl.sortAnimals();
+        }
+    }
+
     public boolean isPhaseEnded() {
         return playersTurn.isEmpty();
     }
@@ -96,7 +104,7 @@ public class Game {
 
     public void deletePlayer(String userName) {
         players.remove(userName);
-        moves = userName + " has left the game";
+        moves = userName + " hasAnimal left the game";
         phase = Phase.START;
     }
 

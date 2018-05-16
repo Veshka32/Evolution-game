@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Player {
@@ -54,6 +55,23 @@ public class Player {
             }
         }
         return null;
+    }
+
+    public boolean hasAnimal(int id){
+        for (int i=0;i<animals.size();i++){
+            if (animals.get(i).getId()==id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void sortAnimals(){
+        animals.sort(Comparator.comparing(animal -> animal.flagForSort));
+    }
+
+    public int howManyAnimals(){
+        return animals.size();
     }
 
    public boolean hasCards(){
