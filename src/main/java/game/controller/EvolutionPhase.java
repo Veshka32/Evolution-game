@@ -33,8 +33,8 @@ public class EvolutionPhase {
                 if (animal == null) {
                     throw new GameException("this is not your animal");
                 }
-                player.deleteCard(cardID);
                 animal.addProperty(property,name);
+                player.deleteCard(cardID);
         }
         game.switchPlayerOnMove();
     }

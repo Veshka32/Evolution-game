@@ -8,6 +8,8 @@ import game.constants.Constants;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import javax.json.JsonObjectBuilder;
+import javax.json.spi.JsonProvider;
 import java.util.*;
 
 @Named
@@ -70,7 +72,7 @@ public class Game {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
-        if (error != null) {
+        if (error != null && playersTurn.get(playerOnMoveIndex).equals(name) ) {
             element.getAsJsonObject().addProperty("error", error);
         }
         element.getAsJsonObject().addProperty("playersList",Arrays.asList(players.keySet().toArray(new String[players.size()])).toString());
