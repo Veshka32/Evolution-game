@@ -111,9 +111,12 @@ function buildAnimal(an) {
     animDiv.appendChild(totalHungry);
 
     animDiv.addEventListener("click",function () {
-        targedAnimalId=an.id;
-        document.getElementById("doing").innerHTML+="property="+draggedProperty+"<br/>"+"animal="+targedAnimalId;
-        //alert("an="+targedAnimalId+" , prop="+draggedProperty);
+        if (targedAnimalId==null || targedAnimalId==undefined){targedAnimalId=an.id;}
+        else secondAnimalId=an.id;
+
+        var doing=document.getElementById("doing");
+        doing.innerHTML="play property="+draggedProperty+"<br/>"+"on animal #"+targedAnimalId;
+        if (!(secondAnimalId==null || secondAnimalId==undefined)) doing.innerText+="and animal #"+secondAnimalId;
     });
     return animDiv;
 }
@@ -150,7 +153,7 @@ function endPhase() {
 }
 
 function buildMessage() {
-    var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"secondAnimalId":secondAnimalId,"move": move,"property":draggedProperty});
+    var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"secondAnimalId":secondAnimalId,"move": move,"property":draggedProperty,"log":document.getElementById("doing").innerText});
     alert("Your move is: "+json);
     return json;
 }

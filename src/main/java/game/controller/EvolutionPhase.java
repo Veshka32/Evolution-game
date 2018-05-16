@@ -38,24 +38,29 @@ public class EvolutionPhase {
     }
 
     private void processDoubleProperty(Game game, Move move) throws GameException {
-        Player player=game.getPlayer(move.getPlayer());
-        if (player.howManyAnimals()<2) throw new GameException("You don't have enough animals");
-        if (move.getAnimalId()==move.getSecondAnimalId()) throw new GameException("You must play this property on two different animals");
-        if (!(player.hasAnimal(move.getAnimalId()) && player.hasAnimal(move.getSecondAnimalId()))) throw new GameException("It's not your animal(s)");
+        Player player = game.getPlayer(move.getPlayer());
+        if (player.howManyAnimals() < 2) throw new GameException("You don't have enough animals");
 
-        Animal animal=player.getAnimal(move.getAnimalId());
-        animal.addDoubleProperty(move.getProperty(),move.getSecondAnimalId());
+        if (move.getAnimalId() == move.getSecondAnimalId())
+            throw new GameException("You must play this property on two different animals");
 
-        Animal animal2=player.getAnimal(move.getSecondAnimalId());
-        animal2.addDoubleProperty(move.getProperty(),move.getAnimalId());
+        if (move.getAnimalId() == 0 || move.getSecondAnimalId() == 0)
+            throw new GameException("You must pick two animals to play this card");
+
+        if (!(player.hasAnimal(move.getAnimalId()) && player.hasAnimal(move.getSecondAnimalId())))
+            throw new GameException("It's not your animal(s)");
+
+        Animal animal = player.getAnimal(move.getAnimalId());
+        animal.addDoubleProperty(move.getProperty(), move.getSecondAnimalId());
+
+        Animal animal2 = player.getAnimal(move.getSecondAnimalId());
+        animal2.addDoubleProperty(move.getProperty(), move.getAnimalId());
     }
 
     private void processSimpleProperty(Game game, Move move) throws GameException {
-        Player player=game.getPlayer(move.getPlayer());
+        Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
-//        if (animal == null) {
-//            throw new GameException("It's not your animal");
-//        }
+
         animal.addProperty(move.getProperty(), move.getPlayer());
         player.deleteCard(move.getCardId());
 

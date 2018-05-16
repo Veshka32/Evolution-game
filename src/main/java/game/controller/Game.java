@@ -33,7 +33,7 @@ public class Game {
 
     public void makeMove(Move move) {
         error = null;
-        moves = move.toString();
+        moves = move.getPlayer()+" "+move.getLog();
         switch (phase) {
             case EVOLUTION:
                 try {

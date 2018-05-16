@@ -9,14 +9,16 @@ public class Move {
     int cardId;
     int animalId;
     int secondAnimalId;
+    String log;
 
-    public Move(String player,int cardId,int animalId,int secondAnimalId,String move,String property){
+    public Move(String player,int cardId,int animalId,int secondAnimalId,String move,String property,String log){
         this.move = move;
         this.cardId = cardId;
         this.animalId=animalId;
         this.secondAnimalId=secondAnimalId;
         this.player = player;
         this.property=property;
+        this.log=log;
     }
 
     public String getMove() {
@@ -25,6 +27,10 @@ public class Move {
 
     public String getPlayer() {
         return player;
+    }
+
+    public String getLog(){
+        return log;
     }
 
     public int getCardId(){return cardId;}
