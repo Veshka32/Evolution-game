@@ -25,6 +25,7 @@ public class Game {
     private transient int playerOnMoveIndex;
     private transient String error;
     private transient EvolutionPhase evolutionPhase = new EvolutionPhase();
+    private transient HashMap<Integer,Animal> animalList=new HashMap<>();
 
     //go to json
     private String moves;
@@ -144,6 +145,11 @@ public class Game {
         Animal animal = new Animal(animalID++, player.getName());
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
+        animalList.put(animal.getId(),animal);
+    }
+
+    public Animal getAnimal(int i){
+        return animalList.get(i);
     }
 
     private void createCards() {

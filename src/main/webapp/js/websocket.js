@@ -154,7 +154,6 @@ function endPhase() {
 
 function buildMessage() {
     var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"secondAnimalId":secondAnimalId,"move": move,"property":draggedProperty,"log":document.getElementById("doing").innerText});
-    alert("Your move is: "+json);
     return json;
 }
 

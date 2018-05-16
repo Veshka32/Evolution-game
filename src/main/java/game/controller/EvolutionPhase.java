@@ -17,9 +17,8 @@ public class EvolutionPhase {
                 break;
             case "EndPhase":
                 game.playerEndsPhase(move.getPlayer());
-                if (game.isPhaseEnded()) {
+                if (game.isPhaseEnded())
                     game.goToNextPhase();
-                }
                 break;
 
             case "PlayProperty":
@@ -34,7 +33,7 @@ public class EvolutionPhase {
     }
 
     private boolean isDouble(String property) {
-        return property.equals("Cooperation") || property.equals("Communication");
+        return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
     }
 
     private void processDoubleProperty(Game game, Move move) throws GameException {
@@ -60,8 +59,17 @@ public class EvolutionPhase {
     private void processSimpleProperty(Game game, Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
+        String property=move.getProperty();
 
-        animal.addProperty(move.getProperty(), move.getPlayer());
+        if (property.equals("Parasite")) {
+            if (animal!=null) throw new GameException("You can't play Parasite on your own animal");
+            Animal attackedAnimal=game.getAnimal(move.getAnimalId());
+            attackedAnimal.addProperty(property);
+
+        } else {
+            if (animal==null) throw new GameException("It's not your animal");
+            animal.addProperty(move.getProperty());
+        }
         player.deleteCard(move.getCardId());
 
     }

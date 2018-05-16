@@ -12,7 +12,7 @@ import java.util.List;
 public class Player {
     private final String name;
     List<Animal> animals=new ArrayList<>();
-    ArrayList<Card> cards=new ArrayList<>();
+    List<Card> cards=new ArrayList<>();
 
     public Player(String login){
         this.name=login;
@@ -21,15 +21,6 @@ public class Player {
     public String getName(){
         return name;
     }
-
-
-
-//    public JsonArray getCards(){
-//        Gson json=new Gson();
-//        JsonElement element=json.toJsonTree(cards, new TypeToken<List<Card>>() {}.getType());
-//        JsonArray jsonArray = element.getAsJsonArray();
-//        return jsonArray;
-//    }
 
     public void addCard(Card card){
         cards.add(card);
@@ -78,4 +69,13 @@ public class Player {
         return !cards.isEmpty();
    }
    public boolean hasAnimals(){return !animals.isEmpty();}
+
+
+
+//    public JsonArray getCards(){
+//        Gson json=new Gson();
+//        JsonElement element=json.toJsonTree(cards, new TypeToken<List<Card>>() {}.getType());
+//        JsonArray jsonArray = element.getAsJsonArray();
+//        return jsonArray;
+//    }
 }

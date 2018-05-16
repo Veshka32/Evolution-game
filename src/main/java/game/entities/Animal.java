@@ -25,7 +25,7 @@ public class Animal {
         owner = player;
     }
 
-    public void addProperty(String property, String actor) throws GameException {
+    public void addProperty(String property) throws GameException {
         if (property.equals("Scavenger") && propertyList.contains("Predator"))
             throw new GameException("Predator cannot be a scavenger");
 
@@ -35,11 +35,6 @@ public class Animal {
         if (!(property.equals("Fat")) && propertyList.contains(property))
             throw new GameException("This animal already hasAnimal property: " + property);
 
-        if (property.equals("Parasite")) {
-            if (actor.equals(owner)) throw new GameException("You can't play Parasite on your own animal");
-        } else {
-            if (!actor.equals(owner)) throw new GameException("It's not your animal");
-        }
 
         propertyList.add(property);
         if (property.equals("Fat")) fat++;
@@ -76,6 +71,11 @@ public class Animal {
     public int getFlagForSort() {
         return flagForSort;
     }
+
+    public boolean hasProperty(String property){
+        return propertyList.contains(property);
+    }
+
 
 
 }
