@@ -1,14 +1,16 @@
 window.onload = init;
 var socket = new WebSocket("ws://localhost:8080/evo/socket");
 socket.onmessage = onMessage;
+
 var playerName;
+var move;
 var draggedProperty;
 var targedAnimalId;
 var playedCardId;
 
 function onMessage(event) {
     var game = JSON.parse(event.data);
-    if (game.hasOwnProperty("error") & game.player==playerName){
+    if (game.hasOwnProperty("error") && game.player==playerName){
         alert(game.error);
         clearFields();
         return;
@@ -19,7 +21,7 @@ function onMessage(event) {
     playerName=game.player;
     document.getElementById("player").innerText =playerName;
     document.getElementById("phase").innerText = game.phase;
-    document.getElementById("players").innerText = "";
+    document.getElementById("players").innerText = game.playersList;
     var yourStatus = document.getElementById("status");
 
     if (game.status == true) {
@@ -43,7 +45,7 @@ function onMessage(event) {
             var animal = player.animals[i];
             common.appendChild(buildAnimal(animal));
         }
-        document.getElementById("players").innerText += player.name+",";
+
         if (player.name==playerName){
             for (var i = 0; i < player.cards.length; i++) {
                 var card = player.cards[i];
@@ -61,10 +63,12 @@ function onMessage(event) {
 function playProperty(property, cardId) {
     if (status) {
         if (property==="MakeAnimal") {
-            draggedProperty=property;
+            move="MakeAnimal";
+            playedCardId=cardId;
             document.getElementById("doing").innerHTML="Make animal from card # "+cardId;
         }
         else {
+            move="PlayProperty";
             draggedProperty=property;
             playedCardId=cardId;
             alert("Click animal");
@@ -127,7 +131,7 @@ function buildCard(card) {
 function makeMove() {
     if(status)
     {
-        var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"move": "PlayProperty","property":draggedProperty});
+        var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"move": move,"property":draggedProperty});
         alert("Your move is: "+json);
     socket.send(json);
     clearFields();

@@ -116,7 +116,6 @@ public class GameFSM {
 
         //define action
         Action<GameFSM> startGame = new StartGameAction<>(test);
-        Action<GameFSM> actionB = new HelloAction("Folks");
 
         /* Deterministic Transitions */
         START.addTransition(gameIsFull, EVOLUTION, startGame);

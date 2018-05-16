@@ -18,7 +18,7 @@ public class Game {
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
     private transient Phase[] phases = Phase.values();
     private transient int currentPhase; //default 0
-    private int whoStartPhase; //default 0
+    private transient int whoStartPhase; //default 0
     private transient List<String> playersTurn = new ArrayList<>();
     private transient int playerOnMoveIndex;
     private transient String error;
@@ -29,18 +29,8 @@ public class Game {
     private Phase phase = Phase.START;
     private HashMap<String, Player> players = new HashMap<>();
 
-    public static void main(String[] args) {
-        Game game = new Game();
-        //Move move=new Move("test",1,"MakeAnimal");
-        game.addPlayer("test");
-        game.addPlayer("pop");
-        game.start();
-        //game.makeMove(move);
-        String str = game.convertToJsonString("test");
-        System.out.println(str);
-    }
-
     public void makeMove(Move move) {
+        error = null;
         moves = move.toString();
         switch (phase) {
             case EVOLUTION:
@@ -61,7 +51,10 @@ public class Game {
     }
 
     public void goToNextPhase() {
-        switchStatus();
+        if (currentPhase == phases.length - 1)
+            currentPhase = 1;
+        else currentPhase++;
+        phase = phases[currentPhase];
         playersTurn = new ArrayList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
     }
 
@@ -79,10 +72,11 @@ public class Game {
         element.getAsJsonObject().addProperty("player", name); //with string
         if (error != null) {
             element.getAsJsonObject().addProperty("error", error);
-            error = null;
         }
+        element.getAsJsonObject().addProperty("playersList",Arrays.asList(players.keySet().toArray(new String[players.size()])).toString());
 
-        if (playersTurn.get(playerOnMoveIndex).equals(name))
+
+        if (playersTurn.contains(name) && playersTurn.get(playerOnMoveIndex).equals(name))
             element.getAsJsonObject().addProperty("status", true);
         else element.getAsJsonObject().addProperty("status", false);
 
@@ -93,7 +87,7 @@ public class Game {
         players.put(userName, new Player(userName));
 
         if (isFull()) {
-            switchStatus();
+            goToNextPhase();
             start();
         }
     }
@@ -134,12 +128,6 @@ public class Game {
         moves = s;
     }
 
-    public void switchStatus() {
-        if (currentPhase == phases.length - 1)
-            currentPhase = 1;
-        else currentPhase++;
-        phase = phases[currentPhase];
-    }
 
     public void makeAnimal(Move move) {
         Player player = players.get(move.getPlayer());

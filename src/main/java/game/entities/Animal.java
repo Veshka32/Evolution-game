@@ -25,7 +25,7 @@ public class Animal {
     public void addProperty(String property, String actor) throws GameException {
         if (property.equals("Scavenger")&&propertyList.contains("Predator")) throw new GameException("Predator cannot be a scavenger");
         if (property.equals("Predator")&&propertyList.contains("Scavenger")) throw new GameException("Scavenger cannot be a predator");
-        if ( !(property.equals("Fat")&&propertyList.contains(property)) ) throw new GameException("This animal already has property: "+property);
+        if ( !(property.equals("Fat"))&&propertyList.contains(property) ) throw new GameException("This animal already has property: "+property);
         if (property.equals("Parasite") && actor.equals(owner)) throw new GameException("You can't play Parasite on your own animal");
         propertyList.add(property);
     }

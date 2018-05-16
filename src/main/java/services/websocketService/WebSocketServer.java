@@ -50,8 +50,9 @@ public class WebSocketServer {
     private void sendToAll(Session session) {
         for (Session s : session.getOpenSessions()) {
             try {
-                String message = game.convertToJsonString(socketsHandler.getName(s));
-                //System.out.println(message);
+                String name=socketsHandler.getName(s);
+                String message = game.convertToJsonString(name);
+                System.out.println(message);
                 s.getBasicRemote().sendText(message);
             } catch (IOException e) {
                 e.printStackTrace();
