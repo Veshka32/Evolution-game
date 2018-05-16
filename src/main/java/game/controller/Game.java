@@ -2,13 +2,12 @@ package game.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import game.constants.Phase;
 import game.entities.*;
 import game.constants.Constants;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
-import javax.json.Json;
-import javax.json.JsonObject;
 import java.util.*;
 
 @Named
@@ -17,7 +16,6 @@ public class Game {
 
     private transient List<Card> cardList;
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
-    private transient int cardID = Constants.START_CARD_INDEX.getValue();
     private transient Phase[] phases = Phase.values();
     private transient int currentPhase; //default 0
     private int whoStartPhase; //default 0
@@ -27,7 +25,7 @@ public class Game {
 
     //go to json
     private String moves;
-    private Phase phase = Phase.OFF;
+    private Phase phase = Phase.START;
     private HashMap<String, Player> players = new HashMap<>();
 
     public boolean containsPlayer(String name) {
@@ -49,7 +47,7 @@ public class Game {
 
         return gson.toJson(element);
     }
-    
+
     public void addPlayer(String userName) {
         players.put(userName, new Player(userName));
 
@@ -62,7 +60,7 @@ public class Game {
     public void deletePlayer(String userName) {
         players.remove(userName);
         moves = userName + " has left the game";
-        phase = Phase.OFF;
+        phase = Phase.START;
     }
 
     public void start() {
@@ -151,6 +149,7 @@ public class Game {
     }
 
     private void createCards() {
+        int cardID = Constants.START_CARD_INDEX.getValue();
         cardList = new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());
         for (int i = 0; i < 4; i++) {
             cardList.add(new Card(cardID++, "Camouflage"));

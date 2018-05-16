@@ -1,8 +1,8 @@
-package game.entities;
+package game.constants;
 
 public enum Phase {
     //order means!
-    OFF,
+    START,
     EVOLUTION,
     FEED,
     DEAD
