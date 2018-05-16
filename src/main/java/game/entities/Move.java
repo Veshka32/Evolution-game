@@ -26,7 +26,9 @@ public class Move {
     }
 
     public int getCardId(){return cardId;}
+
     public int getAnimalId(){return animalId;}
+
     public String getProperty(){return property;}
 
 

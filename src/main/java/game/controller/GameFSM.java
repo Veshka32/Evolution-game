@@ -2,16 +2,12 @@ package game.controller;
 
 import game.constants.Constants;
 import game.entities.Card;
-import game.constants.Phase;
+import game.entities.Move;
 import game.entities.Player;
 import org.statefulj.fsm.FSM;
-import org.statefulj.fsm.RetryException;
 import org.statefulj.fsm.TooBusyException;
 import org.statefulj.fsm.model.Action;
 import org.statefulj.fsm.model.State;
-import org.statefulj.fsm.model.StateActionPair;
-import org.statefulj.fsm.model.Transition;
-import org.statefulj.fsm.model.impl.StateActionPairImpl;
 import org.statefulj.fsm.model.impl.StateImpl;
 import org.statefulj.persistence.memory.MemoryPersisterImpl;
 
@@ -26,12 +22,17 @@ public class GameFSM {
     private transient List<String> playersTurn = new ArrayList<>();
     private transient int playerOnMoveIndex;
     private transient String error;
+    private transient Move lastMove;
 
     //go to json
     @org.statefulj.persistence.annotations.State
     private String state;
     private String moves;
     private HashMap<String, Player> players = new HashMap<>();
+
+    public void setMove(Move move) {
+        lastMove=move;
+    }
 
     public void addPlayer(String userName) {
         players.put(userName, new Player(userName));
@@ -114,7 +115,7 @@ public class GameFSM {
         states.add(END);
 
         //define action
-        Action<GameFSM> startGame = new StartGame<>(test);
+        Action<GameFSM> startGame = new StartGameAction<>(test);
         Action<GameFSM> actionB = new HelloAction("Folks");
 
         /* Deterministic Transitions */

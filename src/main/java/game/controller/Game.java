@@ -22,14 +22,55 @@ public class Game {
     private transient List<String> playersTurn = new ArrayList<>();
     private transient int playerOnMoveIndex;
     private transient String error;
+    private transient EvolutionPhase evolutionPhase = new EvolutionPhase();
 
     //go to json
     private String moves;
     private Phase phase = Phase.START;
     private HashMap<String, Player> players = new HashMap<>();
 
+    public static void main(String[] args) {
+        Game game = new Game();
+        //Move move=new Move("test",1,"MakeAnimal");
+        game.addPlayer("test");
+        game.addPlayer("pop");
+        game.start();
+        //game.makeMove(move);
+        String str = game.convertToJsonString("test");
+        System.out.println(str);
+    }
+
+    public void makeMove(Move move) {
+        moves = move.toString();
+        switch (phase) {
+            case EVOLUTION:
+                try {
+                    evolutionPhase.playProperty(this, move);
+                } catch (GameException e) {
+                    error = e.getMessage();
+                }
+        }
+    }
+
+    public void playerEndsPhase(String name) {
+        playersTurn.remove(name);
+    }
+
+    public boolean isPhaseEnded() {
+        return playersTurn.isEmpty();
+    }
+
+    public void goToNextPhase() {
+        switchStatus();
+        playersTurn = new ArrayList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
+    }
+
     public boolean containsPlayer(String name) {
         return players.containsKey(name);
+    }
+
+    public Player getPlayer(String name) {
+        return players.get(name);
     }
 
     public String convertToJsonString(String name) {
@@ -71,7 +112,7 @@ public class Game {
         playerOnMoveIndex = 0;
     }
 
-    private void switchPlayerOnMove() {
+    public void switchPlayerOnMove() {
         playerOnMoveIndex = (playerOnMoveIndex == 0) ? 1 : 0;
     }
 
@@ -93,52 +134,11 @@ public class Game {
         moves = s;
     }
 
-    public void evolution(Move move) {
-        try {
-            switch (move.getMove()) {
-                case "EndPhase":
-                    playersTurn.remove(move.getPlayer());
-                    break;
-                case "PlayProperty":
-                    evolutionPlayProperty(move);
-                    break;
-            }
-            switchPlayerOnMove();
-            if (playersTurn.isEmpty()) {
-                switchStatus();
-                playersTurn = new ArrayList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
-            }
-        } catch (GameException e) {
-            error = e.getMessage();
-        }
-    }
-
     public void switchStatus() {
         if (currentPhase == phases.length - 1)
             currentPhase = 1;
         else currentPhase++;
         phase = phases[currentPhase];
-    }
-
-    public void makeMove(Move move) {
-        moves = move.toString();
-        switch (phase) {
-            case EVOLUTION:
-                evolution(move);
-        }
-    }
-
-    public void evolutionPlayProperty(Move move) throws GameException {
-        if (move.getProperty().equals("MakeAnimal")) makeAnimal(move);
-        else {
-            Player player = players.get(move.getPlayer());
-            Animal animal = player.getAnimal(move.getAnimalId());
-            if (animal == null) {
-                throw new GameException("this is not your animal");
-            }
-            player.deleteCard(move.getCardId());
-            animal.addProperty(move.getProperty());
-        }
     }
 
     public void makeAnimal(Move move) {
@@ -175,16 +175,5 @@ public class Game {
             cardList.add(new Card(cardID++, "Swimming"));
         }
         Collections.shuffle(cardList);
-    }
-
-    public static void main(String[] args) {
-        Game game = new Game();
-        //Move move=new Move("test",1,"MakeAnimal");
-        game.addPlayer("test");
-        game.addPlayer("pop");
-        game.start();
-        //game.makeMove(move);
-        String str = game.convertToJsonString("test");
-        System.out.println(str);
     }
 }
