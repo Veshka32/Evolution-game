@@ -47,8 +47,8 @@ function onMessage(event) {
         }
 
         if (player.name==playerName){
-            for (var i = 0; i < player.cards.length; i++) {
-                var card = player.cards[i];
+            for (var k = 0; k < player.cards.length; k++) {
+                var card = player.cards[k];
                 privat.appendChild(buildCard(card));
             }
         }
@@ -56,8 +56,7 @@ function onMessage(event) {
 
     var log = document.getElementById("log");
     var today = new Date();
-    var move = "<br/>" + game.moves + "   on " + today.toLocaleString();
-    log.innerHTML += move;
+    log.innerHTML += "<br/>" + game.moves + "   on " + today.toLocaleString();
 }
 
 function playProperty(property, cardId) {
@@ -131,30 +130,35 @@ function buildCard(card) {
 function makeMove() {
     if(status)
     {
-        var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"move": move,"property":draggedProperty});
-        alert("Your move is: "+json);
-    socket.send(json);
-    clearFields();
-    document.getElementById("doing").innerHTML="";
+        socket.send(buildMessage());
+        clearFields();
     }
 
 }
 function endPhase() {
     if (status)
-    {var json = JSON.stringify({"player": playerName, "move": "EndPhase"});
-    socket.send(json);
+    {
+        move="EndPhase";
+        socket.send(buildMessage());
     }
+}
+
+function buildMessage() {
+    var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"move": move,"property":draggedProperty});
+    alert("Your move is: "+json);
+    return json;
 }
 
 function clearFields(){
     targedAnimalId=null;
     draggedProperty=null;
     playedCardId=null;
+    document.getElementById("doing").innerHTML="";
 }
 
 function leave() {
-    var json=JSON.stringify({"player":playerName,"move":"Leave"});
-    socket.send(json);
+    move="Leave";
+    socket.send(buildMessage());
     location.assign("/evo/signIn")
 }
 
