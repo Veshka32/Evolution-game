@@ -9,26 +9,21 @@
 <body>
 
 <div id="wrapper">
-    You are: <div id="player"></div>
-
-    Game phase: <span id="phase"></span><br/>
+    You are: <div id="player"></div><br/>
     Active players: <span id="players"></span><br/>
 
-    <div id="content"></div>
-    <hr>
+    Game phase: <span id="phase"></span><br/>
+    <b>Your status: </b><span id="status"></span><br/>
+    You are doing:
+    <div id="doing"></div><button id="Make move" onclick=makeMove()>Make move</button><br/>
 
-    Animals:
+    <button id="endPhase" onclick=endPhase()>EndPhase</button><br/>
+
     <div id="common"></div>
     <hr>
 
-    <b>Your status: </b><span id="status"></span><br/>
-
-    Your cards:<div id="privat"></div>
+    Your cards:<div id="personal"></div>
     <hr><br/>
-
-    You are doing:
-    <div id="doing"></div><button id="Make move" onclick=makeMove()>Make move</button><br/>
-    <button id="Done" onclick=endPhase()>EndPhase</button><br/>
 
     Game log:
     <div id="log"></div>

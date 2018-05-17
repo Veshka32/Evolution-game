@@ -16,8 +16,6 @@ function onMessage(event) {
         alert(game.error);
         return;
     }
-    var content = document.getElementById("content");
-    content.innerText = "";
 
     playerName=game.player;
     document.getElementById("player").innerText =playerName;
@@ -34,30 +32,47 @@ function onMessage(event) {
         status = ""; //mean false in js
     }
 
-    var privat = document.getElementById("privat");
-    privat.innerText = "";
     var common = document.getElementById("common");
     common.innerText = "";
 
-    for (var key in game.players){
-        var name=key;
-        var player=game.players[key];
-        for (var i = 0; i < player.animals.length; i++) {
-            var animal = player.animals[i];
-            common.appendChild(buildAnimal(animal));
-        }
-
-        if (player.name==playerName){
-            for (var k = 0; k < player.cards.length; k++) {
-                var card = player.cards[k];
-                privat.appendChild(buildCard(card));
-            }
-        }
+    for (var name in game.players){
+        var player=game.players[name];
+        common.appendChild(buildPlayerBlock(player));
+        //build divider
     }
 
     var log = document.getElementById("log");
     var today = new Date();
     log.innerHTML += "<br/>" + game.moves + "   on " + today.toLocaleString();
+}
+
+function buildPlayerBlock(player) {
+    let playerBlock=document.createElement("div");
+    playerBlock.id=player.name;
+
+    let playerName=document.createElement("span");
+    playerName.innerText=player.name+"'s animals";
+
+    playerBlock.appendChild(playerName);
+
+    for (var i = 0; i < player.animals.length; i++) {
+        var animal = player.animals[i];
+        playerBlock.appendChild(buildAnimal(animal));
+    }
+
+    if (player.name==playerName){
+
+        var personal = document.getElementById("personal");
+        personal.innerHTML = "";
+
+        for (var k = 0; k < player.cards.length; k++) {
+            var card = player.cards[k];
+            personal.appendChild(buildCard(card));
+        }
+    }
+
+
+    return player;
 }
 
 function playProperty(property, cardId) {
