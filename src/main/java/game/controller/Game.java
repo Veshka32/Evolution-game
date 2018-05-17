@@ -37,7 +37,8 @@ public class Game {
         switch (phase) {
             case EVOLUTION:
                 try {
-                    EvolutionPhase.playProperty(this, move); //static
+                    EvolutionPhase ep=new EvolutionPhase();
+                    ep.playProperty(this, move);
                 } catch (GameException e) {
                     error = e.getMessage();
                 }
@@ -152,31 +153,7 @@ public class Game {
     }
 
     private void createCards() {
-        int cardID = Constants.START_CARD_INDEX.getValue();
-        cardList = new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());
-        for (int i = 0; i < 4; i++) {
-            cardList.add(new Card(cardID++, "Camouflage"));
-            cardList.add(new Card(cardID++, "Burrowing"));
-            cardList.add(new Card(cardID++, "Sharp Vision"));
-            cardList.add(new Card(cardID++, "Symbiosis"));
-            cardList.add(new Card(cardID++, "Piracy"));
-            cardList.add(new Card(cardID++, "Grazing"));
-            cardList.add(new Card(cardID++, "Tail loss"));
-            cardList.add(new Card(cardID++, "Hibernation"));
-            cardList.add(new Card(cardID++, "Poisonous"));
-            cardList.add(new Card(cardID++, "Communication"));
-            cardList.add(new Card(cardID++, "Scavenger"));
-            cardList.add(new Card(cardID++, "Running"));
-            cardList.add(new Card(cardID++, "Mimicry"));
-            cardList.add(new Card(cardID++, "Parasite", "Predator"));
-            cardList.add(new Card(cardID++, "Parasite", "Fat"));
-            cardList.add(new Card(cardID++, "Cooperation", "Predator"));
-            cardList.add(new Card(cardID++, "Cooperation", "Fat"));
-            cardList.add(new Card(cardID++, "Big", "Predator"));
-            cardList.add(new Card(cardID++, "Big", "Fat"));
-            cardList.add(new Card(cardID++, "Swimming"));
-            cardList.add(new Card(cardID++, "Swimming"));
-        }
-        Collections.shuffle(cardList);
+        cardList=new CardGenerator().getCards();
     }
+
 }
