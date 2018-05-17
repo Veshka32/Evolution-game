@@ -49,14 +49,6 @@ public class Game {
         playersTurn.remove(name);
     }
 
-    public void sort(){
-        Collection<Player> all=players.values();
-        for (Player pl:all
-             ) {
-            pl.sortAnimals();
-        }
-    }
-
     public boolean isPhaseEnded() {
         return playersTurn.isEmpty();
     }

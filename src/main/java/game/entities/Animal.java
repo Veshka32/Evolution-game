@@ -19,6 +19,7 @@ public class Animal {
     int communicateToAnimal;
     int symbiosToAnimal;
 
+
     int fat;
     int flagForSort;
 
@@ -35,7 +36,7 @@ public class Animal {
             throw new GameException("Scavenger cannot be a predator");
 
         if (!(property.equals("Fat")) && propertyList.contains(property))
-            throw new GameException("This animal already hasAnimal property: " + property);
+            throw new GameException("This animal already has property: " + property);
 
 
         propertyList.add(property);
@@ -47,23 +48,22 @@ public class Animal {
     public void addDoubleProperty(String property, int id) throws GameException {
 
         if (property.equals("Cooperation")) {
-            checkIfCooperate(id);
+            //checkIfCooperate(id);
             cooperateToAnimal = id;
-            flagForSort = Constants.FLAG_FOR_COOPERATION.getValue();
+
         }
 
         if (property.equals("Communication")) {
-            checkIfCooperate(id);
+           // checkIfCooperate(id);
             communicateToAnimal=id;
-            flagForSort = Constants.FLAG_FOR_COMMUNICATION.getValue();
         }
 
         propertyList.add(property);
     }
 
     private void checkIfCooperate(int id) throws GameException {
-        if  (cooperateToAnimal==id || communicateToAnimal==id)
-            throw new GameException("These animals are already helping each other!");
+//        if  (cooperateToAnimal==id || communicateToAnimal==id)
+//            throw new GameException("These animals are already helping each other!");
     }
 
     public String getOwner() {

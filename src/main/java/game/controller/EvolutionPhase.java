@@ -25,7 +25,7 @@ public class EvolutionPhase {
                     processSimpleProperty(game, move);
                 }
         }
-        game.sort();
+
         game.switchPlayerOnMove();
     }
 
@@ -35,22 +35,18 @@ public class EvolutionPhase {
 
     private void processDoubleProperty(Game game, Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
+        int id1=move.getAnimalId();
+        int id2=move.getSecondAnimalId();
+
         if (player.howManyAnimals() < 2) throw new GameException("You don't have enough animals");
 
-        if (move.getAnimalId() == move.getSecondAnimalId())
+        if (id1 == id2)
             throw new GameException("You must play this property on two different animals");
 
-        if (move.getAnimalId() == 0 || move.getSecondAnimalId() == 0)
+        if (id1 == 0 ||id2 == 0)
             throw new GameException("You must pick two animals to play this card");
-
-        if (!(player.hasAnimal(move.getAnimalId()) && player.hasAnimal(move.getSecondAnimalId())))
-            throw new GameException("It's not your animal(s)");
-
-        Animal animal = player.getAnimal(move.getAnimalId());
-        animal.addDoubleProperty(move.getProperty(), move.getSecondAnimalId());
-
-        Animal animal2 = player.getAnimal(move.getSecondAnimalId());
-        animal2.addDoubleProperty(move.getProperty(), move.getAnimalId());
+        
+       player.connectAnimal(id1,id2,move.getProperty());
     }
 
     private void processSimpleProperty(Game game, Move move) throws GameException {
