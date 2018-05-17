@@ -24,7 +24,6 @@ public class Game {
     private transient List<String> playersTurn = new ArrayList<>();
     private transient int playerOnMoveIndex;
     private transient String error;
-    private transient EvolutionPhase evolutionPhase = new EvolutionPhase();
     private transient HashMap<Integer,Animal> animalList=new HashMap<>();
 
     //go to json
@@ -38,7 +37,7 @@ public class Game {
         switch (phase) {
             case EVOLUTION:
                 try {
-                    evolutionPhase.playProperty(this, move);
+                    EvolutionPhase.playProperty(this, move); //static
                 } catch (GameException e) {
                     error = e.getMessage();
                 }

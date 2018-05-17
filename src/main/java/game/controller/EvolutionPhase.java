@@ -6,10 +6,7 @@ import game.entities.Player;
 
 public class EvolutionPhase {
 
-    public EvolutionPhase() {
-    }
-
-    public void playProperty(Game game, Move move) throws GameException {
+    public static void playProperty(Game game, Move move) throws GameException {
 
         switch (move.getMove()) {
             case "MakeAnimal":
@@ -32,11 +29,11 @@ public class EvolutionPhase {
         game.switchPlayerOnMove();
     }
 
-    private boolean isDouble(String property) {
+    private static boolean isDouble(String property) {
         return property.equals("Cooperation") || property.equals("Communication");
     }
 
-    private void processDoubleProperty(Game game, Move move) throws GameException {
+    private static void processDoubleProperty(Game game, Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         if (player.howManyAnimals() < 2) throw new GameException("You don't have enough animals");
 
@@ -56,7 +53,7 @@ public class EvolutionPhase {
         animal2.addDoubleProperty(move.getProperty(), move.getAnimalId());
     }
 
-    private void processSimpleProperty(Game game, Move move) throws GameException {
+    private static void processSimpleProperty(Game game, Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
         String property=move.getProperty();
