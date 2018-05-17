@@ -50,7 +50,7 @@ function buildPlayerBlock(player) {
     let playerBlock=document.createElement("div");
     playerBlock.id=player.name;
 
-    let playerName=document.createElement("span");
+    let playerName=document.createElement("div");
     playerName.innerText=player.name+"'s animals";
 
     playerBlock.appendChild(playerName);
@@ -60,7 +60,7 @@ function buildPlayerBlock(player) {
         playerBlock.appendChild(buildAnimal(animal));
     }
 
-    if (player.name==playerName){
+    if (player.name==this.playerName){
 
         var personal = document.getElementById("personal");
         personal.innerHTML = "";
@@ -71,8 +71,7 @@ function buildPlayerBlock(player) {
         }
     }
 
-
-    return player;
+    return playerBlock;
 }
 
 function playProperty(property, cardId) {
@@ -105,19 +104,14 @@ function buildAnimal(an) {
     animDiv.setAttribute("class", "animal");
     animDiv.innerHTML += an.id+"<br/>";
 
-    var owner = document.createElement("span");
-    owner.innerHTML = "Owner: " + an.owner+"<br/>";
-    animDiv.appendChild(owner);
-
-    var props=document.createElement("span");
-    props.innerHTML="Properties:<br/>";
+    var props=document.createElement("span")
     animDiv.appendChild(props);
 
     if (an.hasOwnProperty("propertyList")) {
 
         for (var i = 0; i < an.propertyList.length; i++) {
             var prop = an.propertyList[i];
-            props.innerHTML+=prop+"<br/>";
+            props.appendChild(document.createTextNode(prop));
         }
     }
 
