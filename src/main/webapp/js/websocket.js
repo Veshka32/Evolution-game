@@ -55,11 +55,6 @@ function buildPlayerBlock(player) {
 
     playerBlock.appendChild(playerName);
 
-    for (var i = 0; i < player.animals.length; i++) {
-        var animal = player.animals[i];
-        playerBlock.appendChild(buildAnimal(animal));
-    }
-
     if (player.name==this.playerName){
 
         var personal = document.getElementById("personal");
@@ -69,6 +64,16 @@ function buildPlayerBlock(player) {
             var card = player.cards[k];
             personal.appendChild(buildCard(card));
         }
+    }
+
+    for (var i = 0; i < player.animals.length; i++) {
+        var animalGroup = player.animals[i];
+        for (let m=0;m<animalGroup.length;m++){
+            var animDiv=buildAnimal(animalGroup[m]);
+            animDiv.appendChild(document.createTextNode("group #"+i+"\n"));
+            playerBlock.appendChild(animDiv);
+        }
+
     }
 
     return playerBlock;
@@ -111,7 +116,9 @@ function buildAnimal(an) {
 
         for (var i = 0; i < an.propertyList.length; i++) {
             var prop = an.propertyList[i];
-            props.appendChild(document.createTextNode(prop));
+            var text=document.createElement("span");
+            text.appendChild(document.createTextNode(prop));
+            props.appendChild(text);
         }
     }
 

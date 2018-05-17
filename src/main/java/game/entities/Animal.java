@@ -14,14 +14,13 @@ public class Animal {
     int id;
     int totalHungry = 1;
     int currentHungry;
-    String owner;
-    int cooperateToAnimal; //default 0
-    int communicateToAnimal;
+    transient String owner;
+    transient int cooperateToAnimal; //default 0
+    transient int communicateToAnimal;
     int symbiosToAnimal;
 
-
     int fat;
-    int flagForSort;
+
 
     public Animal(int id, String player) {
         this.id = id;
@@ -38,7 +37,6 @@ public class Animal {
         if (!(property.equals("Fat")) && propertyList.contains(property))
             throw new GameException("This animal already has property: " + property);
 
-
         propertyList.add(property);
         if (property.equals("Fat")) fat++;
         if (property.equals("Predator") || property.equals("Big")) totalHungry++;
@@ -48,22 +46,14 @@ public class Animal {
     public void addDoubleProperty(String property, int id) throws GameException {
 
         if (property.equals("Cooperation")) {
-            //checkIfCooperate(id);
             cooperateToAnimal = id;
-
         }
 
         if (property.equals("Communication")) {
-           // checkIfCooperate(id);
             communicateToAnimal=id;
         }
 
         propertyList.add(property);
-    }
-
-    private void checkIfCooperate(int id) throws GameException {
-//        if  (cooperateToAnimal==id || communicateToAnimal==id)
-//            throw new GameException("These animals are already helping each other!");
     }
 
     public String getOwner() {
@@ -72,10 +62,6 @@ public class Animal {
 
     public int getId() {
         return id;
-    }
-
-    public int getFlagForSort() {
-        return flagForSort;
     }
 
     public boolean hasProperty(String property){

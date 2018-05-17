@@ -45,7 +45,7 @@ public class EvolutionPhase {
 
         if (id1 == 0 ||id2 == 0)
             throw new GameException("You must pick two animals to play this card");
-        
+
        player.connectAnimal(id1,id2,move.getProperty());
     }
 
@@ -61,7 +61,7 @@ public class EvolutionPhase {
 
         } else {
             if (animal==null) throw new GameException("It's not your animal");
-            animal.addProperty(move.getProperty());
+            animal.addProperty(property);
         }
         player.deleteCard(move.getCardId());
 
