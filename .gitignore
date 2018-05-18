@@ -4,3 +4,6 @@
 *.ser
 /target
 
+/h2test.mv.db
+/h2test.trace.db
+/lib
