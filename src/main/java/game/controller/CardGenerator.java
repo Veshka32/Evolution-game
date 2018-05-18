@@ -37,10 +37,11 @@ public class CardGenerator {
             cardList.add(new Card(cardID++, "Swimming"));
             cardList.add(new Card(cardID++, "Swimming"));
         }
-        Collections.shuffle(cardList);
+
     }
 
     public List<Card> getCards(){
+        Collections.shuffle(cardList);
         return cardList;
     }
 

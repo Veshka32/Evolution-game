@@ -5,6 +5,6 @@ public enum Phase {
     START,
     EVOLUTION,
     FEED,
-    DEAD
-
+    DEAD,
+    END
 }

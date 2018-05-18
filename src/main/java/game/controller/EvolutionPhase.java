@@ -16,7 +16,7 @@ public class EvolutionPhase {
                 game.playerEndsPhase(move.getPlayer());
                 if (game.isPhaseEnded())
                     game.goToNextPhase();
-                break;
+                return; //no need in switchPlayerOnMove
 
             case "PlayProperty":
                 if (isDouble(move.getProperty()))

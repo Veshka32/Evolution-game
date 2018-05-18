@@ -12,13 +12,13 @@ var playedCardId;
 function onMessage(event) {
     clearFields();
     var game = JSON.parse(event.data);
-    if (game.hasOwnProperty("error")){
+    if (game.hasOwnProperty("error")) {
         alert(game.error);
         return;
     }
 
-    playerName=game.player;
-    document.getElementById("player").innerText =playerName;
+    playerName = game.player;
+    document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
     document.getElementById("players").innerText = game.playersList;
     var yourStatus = document.getElementById("status");
@@ -35,8 +35,8 @@ function onMessage(event) {
     var common = document.getElementById("common");
     common.innerText = "";
 
-    for (var name in game.players){
-        var player=game.players[name];
+    for (var name in game.players) {
+        var player = game.players[name];
         common.appendChild(buildPlayerBlock(player));
         //build divider
     }
@@ -47,15 +47,15 @@ function onMessage(event) {
 }
 
 function buildPlayerBlock(player) {
-    let playerBlock=document.createElement("div");
-    playerBlock.id=player.name;
+    let playerBlock = document.createElement("div");
+    playerBlock.id = player.name;
 
-    let playerName=document.createElement("div");
-    playerName.innerText=player.name+"'s animals";
+    let playerName = document.createElement("div");
+    playerName.innerText = player.name + "'s animals";
 
     playerBlock.appendChild(playerName);
 
-    if (player.name==this.playerName){
+    if (player.name == this.playerName) {
 
         var personal = document.getElementById("personal");
         personal.innerHTML = "";
@@ -68,9 +68,9 @@ function buildPlayerBlock(player) {
 
     for (var i = 0; i < player.animals.length; i++) {
         var animalGroup = player.animals[i];
-        for (let m=0;m<animalGroup.length;m++){
-            var animDiv=buildAnimal(animalGroup[m]);
-            animDiv.appendChild(document.createTextNode("group #"+i+"\n"));
+        for (let m = 0; m < animalGroup.length; m++) {
+            var animDiv = buildAnimal(animalGroup[m]);
+            animDiv.appendChild(document.createTextNode("group #" + i + "\n"));
             playerBlock.appendChild(animDiv);
         }
 
@@ -81,15 +81,15 @@ function buildPlayerBlock(player) {
 
 function playProperty(property, cardId) {
     if (status) {
-        if (property==="MakeAnimal") {
-            move="MakeAnimal";
-            playedCardId=cardId;
-            document.getElementById("doing").innerHTML="Make animal from card # "+cardId;
+        if (property === "MakeAnimal") {
+            move = "MakeAnimal";
+            playedCardId = cardId;
+            document.getElementById("doing").innerText = "Make animal from card # " + cardId;
         }
         else {
-            move="PlayProperty";
-            draggedProperty=property;
-            playedCardId=cardId;
+            move = "PlayProperty";
+            draggedProperty = property;
+            playedCardId = cardId;
             alert("Click animal");
         }
     }
@@ -104,48 +104,68 @@ function buildButton(name, cardId) {
     return property;
 }
 
+function buildCooperation() {
+    var comm = document.createElement("div");
+    comm.setAttribute("class","cooperation");
+    comm.appendChild(document.createTextNode("Cooperation"));
+    return comm;
+}
+
+function buildCommunication() {
+    var comm = document.createElement("div");
+    comm.setAttribute("class","communication");
+    comm.appendChild(document.createTextNode("Communication"));
+    return comm;
+}
+
 function buildAnimal(an) {
     var animDiv = document.createElement("div");
     animDiv.setAttribute("class", "animal");
-    animDiv.innerHTML += an.id+"<br/>";
+    animDiv.innerHTML += an.id + "<br/>";
 
-    var props=document.createElement("span")
+    var props = document.createElement("span")
     animDiv.appendChild(props);
 
     if (an.hasOwnProperty("propertyList")) {
 
         for (var i = 0; i < an.propertyList.length; i++) {
-            var prop = an.propertyList[i];
-            var text=document.createElement("span");
-            text.appendChild(document.createTextNode(prop));
-            props.appendChild(text);
-            if (prop=="Communication"){
-                let comm=buildCommunication();
+            if (prop == "Communication" && i !== 0 && i != an.propertyList.length - 1) {
+                let comm = buildCommunication();
                 animDiv.appendChild(comm);
             }
+
+            else if (prop = "Cooperation" && i !== 0 && i !== an.propertyList.length - 1) {
+                let comm = buildCooperation();
+                animDiv.appendChild(comm);
+            }
+            else {
+                var prop = an.propertyList[i];
+                var text = document.createElement("span");
+                text.appendChild(document.createTextNode(prop));
+                props.appendChild(text);
+            }
+
         }
     }
 
-    var totalHungry=document.createElement("span");
-    totalHungry.innerHTML="Total Hungry: "+an.totalHungry+"<br/>";
+    var totalHungry = document.createElement("span");
+    totalHungry.innerHTML = "Total Hungry: " + an.totalHungry + "<br/>";
     animDiv.appendChild(totalHungry);
 
-    animDiv.addEventListener("click",function () {
-        if (targedAnimalId==null || targedAnimalId==undefined){targedAnimalId=an.id;}
-        else secondAnimalId=an.id;
+    animDiv.addEventListener("click", function () {
+        if (targedAnimalId == null || targedAnimalId == undefined) {
+            targedAnimalId = an.id;
+        }
+        else secondAnimalId = an.id;
 
-        var doing=document.getElementById("doing");
-        doing.innerHTML="play property="+draggedProperty+"<br/>"+"on animal #"+targedAnimalId;
-        if (!(secondAnimalId==null || secondAnimalId==undefined)) doing.innerText+="and animal #"+secondAnimalId;
+        var doing = document.getElementById("doing");
+        doing.innerHTML = "play property=" + draggedProperty + "<br/>" + "on animal #" + targedAnimalId;
+        if (!(secondAnimalId == null || secondAnimalId == undefined)) doing.innerText += "and animal #" + secondAnimalId;
     });
 
     return animDiv;
 }
 
-function buildCommunication() {
-    var comm=document.createElement("div");
-    comm.setAttribute("class,communication");
-}
 
 function buildCard(card) {
     var cardDiv = document.createElement("div");
@@ -163,36 +183,49 @@ function buildCard(card) {
 }
 
 function makeMove() {
-    if(status)
-    {
-        socket.send(buildMessage());
+    if (status) {
+        let json = buildMessage();
         clearFields();
+        socket.send(json);
+
     }
 
 }
+
 function endPhase() {
-    if (status)
-    {
-        move="EndPhase";
-        socket.send(buildMessage());
+    if (status) {
+        move = "EndPhase";
+        document.getElementById("doing").innerText = playerName+"end move";
+        let json = buildMessage();
+        clearFields();
+        socket.send(json);
     }
 }
 
 function buildMessage() {
-    var json = JSON.stringify({"player": playerName, "cardId":playedCardId, "animalId":targedAnimalId,"secondAnimalId":secondAnimalId,"move": move,"property":draggedProperty,"log":document.getElementById("doing").innerText});
+    let json = JSON.stringify({
+        "player": playerName,
+        "cardId": playedCardId,
+        "animalId": targedAnimalId,
+        "secondAnimalId": secondAnimalId,
+        "move": move,
+        "property": draggedProperty,
+        "log": document.getElementById("doing").innerText
+    });
     return json;
 }
 
-function clearFields(){
-    targedAnimalId=null;
-    draggedProperty=null;
-    playedCardId=null;
-    document.getElementById("doing").innerHTML="";
-    move=null;
+function clearFields() {
+    targedAnimalId = null;
+    draggedProperty = null;
+    playedCardId = null;
+    document.getElementById("doing").innerHTML = "";
+    move = null;
+    status = "";
 }
 
 function leave() {
-    move="Leave";
+    move = "Leave";
     socket.send(buildMessage());
     location.assign("/evo/signIn")
 }
