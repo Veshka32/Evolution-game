@@ -14,7 +14,7 @@ function onMessage(event) {
     var game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")) {
         alert(game.error);
-        status = "";
+        status = "true";
         return;
     }
 
@@ -125,7 +125,7 @@ function buildAnimal(an) {
     animDiv.setAttribute("class", "animal");
     animDiv.innerHTML += an.id + "<br/>";
 
-    var props = document.createElement("span")
+    var props = document.createElement("span");
     animDiv.appendChild(props);
 
     if (an.hasOwnProperty("propertyList")) {
@@ -210,7 +210,7 @@ function endPhase() {
 }
 
 function buildMessage() {
-    let json = JSON.stringify({
+    return JSON.stringify({
         "player": playerName,
         "cardId": playedCardId,
         "animalId": targedAnimalId,
@@ -219,7 +219,6 @@ function buildMessage() {
         "property": draggedProperty,
         "log": document.getElementById("doing").innerText
     });
-    return json;
 }
 
 function clearFields() {

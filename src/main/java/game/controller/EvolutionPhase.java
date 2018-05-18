@@ -4,14 +4,15 @@ import game.entities.Animal;
 import game.entities.Move;
 import game.entities.Player;
 
-public class EvolutionPhase {
+class EvolutionPhase {
 
-    public void playProperty(Game game, Move move) throws GameException {
+    void playProperty(Game game, Move move) throws GameException {
 
         switch (move.getMove()) {
             case "MakeAnimal":
                 game.makeAnimal(move);
                 break;
+
             case "EndPhase":
                 game.playerEndsPhase(move.getPlayer());
                 return; //no need in switchPlayerOnMove
@@ -61,6 +62,5 @@ public class EvolutionPhase {
             animal.addProperty(property);
         }
         player.deleteCard(move.getCardId());
-
     }
 }

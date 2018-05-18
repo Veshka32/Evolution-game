@@ -46,21 +46,25 @@ public class Game {
         }
     }
 
-    public void playerEndsPhase(String name) {
+    void playerEndsPhase(String name) {
         playersTurn.remove(name);
-        if (playersTurn.isEmpty()) {goToNextPhase();return;}
-        playerOnMoveIndex=playerOnMoveIndex%playersTurn.size(); //if name was last in array, after array becomes smaller, go to ind 0
+        if (playersTurn.isEmpty()) {
+            goToNextPhase();
+            return;
+        }
+        playerOnMoveIndex = playerOnMoveIndex % playersTurn.size(); //if name was last in array, after array becomes smaller, go to ind 0
     }
 
 
-    public void switchPlayerOnMove() {
+    void switchPlayerOnMove() {
         playerOnMoveIndex = (playerOnMoveIndex + 1) % Constants.NUMBER_OF_PLAYER.getValue(); // circular array
     }
 
-    public void goToNextPhase() {
+    void goToNextPhase() {
         switch (phase) {
             case START:
                 phase = Phase.EVOLUTION;
+                start();
                 break;
             case EVOLUTION:
                 phase = Phase.FEED;
@@ -76,9 +80,6 @@ public class Game {
         playerOnMoveIndex = 0;
     }
 
-    public Player getPlayer(String name) {
-        return players.get(name);
-    }
 
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
@@ -99,19 +100,12 @@ public class Game {
         playersList[playerOnMoveIndex++] = userName;
         players.put(userName, new Player(userName));
 
-        if (isFull()) {
+        if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
             goToNextPhase();
-            start();
         }
     }
 
-    public void deletePlayer(String userName) {
-        players.remove(userName);
-        moves = userName + " hasAnimal left the game";
-        phase = Phase.START;
-    }
-
-    public void start() {
+    private void start() {
         cardList = generator.getCards();
         playersTurn = new LinkedList<>(Arrays.asList(Arrays.copyOf(playersList, playersList.length)));
         for (String name : playersTurn)
@@ -125,19 +119,12 @@ public class Game {
         }
     }
 
-    public String getAllPlayers() {
-        return new ArrayList<>(players.keySet()).toString();
-    }
-
-    public boolean isFull() {
-        return players.size() == Constants.NUMBER_OF_PLAYER.getValue();
-    }
 
     public void setMoves(String s) {
         moves = s;
     }
 
-    public void makeAnimal(Move move) {
+    void makeAnimal(Move move) {
         Player player = players.get(move.getPlayer());
         Animal animal = new Animal(animalID++, player.getName());
         player.deleteCard(move.getCardId());
@@ -145,12 +132,26 @@ public class Game {
         animalList.put(animal.getId(), animal);
     }
 
-    public Animal getAnimal(int i) {
+    Animal getAnimal(int i) {
         return animalList.get(i);
     }
 
-    public void setGenerator(CardGenerator generator) {
+    public String getAllPlayers() {
+        return new ArrayList<>(players.keySet()).toString();
+    }
+
+    public Player getPlayer(String name) {
+        return players.get(name);
+    }
+
+    void setGenerator(CardGenerator generator) {
         this.generator = generator;
+    }
+
+    public void deletePlayer(String userName) {
+        players.remove(userName);
+        moves = userName + "left the game";
+        phase = Phase.START;
     }
 
 }

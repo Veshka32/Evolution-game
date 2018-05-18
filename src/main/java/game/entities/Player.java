@@ -45,7 +45,7 @@ public class Player {
             throw new GameException("It's not your animal(s)");
 
         CC cc=new CC(animalGraph);
-        if (cc.connected(id1,id2)) throw new GameException("These animalGraph are already helping each other!");
+        if (cc.connected(id1,id2)) throw new GameException("These animals are already helping each other!");
 
         animalMap.get(id1).addDoubleProperty(type, id2);
         animalMap.get(id2).addDoubleProperty(type,id1);

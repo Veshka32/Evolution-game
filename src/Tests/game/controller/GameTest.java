@@ -101,7 +101,7 @@ class GameTest {
 
         game.makeMove(new Move("pop", 83, 2, 0, "PlayProperty", "Swimming", null));
         assert (game.error.equals("It's not your animal"));
-        
+
 
 
     }
