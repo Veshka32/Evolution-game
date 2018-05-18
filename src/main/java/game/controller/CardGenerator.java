@@ -10,7 +10,7 @@ import java.util.List;
 public class CardGenerator {
     List<Card> cardList;
 
-    public CardGenerator(){
+    CardGenerator(){
         int cardID = Constants.START_CARD_INDEX.getValue();
         int duplicate=Constants.NUMBER_OF_DUPLICATE_CARDS.getValue();
         cardList = new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());

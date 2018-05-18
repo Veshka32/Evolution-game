@@ -1,17 +1,22 @@
 package game.controller;
 
 import game.constants.Phase;
+import game.entities.Card;
 import game.entities.Move;
-import game.entities.Player;
-import org.h2.schema.Constant;
 import org.junit.jupiter.api.Test;
-import services.dataBaseService.PasswordEncryptionService;
 
 import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 class GameTest {
+
+    public class TestCardGenerator extends CardGenerator {
+        @Override
+        public List<Card> getCards() {
+            return cardList; //no shuffle
+        }
+    }
+
     Game game=new Game(new TestCardGenerator());
     String player1="pop";
     String player2="test";

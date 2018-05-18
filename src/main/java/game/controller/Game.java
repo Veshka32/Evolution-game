@@ -24,7 +24,7 @@ public class Game {
     transient int playerOnMoveIndex;
     private transient String error;
     private transient HashMap<Integer, Animal> animalList = new HashMap<>();
-    CardGenerator generator=new CardGenerator();
+    private CardGenerator generator=new CardGenerator();
 
     //go to json
     private String moves;
@@ -33,7 +33,7 @@ public class Game {
 
     public Game(){    }
 
-    Game(TestCardGenerator generator ){
+    Game(CardGenerator generator){
         this.generator=generator;
     }
 
