@@ -20,7 +20,7 @@
 .animal{
     width: 80px;
     height: 120px;
-    margin: 10px;
+    margin: 15px;
     padding: 6px;
     background-color: burlywood;
     vertical-align: top;
@@ -29,4 +29,30 @@
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     display: inline-block;
+}
+.communication{
+
+    text-align: center;
+    display: inline-block;
+    background-color: darksalmon;
+    width: 102px;
+    height: 20px;
+    position:relative;
+    top:140px;
+    left:55px;
+    margin-right:-110px;
+    position: relative;
+}
+
+.cooperation{
+
+    text-align: center;
+    display: inline-block;
+    background-color: aquamarine;
+    width: 82px;
+    height: 20px;
+    position:relative;
+    top:140px;
+    left:-60px;
+    position: relative;
 }

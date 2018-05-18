@@ -119,6 +119,10 @@ function buildAnimal(an) {
             var text=document.createElement("span");
             text.appendChild(document.createTextNode(prop));
             props.appendChild(text);
+            if (prop=="Communication"){
+                let comm=buildCommunication();
+                animDiv.appendChild(comm);
+            }
         }
     }
 
@@ -134,7 +138,13 @@ function buildAnimal(an) {
         doing.innerHTML="play property="+draggedProperty+"<br/>"+"on animal #"+targedAnimalId;
         if (!(secondAnimalId==null || secondAnimalId==undefined)) doing.innerText+="and animal #"+secondAnimalId;
     });
+
     return animDiv;
+}
+
+function buildCommunication() {
+    var comm=document.createElement("div");
+    comm.setAttribute("class,communication");
 }
 
 function buildCard(card) {

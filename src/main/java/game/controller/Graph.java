@@ -1,10 +1,9 @@
 package game.controller;
 
-import java.util.NoSuchElementException;
 import java.util.Stack;
 
 public class Graph {
-    private static final String NEWLINE = System.getProperty("line.separator");
+
 
     private final int V;
     private int E;
@@ -31,7 +30,6 @@ public class Graph {
         return E;
     }
 
-    // throw an IllegalArgumentException unless {@code 0 <= v < V}
     private void validateVertex(int v) {
         if (v < 0 || v >= V)
             throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (V-1));
@@ -79,25 +77,5 @@ public class Graph {
 
     public int V(){
         return V;
-    }
-
-
-    /**
-     * Returns a string representation of this graph.
-     *
-     * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,
-     *         followed by the <em>V</em> adjacency lists
-     */
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append(V + " vertices, " + E + " edges " + NEWLINE);
-        for (int v = 0; v < V; v++) {
-            s.append(v + ": ");
-            for (int w : adj[v]) {
-                s.append(w + " ");
-            }
-            s.append(NEWLINE);
-        }
-        return s.toString();
     }
 }

@@ -15,8 +15,8 @@ public class Animal {
     int totalHungry = 1;
     int currentHungry;
     transient String owner;
-    transient int cooperateToAnimal; //default 0
-    transient int communicateToAnimal;
+    int cooperateToAnimal; //default 0
+    int communicateToAnimal;
     int symbiosToAnimal;
 
     int fat;
