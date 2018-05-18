@@ -18,7 +18,7 @@ public class GameStartServlet extends HttpServlet {
         HttpSession session = req.getSession();
         String name=(String) session.getAttribute("player");
 
-        if (game.containsPlayer(name)){req.setAttribute("playersList",game.getAllPlayers());
+        if (game.getPlayer(name)!=null){req.setAttribute("playersList",game.getAllPlayers());
         resp.sendRedirect("views/socket.html");}
 
         else if (game.isFull()) {

@@ -14,8 +14,6 @@ public class EvolutionPhase {
                 break;
             case "EndPhase":
                 game.playerEndsPhase(move.getPlayer());
-                if (game.isPhaseEnded())
-                    game.goToNextPhase();
                 return; //no need in switchPlayerOnMove
 
             case "PlayProperty":
@@ -25,7 +23,6 @@ public class EvolutionPhase {
                     processSimpleProperty(game, move);
                 }
         }
-
         game.switchPlayerOnMove();
     }
 

@@ -2,18 +2,15 @@ package game.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import game.constants.Phase;
-import game.entities.*;
 import game.constants.Constants;
+import game.constants.Phase;
+import game.entities.Animal;
+import game.entities.Card;
+import game.entities.Move;
+import game.entities.Player;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
 import javax.inject.Named;
-import javax.json.JsonObjectBuilder;
-import javax.json.spi.JsonProvider;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.*;
 
 @Named
@@ -23,17 +20,17 @@ public class Game {
     private transient List<Card> cardList;
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
     private transient int whoStartPhase; //default 0
-    transient List<String> playersTurn =  new LinkedList<>();
-    private final String[] playersList=new String[Constants.NUMBER_OF_PLAYER.getValue()];
+    transient List<String> playersTurn = new LinkedList<>();
     transient int playerOnMoveIndex;
-    private transient String error;
+    transient String error;
     private transient HashMap<Integer, Animal> animalList = new HashMap<>();
-    private CardGenerator generator=new CardGenerator();
+    private transient CardGenerator generator = new CardGenerator();
 
     //go to json
     private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
     private HashMap<String, Player> players = new HashMap<>();
+    private final String[] playersList = new String[Constants.NUMBER_OF_PLAYER.getValue()];
 
     public void makeMove(Move move) {
         error = null;
@@ -51,6 +48,8 @@ public class Game {
 
     public void playerEndsPhase(String name) {
         playersTurn.remove(name);
+        if (playersTurn.isEmpty()) {goToNextPhase();return;}
+        playerOnMoveIndex=playerOnMoveIndex%playersTurn.size(); //if name was last in array, after array becomes smaller, go to ind 0
     }
 
 
@@ -58,31 +57,23 @@ public class Game {
         playerOnMoveIndex = (playerOnMoveIndex + 1) % Constants.NUMBER_OF_PLAYER.getValue(); // circular array
     }
 
-    public boolean isPhaseEnded() {
-        return playersTurn.isEmpty();
-    }
-
     public void goToNextPhase() {
-        switch (phase){
+        switch (phase) {
             case START:
-                phase=Phase.EVOLUTION;
+                phase = Phase.EVOLUTION;
                 break;
             case EVOLUTION:
-                phase=Phase.FEED;
+                phase = Phase.FEED;
                 break;
             case FEED:
-                phase=Phase.DEAD;
+                phase = Phase.DEAD;
                 break;
             case DEAD:
-                phase=Phase.EVOLUTION;
+                phase = Phase.EVOLUTION;
                 break;
         }
         playersTurn = new LinkedList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
-        playerOnMoveIndex=0;
-    }
-
-    public boolean containsPlayer(String name) {
-        return players.containsKey(name);
+        playerOnMoveIndex = 0;
     }
 
     public Player getPlayer(String name) {
@@ -95,17 +86,17 @@ public class Game {
         element.getAsJsonObject().addProperty("player", name); //with string
         if (error != null && playersTurn.get(playerOnMoveIndex).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
+        } else {
+            if (playersTurn.get(playerOnMoveIndex).equals(name))
+                element.getAsJsonObject().addProperty("status", true);
+            else element.getAsJsonObject().addProperty("status", false);
         }
-
-        if (playersTurn.contains(name) && playersTurn.get(playerOnMoveIndex).equals(name))
-            element.getAsJsonObject().addProperty("status", true);
-        else element.getAsJsonObject().addProperty("status", false);
 
         return gson.toJson(element);
     }
 
     public void addPlayer(String userName) {
-        playersList[playerOnMoveIndex++]=userName;
+        playersList[playerOnMoveIndex++] = userName;
         players.put(userName, new Player(userName));
 
         if (isFull()) {
@@ -122,7 +113,7 @@ public class Game {
 
     public void start() {
         cardList = generator.getCards();
-        playersTurn = new LinkedList<>(Arrays.asList(Arrays.copyOf(playersList,playersList.length)));
+        playersTurn = new LinkedList<>(Arrays.asList(Arrays.copyOf(playersList, playersList.length)));
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));
         playerOnMoveIndex = 0;
@@ -135,7 +126,7 @@ public class Game {
     }
 
     public String getAllPlayers() {
-        return Arrays.toString(playersList);
+        return new ArrayList<>(players.keySet()).toString();
     }
 
     public boolean isFull() {
@@ -158,8 +149,8 @@ public class Game {
         return animalList.get(i);
     }
 
-    public void setGenerator( CardGenerator generator){
-        this.generator=generator;
+    public void setGenerator(CardGenerator generator) {
+        this.generator = generator;
     }
 
 }

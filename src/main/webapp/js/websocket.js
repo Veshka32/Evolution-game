@@ -14,8 +14,10 @@ function onMessage(event) {
     var game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")) {
         alert(game.error);
+        status = "";
         return;
     }
+
 
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
@@ -105,15 +107,15 @@ function buildButton(name, cardId) {
 }
 
 function buildCooperation() {
-    var comm = document.createElement("div");
-    comm.setAttribute("class","cooperation");
+    var comm = document.createElement("span");
+    comm.setAttribute("class", "cooperation");
     comm.appendChild(document.createTextNode("Cooperation"));
     return comm;
 }
 
 function buildCommunication() {
-    var comm = document.createElement("div");
-    comm.setAttribute("class","communication");
+    var comm = document.createElement("span");
+    comm.setAttribute("class", "communication");
     comm.appendChild(document.createTextNode("Communication"));
     return comm;
 }
@@ -127,19 +129,24 @@ function buildAnimal(an) {
     animDiv.appendChild(props);
 
     if (an.hasOwnProperty("propertyList")) {
+        let length=an.propertyList.length;
 
-        for (var i = 0; i < an.propertyList.length; i++) {
-            if (prop == "Communication" && i !== 0 && i != an.propertyList.length - 1) {
-                let comm = buildCommunication();
-                animDiv.appendChild(comm);
+        for (let i = 0; i < length; i++) {
+            var prop = an.propertyList[i];
+
+            if (prop == "Communication") {
+                //if (length < 3 && i!=0) animDiv.appendChild(buildCommunication());
+                //else if (i != 0 && i != length - 1)
+                    animDiv.appendChild(buildCommunication());
             }
 
-            else if (prop = "Cooperation" && i !== 0 && i !== an.propertyList.length - 1) {
-                let comm = buildCooperation();
-                animDiv.appendChild(comm);
+            else if (prop == "Cooperation") {
+                //if (length < 3 && i!=length-1) animDiv.appendChild(buildCooperation());
+                //else if (i != 0 && i != length - 1)
+                    animDiv.appendChild(buildCooperation());
             }
+
             else {
-                var prop = an.propertyList[i];
                 var text = document.createElement("span");
                 text.appendChild(document.createTextNode(prop));
                 props.appendChild(text);
@@ -195,7 +202,7 @@ function makeMove() {
 function endPhase() {
     if (status) {
         move = "EndPhase";
-        document.getElementById("doing").innerText = playerName+"end move";
+        document.getElementById("doing").innerText = playerName + "end move";
         let json = buildMessage();
         clearFields();
         socket.send(json);
@@ -219,7 +226,7 @@ function clearFields() {
     targedAnimalId = null;
     draggedProperty = null;
     playedCardId = null;
-    document.getElementById("doing").innerHTML = "";
+    document.getElementById("doing").innerText = "";
     move = null;
     status = "";
 }
