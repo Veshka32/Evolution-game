@@ -17,7 +17,7 @@ class GameTest {
         }
     }
 
-    Game game=new Game(new TestCardGenerator());
+    Game game=new Game();
     String player1="pop";
     String player2="test";
     String[] playersList=new String[]{player1,player2};
@@ -25,6 +25,7 @@ class GameTest {
     @Test
     void switchPlayerOnMove() {
         //start game when necessary number of players is added;
+        game.setGenerator(new TestCardGenerator());
         game.addPlayer(player1);
         game.addPlayer(player2);
         assert (game.phase.equals(Phase.EVOLUTION));

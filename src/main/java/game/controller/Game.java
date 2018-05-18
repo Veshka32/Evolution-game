@@ -7,9 +7,13 @@ import game.entities.*;
 import game.constants.Constants;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.*;
 
 @Named
@@ -30,12 +34,6 @@ public class Game {
     private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
     private HashMap<String, Player> players = new HashMap<>();
-
-    public Game(){    }
-
-    Game(CardGenerator generator){
-        this.generator=generator;
-    }
 
     public void makeMove(Move move) {
         error = null;
@@ -159,4 +157,9 @@ public class Game {
     public Animal getAnimal(int i) {
         return animalList.get(i);
     }
+
+    public void setGenerator( CardGenerator generator){
+        this.generator=generator;
+    }
+
 }
