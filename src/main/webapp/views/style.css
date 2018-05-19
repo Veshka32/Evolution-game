@@ -12,12 +12,12 @@
     display: inline-block;
 }
 
-.card span{
+.card span {
     display: block;
     background-color: lightgreen;
 }
 
-.animal{
+.animal {
     width: 80px;
     height: 120px;
     margin: 15px;
@@ -30,27 +30,25 @@
     -webkit-border-radius: 8px;
     display: inline-block;
 }
-.communication{
 
-    text-align: center;
-    display: inline-block;
-    background-color: darksalmon;
-    width: 102px;
-    height: 20px;
-    top:140px;
-    left:55px;
-    margin-right:-110px;
-    position: relative;
+.animal span {
+    display: block;
 }
 
-.cooperation{
+.property {
+    width: 70px;
+    height: 12px;
+    background-color: chocolate;
+    vertical-align: top;
+    font-size: 12px;
+    border: solid 1px black;
+    margin:3px;
+    position:relative;
 
-    text-align: center;
-    display: inline-block;
-    background-color: aquamarine;
-    width: 82px;
-    height: 20px;
-    top:140px;
-    left:-60px;
-    position: relative;
 }
+
+.parameter {
+    display: block;font-size: 12px;
+
+}
+

@@ -48,24 +48,6 @@ class PlayerTest {
         assertThrows(GameException.class, ()->{
             player.connectAnimal(1,4,"Communication");
         }, "It's not your animal(s)");
-
-        player.addAnimal(an4);
-        player.connectAnimal(1,4,"Communication");
-
-        int[] list=new int[4];
-        int[] rightOrder={1,2,3,4};
-        List<Animal> sorted=player.animals.get(0);
-        for (int i=0;i<list.length;i++) {
-            list[i]=sorted.get(i).getId();
-        }
-        assert(Arrays.equals(list,rightOrder));
-
-
-
-
-
-
-
     }
 
 }

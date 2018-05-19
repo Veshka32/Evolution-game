@@ -1,26 +1,22 @@
 package game.entities;
 
-import game.constants.Constants;
 import game.controller.GameException;
 
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.spi.JsonProvider;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Animal {
     List<String> propertyList = new ArrayList<>();
     int id;
     int totalHungry = 1;
+    int cooperateTo; //default 0
+    int communicateTo;
+    transient int symbiosToAnimal;
     int currentHungry;
-    transient String owner;
-    private transient int cooperateToAnimal; //default 0
-    private transient int communicateToAnimal;
-    transient int sortIndex; //comm=2, coop=1
-    int symbiosToAnimal;
-
+    int chain;
     int fat;
+
+    transient String owner;
+
 
 
     public Animal(int id, String player) {
@@ -47,13 +43,9 @@ public class Animal {
     public void addDoubleProperty(String property, int id) throws GameException {
 
         if (property.equals("Cooperation")) {
-            cooperateToAnimal = id;
-            sortIndex=1; //update anyway
-        }
-
-        if (property.equals("Communication")) {
-            communicateToAnimal=id;
-            if (sortIndex!=1) sortIndex=2; //update only if not coop
+            cooperateTo = id;
+        } else if (property.equals("Communication")) {
+            communicateTo=id;
         }
 
         propertyList.add(property);
@@ -66,8 +58,6 @@ public class Animal {
     public int getId() {
         return id;
     }
-
-    public int getSortIndex(){return sortIndex;}
 
     public boolean hasProperty(String property){
         return propertyList.contains(property);

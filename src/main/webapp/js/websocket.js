@@ -62,23 +62,53 @@ function buildPlayerBlock(player) {
         var personal = document.getElementById("personal");
         personal.innerHTML = "";
 
-        for (var k = 0; k < player.cards.length; k++) {
+        for (let k = 0; k < player.cards.length; k++) {
             var card = player.cards[k];
             personal.appendChild(buildCard(card));
         }
     }
 
-    for (var i = 0; i < player.animals.length; i++) {
-        var animalGroup = player.animals[i];
-        for (let m = 0; m < animalGroup.length; m++) {
-            var animDiv = buildAnimal(animalGroup[m]);
-            animDiv.appendChild(document.createTextNode("group #" + i + "\n"));
-            playerBlock.appendChild(animDiv);
-        }
-
+    for (let id in player.animals) {
+        let animal=player.animals[id];
+        playerBlock.appendChild(buildAnimal(animal));
     }
 
     return playerBlock;
+}
+
+function buildAnimal(an) {
+    var animDiv = document.createElement("div");
+    animDiv.setAttribute("class", "animal");
+    for (var key in an) {
+        if (key == "propertyList") {
+            for (let m in an.propertyList) {
+                let span = document.createElement("span");
+                span.setAttribute("class", "property");
+                span.appendChild(document.createTextNode(an.propertyList[m]));
+                animDiv.appendChild(span);
+            }
+        }
+        else if(an[key]!==0)
+            {
+                let span = document.createElement("span");
+                span.setAttribute("class","parameter");
+                span.innerText = key + ": " + an[key];
+                animDiv.appendChild(span);
+            }
+        }
+
+        animDiv.addEventListener("click", function () {
+        if (targedAnimalId == null || targedAnimalId == undefined) {
+            targedAnimalId = an.id;
+        }
+        else secondAnimalId = an.id;
+
+        var doing = document.getElementById("doing");
+        doing.innerHTML = "play property=" + draggedProperty + "<br/>" + "on animal #" + targedAnimalId;
+        if (!(secondAnimalId == null || secondAnimalId == undefined)) doing.innerText += "and animal #" + secondAnimalId;
+    });
+
+    return animDiv;
 }
 
 function playProperty(property, cardId) {
@@ -120,58 +150,7 @@ function buildCommunication() {
     return comm;
 }
 
-function buildAnimal(an) {
-    var animDiv = document.createElement("div");
-    animDiv.setAttribute("class", "animal");
-    animDiv.innerHTML += an.id + "<br/>";
 
-    var props = document.createElement("span");
-    animDiv.appendChild(props);
-
-    if (an.hasOwnProperty("propertyList")) {
-        let length=an.propertyList.length;
-
-        for (let i = 0; i < length; i++) {
-            var prop = an.propertyList[i];
-
-            if (prop == "Communication") {
-                //if (length < 3 && i!=0) animDiv.appendChild(buildCommunication());
-                //else if (i != 0 && i != length - 1)
-                    animDiv.appendChild(buildCommunication());
-            }
-
-            else if (prop == "Cooperation") {
-                //if (length < 3 && i!=length-1) animDiv.appendChild(buildCooperation());
-                //else if (i != 0 && i != length - 1)
-                    animDiv.appendChild(buildCooperation());
-            }
-
-            else {
-                var text = document.createElement("span");
-                text.appendChild(document.createTextNode(prop));
-                props.appendChild(text);
-            }
-
-        }
-    }
-
-    var totalHungry = document.createElement("span");
-    totalHungry.innerHTML = "Total Hungry: " + an.totalHungry + "<br/>";
-    animDiv.appendChild(totalHungry);
-
-    animDiv.addEventListener("click", function () {
-        if (targedAnimalId == null || targedAnimalId == undefined) {
-            targedAnimalId = an.id;
-        }
-        else secondAnimalId = an.id;
-
-        var doing = document.getElementById("doing");
-        doing.innerHTML = "play property=" + draggedProperty + "<br/>" + "on animal #" + targedAnimalId;
-        if (!(secondAnimalId == null || secondAnimalId == undefined)) doing.innerText += "and animal #" + secondAnimalId;
-    });
-
-    return animDiv;
-}
 
 
 function buildCard(card) {
@@ -236,9 +215,9 @@ function leave() {
     location.assign("/evo/signIn")
 }
 
-function restart(){
-    if (status){
-        move="Restart";
+function restart() {
+    if (status) {
+        move = "Restart";
         socket.send(buildMessage());
     }
 

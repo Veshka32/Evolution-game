@@ -10,8 +10,7 @@ public class Player {
     private final String name;
     List<Card> cards=new ArrayList<>();
     private transient Graph animalGraph =new Graph(84);
-    private transient Map<Integer,Animal> animalMap=new HashMap<>();
-    List<List<Animal>> animals=new ArrayList<>();
+    private Map<Integer,Animal> animals=new HashMap<>();
 
     public Player(String login){
         this.name=login;
@@ -36,7 +35,7 @@ public class Player {
 
     public void addAnimal(Animal animal){
         int id=animal.getId();
-        animalMap.put(id,animal);
+        animals.put(id,animal);
         buildComponents();
     }
 
@@ -47,58 +46,41 @@ public class Player {
         CC cc=new CC(animalGraph);
         if (cc.connected(id1,id2)) throw new GameException("These animals are already helping each other!");
 
-        animalMap.get(id1).addDoubleProperty(type, id2);
-        animalMap.get(id2).addDoubleProperty(type,id1);
-        union(id1,id2,type);
+        animals.get(id1).addDoubleProperty(type, id2);
+        animals.get(id2).addDoubleProperty(type, id1);
+        union(id1,id2);
         buildComponents();
     }
 
-    public void union(int a, int b,String type){
+    public void union(int a, int b){
         animalGraph.addEdge(a,b);
     }
 
     public void buildComponents(){
         CC cc=new CC(animalGraph);
 
-        Map<Integer,List<Animal>> components=new HashMap<>();
-
-        for (int id:animalMap.keySet()){
-            components.put(cc.id(id),new ArrayList<>());      //
-        }
-
-        for (int id:animalMap.keySet()){
-            int componentId=cc.id(id);
-            components.get(componentId).add(animalMap.get(id));
-        }
-
-        animals.clear();
-        for (int key:components.keySet()){
-            animals.add(components.get(key));
-        }
-
-        for (List<Animal> list:animals
-             ) {
-            list.sort(Comparator.comparing(Animal::getSortIndex));
+        for (Animal animal:animals.values()) {
+            animal.chain=cc.id(animal.getId());
         }
     }
 
     public Animal getAnimal(int id){
-        return animalMap.get(id);
+        return animals.get(id);
     }
 
     public boolean hasAnimal(int id){
-       return animalMap.containsKey(id);
+       return animals.containsKey(id);
     }
 
     public int howManyAnimals(){
-        return animalMap.size();
+        return animals.size();
     }
 
    public boolean hasCards(){
         return !cards.isEmpty();
    }
 
-   public boolean hasAnimals(){return !animalMap.isEmpty();}
+   public boolean hasAnimals(){return !animals.isEmpty();}
 
 
 
