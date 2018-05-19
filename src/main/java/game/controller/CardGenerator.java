@@ -24,7 +24,7 @@ public class CardGenerator {
             cardList.add(new Card(cardID++, "Tail loss"));
             cardList.add(new Card(cardID++, "Hibernation"));
             cardList.add(new Card(cardID++, "Poisonous"));
-            cardList.add(new Card(cardID++, "Communication"));
+            cardList.add(new Card(cardID++, "Communication","Predator"));
             cardList.add(new Card(cardID++, "Scavenger"));
             cardList.add(new Card(cardID++, "Running"));
             cardList.add(new Card(cardID++, "Mimicry"));
