@@ -60,8 +60,6 @@ To avoid infinite loop while do filter on index.jsp, use req.getRequestDispatche
 
 prepared statement: http://www.h2database.com/html/advanced.html#sql_injection
 
-
-userdao?
 @test
 @EJB
 
@@ -69,5 +67,5 @@ Maven dependency scopes: https://maven.apache.org/guides/introduction/introducti
 
 more about filters
 who and how can destroy game
-
-clear playerlist after endPhase;
+leave game and back
+think about concurrency

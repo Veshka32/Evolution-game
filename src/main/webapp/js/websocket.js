@@ -202,7 +202,7 @@ function makeMove() {
 function endPhase() {
     if (status) {
         move = "EndPhase";
-        document.getElementById("doing").innerText = playerName + "end move";
+        document.getElementById("doing").innerText = "end move";
         let json = buildMessage();
         clearFields();
         socket.send(json);
@@ -234,6 +234,14 @@ function leave() {
     move = "Leave";
     socket.send(buildMessage());
     location.assign("/evo/signIn")
+}
+
+function restart(){
+    if (status){
+        move="Restart";
+        socket.send(buildMessage());
+    }
+
 }
 
 function init() {

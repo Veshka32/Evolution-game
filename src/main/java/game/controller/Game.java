@@ -21,7 +21,7 @@ public class Game {
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
     private transient int whoStartPhase; //default 0
     transient List<String> playersTurn = new LinkedList<>();
-    transient int playerOnMoveIndex;
+    transient int playerOnMove;
     transient String error;
     private transient HashMap<Integer, Animal> animalList = new HashMap<>();
     private transient CardGenerator generator = new CardGenerator();
@@ -35,6 +35,9 @@ public class Game {
     public void makeMove(Move move) {
         error = null;
         moves = move.getPlayer() + " " + move.getLog();
+
+        if (move.getMove().equals("Restart")) {restart();return;}
+
         switch (phase) {
             case EVOLUTION:
                 try {
@@ -52,12 +55,12 @@ public class Game {
             goToNextPhase();
             return;
         }
-        playerOnMoveIndex = playerOnMoveIndex % playersTurn.size(); //if name was last in array, after array becomes smaller, go to ind 0
+        playerOnMove = playerOnMove % playersTurn.size(); //if name was last in array, after array becomes smaller, go to ind 0
     }
 
 
     void switchPlayerOnMove() {
-        playerOnMoveIndex = (playerOnMoveIndex + 1) % Constants.NUMBER_OF_PLAYER.getValue(); // circular array
+        playerOnMove = (playerOnMove + 1) % Constants.NUMBER_OF_PLAYER.getValue(); // circular array
     }
 
     void goToNextPhase() {
@@ -77,18 +80,22 @@ public class Game {
                 break;
         }
         playersTurn = new LinkedList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
-        playerOnMoveIndex = 0;
+        playerOnMove = 0;
     }
 
+    public boolean onProgress(){
+        return !phase.equals(Phase.START);
+    }
 
     public String convertToJsonString(String name) {
+
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
-        if (error != null && playersTurn.get(playerOnMoveIndex).equals(name)) {
+        if (error != null && playersTurn.get(playerOnMove).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
         } else {
-            if (playersTurn.get(playerOnMoveIndex).equals(name))
+            if (playersTurn.size()>0 && playersTurn.get(playerOnMove).equals(name))
                 element.getAsJsonObject().addProperty("status", true);
             else element.getAsJsonObject().addProperty("status", false);
         }
@@ -97,7 +104,7 @@ public class Game {
     }
 
     public void addPlayer(String userName) {
-        playersList[playerOnMoveIndex++] = userName;
+        playersList[playerOnMove++] = userName;
         players.put(userName, new Player(userName));
 
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
@@ -110,7 +117,16 @@ public class Game {
         playersTurn = new LinkedList<>(Arrays.asList(Arrays.copyOf(playersList, playersList.length)));
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));
-        playerOnMoveIndex = 0;
+        playerOnMove = 0;
+    }
+
+    private void restart(){
+        cardList = generator.getCards();
+        playersTurn = new LinkedList<>(Arrays.asList(Arrays.copyOf(playersList, playersList.length)));
+        for (String name : playersTurn){
+            players.replace(name,new Player(name));
+            addCardsOnStart(players.get(name));}
+        playerOnMove = 0;
     }
 
     private void addCardsOnStart(Player player) {

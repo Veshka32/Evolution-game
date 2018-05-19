@@ -32,31 +32,31 @@ class GameTest {
         game.addPlayer(player2);
         assert (game.phase.equals(Phase.EVOLUTION));
         assert (game.getAllPlayers().equals(Arrays.toString(playersList)));
-        assert (game.playerOnMoveIndex == 0);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player1));
+        assert (game.playerOnMove == 0);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player1));
 
         //players make moves
         Move move = new Move("pop", 84, 0, 0, "MakeAnimal", null, null);
         game.makeMove(move);
-        assert (game.playerOnMoveIndex == 1);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player2));
+        assert (game.playerOnMove == 1);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player2));
 
         move = new Move("test", 78, 0, 0, "MakeAnimal", null, null);
         game.makeMove(move);
-        assert (game.playerOnMoveIndex == 0);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player1));
+        assert (game.playerOnMove == 0);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player1));
 
         //player pop ends phase
         move = new Move("pop", 0, 0, 0, "EndPhase", null, null);
         game.makeMove(move);
-        assert (game.playerOnMoveIndex == 0);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player2));
+        assert (game.playerOnMove == 0);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player2));
 
         //player test ends phase
         move = new Move("test", 0, 0, 0, "EndPhase", null, null);
         game.makeMove(move);
-        assert (game.playerOnMoveIndex == 0);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player1));
+        assert (game.playerOnMove == 0);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player1));
         assert (game.phase.equals(Phase.FEED));
     }
 
@@ -69,20 +69,20 @@ class GameTest {
         game.addPlayer(player2);
         assert (game.phase.equals(Phase.EVOLUTION));
         assert (game.getAllPlayers().equals(Arrays.toString(playersList)));
-        assert (game.playerOnMoveIndex == 0);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player1));
+        assert (game.playerOnMove == 0);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player1));
 
         //players make moves
         Move move = new Move("pop", 84, 0, 0, "MakeAnimal", null, null);
         game.makeMove(move);
-        assert (game.playerOnMoveIndex == 1);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player2));
+        assert (game.playerOnMove == 1);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player2));
 
         //player test ends phase
         move = new Move("test", 0, 0, 0, "EndPhase", null, null);
         game.makeMove(move);
-        assert (game.playerOnMoveIndex == 0);
-        assert (game.playersTurn.get(game.playerOnMoveIndex).equals(player1));
+        assert (game.playerOnMove == 0);
+        assert (game.playersTurn.get(game.playerOnMove).equals(player1));
         assert (game.phase.equals(Phase.EVOLUTION));
     }
 

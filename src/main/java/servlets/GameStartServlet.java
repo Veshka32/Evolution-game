@@ -21,7 +21,7 @@ public class GameStartServlet extends HttpServlet {
         if (game.getPlayer(name)!=null){req.setAttribute("playersList",game.getAllPlayers());
         resp.sendRedirect("views/socket.html");}
 
-        else if (game.isFull()) {
+        else if (game.onProgress()) {
             req.setAttribute("message", "Sorry,game is full");
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         }
