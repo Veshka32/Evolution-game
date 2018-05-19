@@ -130,6 +130,7 @@ public class Game {
             addCardsOnStart(players.get(name));
         }
         playerOnMove = 0;
+        phase=Phase.EVOLUTION;
     }
 
     private void addCardsOnStart(Player player) {

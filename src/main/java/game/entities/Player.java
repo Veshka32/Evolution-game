@@ -11,7 +11,7 @@ public class Player {
     List<Card> cards=new ArrayList<>();
     private transient Graph animalGraph =new Graph(84);
     private transient Map<Integer,Animal> animalMap=new HashMap<>();
-    Collection<List<Animal>> animals=new ArrayList<>();
+    List<List<Animal>> animals=new ArrayList<>();
 
     public Player(String login){
         this.name=login;
@@ -74,6 +74,11 @@ public class Player {
         animals.clear();
         for (int key:components.keySet()){
             animals.add(components.get(key));
+        }
+
+        for (List<Animal> list:animals
+             ) {
+            list.sort(Comparator.comparing(Animal::getSortIndex));
         }
     }
 

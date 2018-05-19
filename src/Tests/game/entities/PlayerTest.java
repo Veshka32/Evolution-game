@@ -3,6 +3,10 @@ package game.entities;
 import game.controller.GameException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
@@ -16,10 +20,10 @@ class PlayerTest {
     public void connectAnimal() throws GameException {
         player.addAnimal(an1);
         player.addAnimal(an2);
-        player.connectAnimal(1,2,"Communication");
+        player.connectAnimal(1,2,"Cooperation");
 
         assertThrows(GameException.class, ()->{
-            player.connectAnimal(1,2,"Communication");
+            player.connectAnimal(1,2,"Cooperation");
         }, "These animals are already helping each other!");
 
         assertThrows(GameException.class,()->{
@@ -38,8 +42,27 @@ class PlayerTest {
         }, "These animals are already helping each other!");
 
         assertThrows(GameException.class, ()->{
+            player.connectAnimal(2,3,"Cooperation");
+        }, "These animals are already helping each other!");
+
+        assertThrows(GameException.class, ()->{
             player.connectAnimal(1,4,"Communication");
         }, "It's not your animal(s)");
+
+        player.addAnimal(an4);
+        player.connectAnimal(1,4,"Communication");
+
+        int[] list=new int[4];
+        int[] rightOrder={1,2,3,4};
+        List<Animal> sorted=player.animals.get(0);
+        for (int i=0;i<list.length;i++) {
+            list[i]=sorted.get(i).getId();
+        }
+        assert(Arrays.equals(list,rightOrder));
+
+
+
+
 
 
 
