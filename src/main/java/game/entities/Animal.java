@@ -13,7 +13,8 @@ public class Animal {
     transient int symbiosToAnimal;
     int currentHungry;
     int chain;
-    int fat;
+    int fatSupply;
+    int currentFatSupply;
 
     transient String owner;
 
@@ -25,22 +26,26 @@ public class Animal {
     }
 
     public void addProperty(String property) throws GameException {
+
+
         if (property.equals("Scavenger") && propertyList.contains("Predator"))
             throw new GameException("Predator cannot be a scavenger");
 
-        if (property.equals("Predator") && propertyList.contains("Scavenger"))
+        else if (property.equals("Predator") && propertyList.contains("Scavenger"))
             throw new GameException("Scavenger cannot be a predator");
 
-        if (!(property.equals("Fat")) && propertyList.contains(property))
+        else if (!(property.equals("Fat")) && propertyList.contains(property))
             throw new GameException("This animal already has property: " + property);
 
+        else if (property.equals("Fat")) {fatSupply++; return;} //do not put in property list
+
         propertyList.add(property);
-        if (property.equals("Fat")) fat++;
+
         if (property.equals("Predator") || property.equals("Big")) totalHungry++;
         if (property.equals("Parasite")) totalHungry += 2;
     }
 
-    public void addDoubleProperty(String property, int id) throws GameException {
+    public void addDoubleProperty(String property, int id)  {
 
         if (property.equals("Cooperation")) {
             cooperateTo = id;
