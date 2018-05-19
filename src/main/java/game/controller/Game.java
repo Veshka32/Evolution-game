@@ -23,20 +23,23 @@ public class Game {
     transient List<String> playersTurn = new LinkedList<>();
     transient int playerOnMove;
     transient String error;
-    private transient HashMap<Integer, Animal> animalList = new HashMap<>();
+    transient HashMap<Integer, Animal> animalList = new HashMap<>();
     private transient CardGenerator generator = new CardGenerator();
 
     //go to json
     private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
-    private HashMap<String, Player> players = new HashMap<>();
-    private final String[] playersList = new String[Constants.NUMBER_OF_PLAYER.getValue()];
+    private Map<String, Player> players = new LinkedHashMap<>();
+    //private final String[] playersList = new String[Constants.NUMBER_OF_PLAYER.getValue()];
 
     public void makeMove(Move move) {
         error = null;
         moves = move.getPlayer() + " " + move.getLog();
 
-        if (move.getMove().equals("Restart")) {restart();return;}
+        if (move.getMove().equals("Restart")) {
+            restart();
+            return;
+        }
 
         switch (phase) {
             case EVOLUTION:
@@ -51,16 +54,14 @@ public class Game {
 
     void playerEndsPhase(String name) {
         playersTurn.remove(name);
-        if (playersTurn.isEmpty()) {
+        if (playersTurn.isEmpty())
             goToNextPhase();
-            return;
-        }
-        playerOnMove = playerOnMove % playersTurn.size(); //if name was last in array, after array becomes smaller, go to ind 0
+
     }
 
 
     void switchPlayerOnMove() {
-        playerOnMove = (playerOnMove + 1) % Constants.NUMBER_OF_PLAYER.getValue(); // circular array
+        playerOnMove = (playerOnMove + 1) % playersTurn.size(); // circular array;
     }
 
     void goToNextPhase() {
@@ -79,11 +80,11 @@ public class Game {
                 phase = Phase.EVOLUTION;
                 break;
         }
-        playersTurn = new LinkedList<>(Arrays.asList(players.keySet().toArray(new String[players.size()])));
+        playersTurn = new LinkedList<>(players.keySet());
         playerOnMove = 0;
     }
 
-    public boolean onProgress(){
+    public boolean onProgress() {
         return !phase.equals(Phase.START);
     }
 
@@ -92,10 +93,11 @@ public class Game {
         Gson gson = new Gson();
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
+        element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
         if (error != null && playersTurn.get(playerOnMove).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
         } else {
-            if (playersTurn.size()>0 && playersTurn.get(playerOnMove).equals(name))
+            if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
                 element.getAsJsonObject().addProperty("status", true);
             else element.getAsJsonObject().addProperty("status", false);
         }
@@ -104,7 +106,7 @@ public class Game {
     }
 
     public void addPlayer(String userName) {
-        playersList[playerOnMove++] = userName;
+
         players.put(userName, new Player(userName));
 
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
@@ -114,18 +116,19 @@ public class Game {
 
     private void start() {
         cardList = generator.getCards();
-        playersTurn = new LinkedList<>(Arrays.asList(Arrays.copyOf(playersList, playersList.length)));
+        playersTurn = new LinkedList<>(players.keySet());
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));
         playerOnMove = 0;
     }
 
-    private void restart(){
+    private void restart() {
         cardList = generator.getCards();
-        playersTurn = new LinkedList<>(Arrays.asList(Arrays.copyOf(playersList, playersList.length)));
-        for (String name : playersTurn){
-            players.replace(name,new Player(name));
-            addCardsOnStart(players.get(name));}
+        playersTurn = new LinkedList<>(players.keySet());
+        for (String name : playersTurn) {
+            players.replace(name, new Player(name));
+            addCardsOnStart(players.get(name));
+        }
         playerOnMove = 0;
     }
 
@@ -134,7 +137,6 @@ public class Game {
             player.addCard(cardList.remove(cardList.size() - 1));
         }
     }
-
 
     public void setMoves(String s) {
         moves = s;
@@ -146,6 +148,7 @@ public class Game {
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
         animalList.put(animal.getId(), animal);
+
     }
 
     Animal getAnimal(int i) {

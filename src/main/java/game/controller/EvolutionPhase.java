@@ -1,5 +1,6 @@
 package game.controller;
 
+import game.constants.Phase;
 import game.entities.Animal;
 import game.entities.Move;
 import game.entities.Player;
@@ -15,7 +16,7 @@ class EvolutionPhase {
 
             case "EndPhase":
                 game.playerEndsPhase(move.getPlayer());
-                return; //no need in switchPlayerOnMove
+                break;
 
             case "PlayProperty":
                 if (isDouble(move.getProperty()))
@@ -24,7 +25,8 @@ class EvolutionPhase {
                     processSimpleProperty(game, move);
                 }
         }
-        game.switchPlayerOnMove();
+        if (game.phase.equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
+
     }
 
     private boolean isDouble(String property) {
