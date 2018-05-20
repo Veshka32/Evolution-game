@@ -15,7 +15,7 @@ public class Animal {
     List<String> propertyList = new ArrayList<>();
     int id;
     int totalHungry = 1;
-    int currentHungry;
+    int currentHungry=totalHungry;
     int chain;
     int fatSupply;
     int currentFatSupply;
@@ -32,7 +32,6 @@ public class Animal {
     }
 
     public void addProperty(String property) throws GameException {
-
 
         if (property.equals("Scavenger") && propertyList.contains("Predator"))
             throw new GameException("Predator cannot be a scavenger");
@@ -53,6 +52,17 @@ public class Animal {
 
     public String getOwner() {
         return owner;
+    }
+
+    public void eatFood() throws GameException {
+
+        if (currentHungry==0) throw new GameException("This animal is fed!");
+
+            currentHungry--;
+    }
+
+    public boolean isHungry(){
+        return currentHungry!=0;
     }
 
     public int getId() {

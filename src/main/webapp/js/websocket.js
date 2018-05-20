@@ -22,6 +22,7 @@ function onMessage(event) {
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
+    if (game.phase=="FOOD") document.getElementById("food").innerText=game.food;
     document.getElementById("players").innerText = game.playersList;
     var yourStatus = document.getElementById("status");
 
@@ -36,6 +37,7 @@ function onMessage(event) {
 
     var common = document.getElementById("common");
     common.innerText = "";
+
 
     for (var name in game.players) {
         var player = game.players[name];

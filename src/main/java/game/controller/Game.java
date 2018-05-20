@@ -30,7 +30,13 @@ public class Game {
     private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
     private Map<String, Player> players = new LinkedHashMap<>();
-    //private final String[] playersList = new String[Constants.NUMBER_OF_PLAYER.getValue()];
+    int food;
+
+    public void deleteFood(){
+        food--;
+        if (food==0)
+            goToNextPhase();
+    }
 
     public void makeMove(Move move) {
         error = null;
@@ -49,6 +55,9 @@ public class Game {
                 } catch (GameException e) {
                     error = e.getMessage();
                 }
+            case FEED:
+                FeedPhase fp=new FeedPhase();
+
         }
     }
 
@@ -71,6 +80,8 @@ public class Game {
                 start();
                 break;
             case EVOLUTION:
+                Random r=new Random();
+                food=r.nextInt(Constants.MAX_FOOD.getValue()-1)+Constants.MIN_FOOD.getValue();
                 phase = Phase.FEED;
                 break;
             case FEED:
