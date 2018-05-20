@@ -9,7 +9,6 @@ import java.util.*;
 public class Player {
     private final String name;
     List<Card> cards=new ArrayList<>();
-    private transient Graph animalGraph =new Graph(84);
     private Map<Integer,Animal> animals=new HashMap<>();
 
     public Player(String login){
@@ -34,35 +33,50 @@ public class Player {
     }
 
     public void addAnimal(Animal animal){
-        int id=animal.getId();
-        animals.put(id,animal);
-        buildComponents();
+        animals.put(animal.getId(),animal);
     }
 
-    public void connectAnimal(int id1,int id2,String type) throws GameException {
-        if (!(hasAnimal(id1) && hasAnimal(id2)))
+    public void connectAnimal(int id1,int id2,String property) throws GameException {
+
+        if (animals.size() < 2) throw new GameException("You don't have enough animals");
+
+        if (!(animals.containsKey(id1) && animals.containsKey(id2)))
             throw new GameException("It's not your animal(s)");
 
-        CC cc=new CC(animalGraph);
-        if (cc.connected(id1,id2)) throw new GameException("These animals are already helping each other!");
+        if (id1 == id2)
+            throw new GameException("You must play this property on two different animals");
 
-        animals.get(id1).addDoubleProperty(type, id2);
-        animals.get(id2).addDoubleProperty(type, id1);
-        union(id1,id2);
-        buildComponents();
-    }
+        if (id1 == 0 ||id2 == 0)
+            throw new GameException("You must pick two animals to play this card");
 
-    public void union(int a, int b){
-        animalGraph.addEdge(a,b);
-    }
+        Animal animal=animals.get(id1);
+        Animal animal2=animals.get(id2);
 
-    public void buildComponents(){
-        CC cc=new CC(animalGraph);
+        if (property.equals("Communication")) {
+            if (animal.isCommunicate(id2)) throw new GameException("These animals are already communicating");
+            else {
+                animal.setCommunicateTo(id2);
+                animal2.setCommunicateTo(id1);}
+            }
+        else if (property.equals("Cooperation")){
+            if (animal.isCooperate(id2))
+            throw new GameException("These animals are already cooperating");
+            else {
+                animal.setCooperateTo(id2);
+                animal2.setCooperateTo(id1);
+            }}
 
-        for (Animal animal:animals.values()) {
-            animal.chain=cc.id(animal.getId());
+        else if (property.equals("Symbiosis")){
+            if (animal.isInSymbiosis(id2))
+            throw new GameException("Animal #"+id1+" is already in symbiosis with animal #"+id2);
+            else {
+                animal.setSymbiosysWith(id2);
+                animal2.setSymbiontFor(id1);
+            }
         }
     }
+
+
 
     public Animal getAnimal(int id){
         return animals.get(id);

@@ -88,7 +88,7 @@ function buildAnimal(an) {
                 animDiv.appendChild(span);
             }
         }
-        else if(an[key]!==0)
+        else if(an[key]!==null && an[key]!==0)
             {
                 let span = document.createElement("span");
                 span.setAttribute("class","parameter");

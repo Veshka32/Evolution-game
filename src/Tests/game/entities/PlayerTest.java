@@ -24,7 +24,7 @@ class PlayerTest {
 
         assertThrows(GameException.class, ()->{
             player.connectAnimal(1,2,"Cooperation");
-        }, "These animals are already helping each other!");
+        }, "These animals are already cooperating");
 
         assertThrows(GameException.class,()->{
             player.connectAnimal(1,3,"Communication"); //not throw any
@@ -35,19 +35,7 @@ class PlayerTest {
 
         assertThrows(GameException.class, ()->{
             player.connectAnimal(1,3,"Communication");
-        }, "These animals are already helping each other!");
-
-        assertThrows(GameException.class, ()->{
-            player.connectAnimal(2,3,"Communication");
-        }, "These animals are already helping each other!");
-
-        assertThrows(GameException.class, ()->{
-            player.connectAnimal(2,3,"Cooperation");
-        }, "These animals are already helping each other!");
-
-        assertThrows(GameException.class, ()->{
-            player.connectAnimal(1,4,"Communication");
-        }, "It's not your animal(s)");
+        }, "These animals are already communicating");
     }
 
 }

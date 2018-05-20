@@ -21,6 +21,7 @@ class EvolutionPhase {
             case "PlayProperty":
                 if (isDouble(move.getProperty()))
                     processDoubleProperty(game, move);
+
                 else {
                     processSimpleProperty(game, move);
                 }
@@ -30,7 +31,7 @@ class EvolutionPhase {
     }
 
     private boolean isDouble(String property) {
-        return property.equals("Cooperation") || property.equals("Communication");
+        return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
     }
 
     private void processDoubleProperty(Game game, Move move) throws GameException {
@@ -38,15 +39,8 @@ class EvolutionPhase {
         int id1=move.getAnimalId();
         int id2=move.getSecondAnimalId();
 
-        if (player.howManyAnimals() < 2) throw new GameException("You don't have enough animals");
+        player.connectAnimal(id1,id2,move.getProperty());
 
-        if (id1 == id2)
-            throw new GameException("You must play this property on two different animals");
-
-        if (id1 == 0 ||id2 == 0)
-            throw new GameException("You must pick two animals to play this card");
-
-       player.connectAnimal(id1,id2,move.getProperty());
     }
 
     private void processSimpleProperty(Game game, Move move) throws GameException {
@@ -65,4 +59,6 @@ class EvolutionPhase {
         }
         player.deleteCard(move.getCardId());
     }
+
+
 }
