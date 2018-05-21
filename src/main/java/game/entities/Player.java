@@ -44,11 +44,12 @@ public class Player {
         if (!(animals.containsKey(id1) && animals.containsKey(id2)))
             throw new GameException("It's not your animal(s)");
 
-        if (id1 == id2)
-            throw new GameException("You must play this property on two different animals");
-
         if (id1 == 0 || id2 == 0)
             throw new GameException("You must pick two animals to play this card");
+
+        else if (id1 == id2)
+            throw new GameException("You must play this property on two different animals");
+
 
         Animal animal = animals.get(id1);
         Animal animal2 = animals.get(id2);
