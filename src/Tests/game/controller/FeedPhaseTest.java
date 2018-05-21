@@ -43,14 +43,14 @@ class FeedPhaseTest {
         assert (game.phase.equals(Phase.FEED));
 
         // food=2;
-        game.food=2;
+        game.setFood(2);
         game.makeMove(new Move("pop",0,1,0,"eatFood",null,null));
         game.makeMove(new Move("test",0,2,0,"eatFood",null,null));
         assert (game.phase.equals(Phase.DEAD));
 
         //food=8;
         game.phase=Phase.FEED;
-        game.food=8;
+        game.setFood(Constants.MAX_FOOD.getValue());
         for (Player pl : game.players.values()
                 ) {
             pl.resetCurrentHungry();
@@ -60,7 +60,7 @@ class FeedPhaseTest {
         game.makeMove(new Move("pop",0,0,0,"EndPhase",null,null));
         game.makeMove(new Move("test",0,0,0,"EndPhase",null,null));
         assert (game.phase.equals(Phase.DEAD));
-        assert (game.food==6);
+        assert (game.getFood()==6);
 
     }
 

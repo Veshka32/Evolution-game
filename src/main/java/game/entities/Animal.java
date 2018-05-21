@@ -72,7 +72,7 @@ public class Animal {
     }
 
     public void eatExtraMeet(Player player, Game game){
-        if (game.food==0) return;
+        if (game.getFood()==0) return;
         if (currentHungry==0 || fedFlag || !(checkSymbiosis(owner))) return; //abort dfs if animal is fed, is already visited or can't get fish
 
         fedFlag=true;
