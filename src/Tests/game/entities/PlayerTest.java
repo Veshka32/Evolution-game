@@ -11,10 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
     Player player=new Player("test");
-    Animal an1=new Animal(1,"test");
-    Animal an2=new Animal(2,"test");
-    Animal an3=new Animal(3,"test");
-    Animal an4=new Animal(4,"pop");
+    Animal an1=new Animal(1,player);
+    Animal an2=new Animal(2,player);
+    Animal an3=new Animal(3,player);
 
     @Test
     public void connectAnimal() throws GameException {

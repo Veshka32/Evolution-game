@@ -10,7 +10,7 @@ class AnimalTest {
 
     @Test
     void addProperty() throws GameException {
-        String owner1="test";
+        Player owner1=new Player("test");
         int index=1;
         Animal scavenger=new Animal(index++,owner1);
         Animal predator=new Animal(index++,owner1);
@@ -38,10 +38,10 @@ class AnimalTest {
 
     @Test
     void eatMeet() throws GameException {
-        String name="test";
+        Player player=new Player("test");
         int index=1;
-        Animal[] animals={new Animal(index++,name),new Animal(index++,name),new Animal(index++,name),new Animal(index++,name)};
-        Player player=new Player(name);
+        Animal[] animals={new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player)};
+
         for (Animal an:animals
              ) {
             player.addAnimal(an);

@@ -52,10 +52,12 @@ public class Game {
                 case EVOLUTION:
                     EvolutionPhase ep = new EvolutionPhase();
                     ep.playProperty(this, move);
+                    break;
 
                 case FEED:
                     FeedPhase fp = new FeedPhase();
                     fp.eat(this, move);
+                    break;
             }
         } catch (GameException e) {
             error = e.getMessage();
@@ -83,6 +85,10 @@ public class Game {
             case EVOLUTION:
                 Random r = new Random();
                 food = r.nextInt(Constants.MAX_FOOD.getValue() - 1) + Constants.MIN_FOOD.getValue();
+                for (Player pl:players.values()
+                     ) {
+                    pl.reserCurrentHungry();
+                }
                 phase = Phase.FEED;
                 break;
             case FEED:
@@ -157,7 +163,7 @@ public class Game {
 
     void makeAnimal(Move move) {
         Player player = players.get(move.getPlayer());
-        Animal animal = new Animal(animalID++, player.getName());
+        Animal animal = new Animal(animalID++, player);
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
         animalList.put(animal.getId(), animal);

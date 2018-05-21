@@ -28,6 +28,8 @@ public class FeedPhase {
         if (animal==null) throw  new GameException("It's not your animal");
         animal.eatMeet(player);
         player.resetFedFlag();
+        game.deleteFood();
+
     }
 
 }

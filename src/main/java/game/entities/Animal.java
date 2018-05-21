@@ -10,7 +10,7 @@ public class Animal {
     transient ArrayList<Integer> communicateTo=new ArrayList<>();
     transient ArrayList<Integer> symbiontFor=new ArrayList();
     transient ArrayList<Integer> symbiosys=new ArrayList<>();
-    transient String owner;
+    transient Player owner;
     transient boolean fedFlag=false;
 
     //go to json
@@ -28,7 +28,7 @@ public class Animal {
 
 
 
-    public Animal(int id, String player) {
+    public Animal(int id, Player player) {
         this.id = id;
         owner = player;
     }
@@ -52,7 +52,7 @@ public class Animal {
         if (property.equals("Parasite")) totalHungry += 2;
     }
 
-    public String getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
@@ -64,18 +64,18 @@ public class Animal {
         currentHungry--;
         for (int id:cooperateTo
              ) {
-            player.getAnimal(id).eatFish(player);
+            player.getAnimal(id).eatFish();
         }
     }
 
-    public void eatFish(Player player) {
-        if (currentHungry==0 || fedFlag || !(checkSymbiosis(player))) return; //abort dfs if animal is fed, is already visited or can't get fish
+    public void eatFish() {
+        if (currentHungry==0 || fedFlag || !(checkSymbiosis(owner))) return; //abort dfs if animal is fed, is already visited or can't get fish
 
         fedFlag=true;
         currentHungry--;
         for (int id:cooperateTo
                 ) {
-            player.getAnimal(id).eatFish(player);
+            owner.getAnimal(id).eatFish();
         }
     }
 
