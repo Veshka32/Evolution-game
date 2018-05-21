@@ -82,7 +82,7 @@ public class Player {
         }
     }
 
-    public void reserCurrentHungry(){
+    public void resetCurrentHungry(){
         for (Animal an:animals.values()
                 ) {
             an.currentHungry=an.totalHungry;

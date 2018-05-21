@@ -1,13 +1,13 @@
 package game.entities;
 
+import game.constants.Constants;
+import game.controller.Game;
 import game.controller.GameException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnimalTest {
-
-
     @Test
     void addProperty() throws GameException {
         Player owner1=new Player("test");
@@ -38,41 +38,96 @@ class AnimalTest {
 
     @Test
     void eatMeet() throws GameException {
+        //set up player with 5 connected animals
+        Game game=new Game();
+        game.food=Constants.MAX_FOOD.getValue();
         Player player=new Player("test");
         int index=1;
-        Animal[] animals={new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player)};
+        Animal[] animals={new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player)};
 
         for (Animal an:animals
              ) {
             player.addAnimal(an);
         }
+
         player.connectAnimal(1,2,"Cooperation");
         player.connectAnimal(2,3,"Cooperation");
+        player.connectAnimal(3,4, "Communication");
+        player.connectAnimal(4,5,"Communication");
 
-        //feed one animal
-        animals[0].eatMeet(player);
-        assertThrows (GameException.class, ()->{animals[0].eatMeet(player);},"This animal is fed!");
-        assertThrows (GameException.class, ()->{animals[1].eatMeet(player);},"This animal is fed!");
-        assertThrows (GameException.class, ()->{animals[2].eatMeet(player);},"This animal is fed!");
-        assert (animals[0].currentHungry==0);
-        assert (animals[1].currentHungry==0);
-        assert (animals[2].currentHungry==0);
+        //feed animals 1 first
+        animals[0].eatMeet(player,game);
+        assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[2].eatMeet(player,game);},"This animal is fed!");
         assert (animals[3].currentHungry==1);
+        assert (animals[4].currentHungry==1);
+
+
+
+        //feed animal 3 first
         player.resetFedFlag();
-        player.reserCurrentHungry();
+        player.resetCurrentHungry();
+        game.food=Constants.MAX_FOOD.getValue();
+        animals[2].eatMeet(player,game);
+        assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[2].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[4].eatMeet(player,game);},"This animal is fed!");
+        assert (game.food==5); //5= MAX.FOOD-3
+
+        //feed animal 5 first
+        player.resetFedFlag();
+        player.resetCurrentHungry();
+        game.food=Constants.MAX_FOOD.getValue();
+        animals[4].eatMeet(player,game);
+        assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[2].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[4].eatMeet(player,game);},"This animal is fed!");
+        assert (game.food==5); //max 8-3
+
+        //feed animal 5 first, game has less food
+        player.resetFedFlag();
+        player.resetCurrentHungry();
+        game.food=2;
+        animals[4].eatMeet(player,game);
+        assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[4].eatMeet(player,game);},"This animal is fed!");
+        assert (game.food==0);
+        assert (animals[0].currentHungry==1);
+        assert (animals[1].currentHungry==1);
+        assert (animals[2].currentHungry==1);
+
+        //feed animal 3 first, game has less food
+        player.resetFedFlag();
+        player.resetCurrentHungry();
+        game.food=2;
+        animals[2].eatMeet(player,game);
+        assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[2].eatMeet(player,game);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
+        assert (animals[4].currentHungry==1);
+        assert (game.food==0);
 
         //feed big animal
+        player.resetFedFlag();
+        player.resetCurrentHungry();
+        game.food=Constants.MAX_FOOD.getValue();
         animals[0].addProperty("Big");
         animals[2].addProperty("Big");
-        player.reserCurrentHungry();
-        animals[0].eatMeet(player);
-        assertThrows (GameException.class, ()->{animals[1].eatMeet(player);},"This animal is fed!");
+        player.resetCurrentHungry();
+        animals[0].eatMeet(player,game);
+        assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
         assert (animals[0].currentHungry==1);
         assert (animals[1].currentHungry==0);
         assert (animals[2].currentHungry==1);
 
         //feed big animal again
-        animals[0].eatMeet(player);
+        animals[0].eatMeet(player,game);
         assert (animals[0].currentHungry==0);
         assert (animals[1].currentHungry==0);
         assert (animals[2].currentHungry==1);

@@ -26,10 +26,8 @@ public class FeedPhase {
         Player player=game.getPlayer(move.getPlayer());
         Animal animal=player.getAnimal(move.getAnimalId());
         if (animal==null) throw  new GameException("It's not your animal");
-        animal.eatMeet(player);
+        animal.eatMeet(player,game);
         player.resetFedFlag();
-        game.deleteFood();
-
     }
 
 }

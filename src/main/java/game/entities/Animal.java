@@ -56,16 +56,39 @@ public class Animal {
         return owner;
     }
 
-    public void eatMeet(Player player) throws GameException {
+    public void eatMeet(Player player, Game game) throws GameException {
 
         if (currentHungry==0) throw new GameException("This animal is fed!");
-        if (!checkSymbiosis(player)) throw new GameException("You should feed the symbiont first"); ;
+        if (!checkSymbiosis(player)) throw new GameException("You should feed the symbiont first");
+
         fedFlag=true;
         currentHungry--;
+        game.deleteFood();
         for (int id:cooperateTo
              ) {
             player.getAnimal(id).eatFish();
         }
+
+        for (int id:communicateTo){
+            player.getAnimal(id).eatExtraMeet(player,game);
+        }
+    }
+
+    public void eatExtraMeet(Player player, Game game){
+        if (game.food==0) return;
+        if (currentHungry==0 || fedFlag || !(checkSymbiosis(owner))) return; //abort dfs if animal is fed, is already visited or can't get fish
+
+        fedFlag=true;
+        currentHungry--;
+        game.deleteFood();
+        for (int id:communicateTo){
+            player.getAnimal(id).eatExtraMeet(player,game);
+        }
+
+        for (int id:cooperateTo){
+            player.getAnimal(id).eatFish();
+        }
+
     }
 
     public void eatFish() {
