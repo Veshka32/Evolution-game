@@ -30,7 +30,7 @@ public class Game {
     private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
     Map<String, Player> players = new LinkedHashMap<>();
-    int food;
+    private int food;
 
     public void deleteFood() {
         food--;
@@ -175,7 +175,7 @@ public class Game {
 
     }
 
-    public Animal getAnimal(int i) {
+    Animal getAnimal(int i) {
         return animalList.get(i);
     }
 
