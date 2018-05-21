@@ -53,39 +53,44 @@ public class Player {
         Animal animal = animals.get(id1);
         Animal animal2 = animals.get(id2);
 
-        if (property.equals("Communication")) {
-            if (animal.isCommunicate(id2) || animal.isCooperate(id2)) throw new GameException("These animals are already helping each other");
-            else {
-                animal.setCommunicateTo(id2);
-                animal2.setCommunicateTo(id1);
-            }
-        } else if (property.equals("Cooperation")) {
-            if (animal.isCommunicate(id2) || animal.isCooperate(id2)) throw new GameException("These animals are already helping each other");
-            else{
-                animal.setCooperateTo(id2);
-                animal2.setCooperateTo(id1);
-            }
-        } else if (property.equals("Symbiosis")) {
-            if (animal.isInSymbiosis(id2))
-                throw new GameException("Animal #" + id1 + " is already in symbiosis with animal #" + id2);
-            else {
-                animal.setSymbiosysWith(id2);
-                animal2.setSymbiontFor(id1);
-            }
+        switch (property) {
+            case "Communication":
+                if (animal.isCommunicate(id2) || animal.isCooperate(id2))
+                    throw new GameException("These animals are already helping each other");
+                else {
+                    animal.setCommunicateTo(id2);
+                    animal2.setCommunicateTo(id1);
+                }
+                break;
+            case "Cooperation":
+                if (animal.isCommunicate(id2) || animal.isCooperate(id2))
+                    throw new GameException("These animals are already helping each other");
+                else {
+                    animal.setCooperateTo(id2);
+                    animal2.setCooperateTo(id1);
+                }
+                break;
+            case "Symbiosis":
+                if (animal.isInSymbiosis(id2))
+                    throw new GameException("Animal #" + id1 + " is already in symbiosis with animal #" + id2);
+                else {
+                    animal.setSymbiosysWith(id2);
+                    animal2.setSymbiontFor(id1);
+                }
         }
     }
 
-    public void resetFedFlag(){
-        for (Animal an:animals.values()
-             ) {
-            an.fedFlag=false;
-        }
-    }
-
-    public void resetCurrentHungry(){
-        for (Animal an:animals.values()
+    public void resetFedFlag() {
+        for (Animal an : animals.values()
                 ) {
-            an.currentHungry=an.totalHungry;
+            an.fedFlag = false;
+        }
+    }
+
+    public void resetCurrentHungry() {
+        for (Animal an : animals.values()
+                ) {
+            an.currentHungry = an.totalHungry;
         }
     }
 
@@ -109,12 +114,4 @@ public class Player {
     public boolean hasAnimals() {
         return !animals.isEmpty();
     }
-
-
-//    public JsonArray getCards(){
-//        Gson json=new Gson();
-//        JsonElement element=json.toJsonTree(cards, new TypeToken<List<Card>>() {}.getType());
-//        JsonArray jsonArray = element.getAsJsonArray();
-//        return jsonArray;
-//    }
 }

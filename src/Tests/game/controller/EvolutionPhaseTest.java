@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-class GameTest {
+class EvolutionPhaseTest {
 
     public class TestCardGenerator extends CardGenerator {
         @Override
@@ -96,7 +96,6 @@ class GameTest {
         assert (game.playersTurn.size()==2);
         assert (game.playersTurn.get(game.playerOnMove).equals(player1));
         assert (game.phase.equals(Phase.FEED));
-
     }
 
     @Test
@@ -113,10 +112,6 @@ class GameTest {
 
         game.makeMove(new Move("pop", 83, 2, 0, "PlayProperty", "Swimming", null));
         assert (game.error.equals("It's not your animal"));
-
-
-
     }
-
 
 }

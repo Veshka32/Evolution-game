@@ -29,8 +29,8 @@ public class Game {
     //go to json
     private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
-    private Map<String, Player> players = new LinkedHashMap<>();
-   public int food;
+    Map<String, Player> players = new LinkedHashMap<>();
+    int food;
 
     public void deleteFood() {
         food--;
@@ -81,10 +81,9 @@ public class Game {
                 start();
                 break;
             case EVOLUTION:
-                Random r = new Random();
-                food = r.nextInt(Constants.MAX_FOOD.getValue() - 1) + Constants.MIN_FOOD.getValue();
-                for (Player pl:players.values()
-                     ) {
+                food = new Random().nextInt(Constants.MAX_FOOD.getValue() - 1) + Constants.MIN_FOOD.getValue();
+                for (Player pl : players.values()
+                        ) {
                     pl.resetCurrentHungry();
                 }
                 phase = Phase.FEED;
@@ -102,6 +101,14 @@ public class Game {
 
     public boolean onProgress() {
         return !phase.equals(Phase.START);
+    }
+
+    public int getFood(){
+        return food;
+    }
+
+    public void setFood(int i){
+        food=i;
     }
 
     public String convertToJsonString(String name) {

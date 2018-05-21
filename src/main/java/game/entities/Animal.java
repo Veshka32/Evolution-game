@@ -8,7 +8,7 @@ import java.util.*;
 public class Animal {
     transient ArrayList<Integer> cooperateTo=new ArrayList<>(); //default 0
     transient ArrayList<Integer> communicateTo=new ArrayList<>();
-    transient ArrayList<Integer> symbiontFor=new ArrayList();
+    transient ArrayList<Integer> symbiontFor=new ArrayList<>();
     transient ArrayList<Integer> symbiosys=new ArrayList<>();
     transient Player owner;
     transient boolean fedFlag=false;
@@ -18,15 +18,12 @@ public class Animal {
     int id;
     int totalHungry = 1;
     int currentHungry=totalHungry;
-
     int fatSupply;
     int currentFatSupply;
     String cooperateWith;
     String communicateWith;
     String symbiont;
     String symbiosisWith;
-
-
 
     public Animal(int id, Player player) {
         this.id = id;
