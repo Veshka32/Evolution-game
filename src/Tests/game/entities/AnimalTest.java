@@ -6,15 +6,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnimalTest {
-    String owner1="test";
-    String owner2="pop";
-    int index=1;
-    Animal scavenger=new Animal(index++,owner1);
-    Animal predator=new Animal(index++,owner1);
-    Animal an3=new Animal(index++,owner2);
+
 
     @Test
     void addProperty() throws GameException {
+        String owner1="test";
+        int index=1;
+        Animal scavenger=new Animal(index++,owner1);
+        Animal predator=new Animal(index++,owner1);
         scavenger.addProperty("Scavenger");
 
         assertThrows(GameException.class,()->{
@@ -38,6 +37,46 @@ class AnimalTest {
     }
 
     @Test
-    void addDoubleProperty() {
+    void eatMeet() throws GameException {
+        String name="test";
+        int index=1;
+        Animal[] animals={new Animal(index++,name),new Animal(index++,name),new Animal(index++,name),new Animal(index++,name)};
+        Player player=new Player(name);
+        for (Animal an:animals
+             ) {
+            player.addAnimal(an);
+        }
+        player.connectAnimal(1,2,"Cooperation");
+        player.connectAnimal(2,3,"Cooperation");
+
+        //feed one animal
+        animals[0].eatMeet(player);
+        assertThrows (GameException.class, ()->{animals[0].eatMeet(player);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[1].eatMeet(player);},"This animal is fed!");
+        assertThrows (GameException.class, ()->{animals[2].eatMeet(player);},"This animal is fed!");
+        assert (animals[0].currentHungry==0);
+        assert (animals[1].currentHungry==0);
+        assert (animals[2].currentHungry==0);
+        assert (animals[3].currentHungry==1);
+        player.resetFedFlag();
+        player.reserCurrentHungry();
+
+        //feed big animal
+        animals[0].addProperty("Big");
+        animals[2].addProperty("Big");
+        player.reserCurrentHungry();
+        animals[0].eatMeet(player);
+        assertThrows (GameException.class, ()->{animals[1].eatMeet(player);},"This animal is fed!");
+        assert (animals[0].currentHungry==1);
+        assert (animals[1].currentHungry==0);
+        assert (animals[2].currentHungry==1);
+
+        //feed big animal again
+        animals[0].eatMeet(player);
+        assert (animals[0].currentHungry==0);
+        assert (animals[1].currentHungry==0);
+        assert (animals[2].currentHungry==1);
+
+
     }
 }

@@ -1,5 +1,6 @@
 package game.entities;
 
+import game.controller.Game;
 import game.controller.GameException;
 
 import java.util.*;
@@ -10,13 +11,14 @@ public class Animal {
     transient ArrayList<Integer> symbiontFor=new ArrayList();
     transient ArrayList<Integer> symbiosys=new ArrayList<>();
     transient String owner;
+    transient boolean fedFlag=false;
 
     //go to json
     List<String> propertyList = new ArrayList<>();
     int id;
     int totalHungry = 1;
     int currentHungry=totalHungry;
-    int chain;
+
     int fatSupply;
     int currentFatSupply;
     String cooperateWith;
@@ -54,19 +56,47 @@ public class Animal {
         return owner;
     }
 
-    public void eatFood() throws GameException {
+    public void eatMeet(Player player) throws GameException {
 
         if (currentHungry==0) throw new GameException("This animal is fed!");
-
-            currentHungry--;
+        if (!checkSymbiosis(player)) throw new GameException("You should feed the symbiont first"); ;
+        fedFlag=true;
+        currentHungry--;
+        for (int id:cooperateTo
+             ) {
+            player.getAnimal(id).eatFish(player);
+        }
     }
 
-    public boolean isHungry(){
-        return currentHungry!=0;
+    public void eatFish(Player player) {
+        if (currentHungry==0 || fedFlag || !(checkSymbiosis(player))) return; //abort dfs if animal is fed, is already visited or can't get fish
+
+        fedFlag=true;
+        currentHungry--;
+        for (int id:cooperateTo
+                ) {
+            player.getAnimal(id).eatFish(player);
+        }
+    }
+
+    public boolean checkSymbiosis(Player player) { //return false if not all of the symbionts are fed;
+        if (!symbiosys.isEmpty()) {
+            for (int id : symbiosys
+                    ) {
+                if (player.getAnimal(id).currentHungry != 0)
+                    return false;
+
+            }
+        }
+        return true;
     }
 
     public int getId() {
         return id;
+    }
+
+    public boolean isHungry(){
+        return currentHungry!=0;
     }
 
     public boolean isCommunicate(int id){

@@ -36,21 +36,6 @@ public class Player {
         animals.put(animal.getId(), animal);
     }
 
-    public void feedAnimal(int id) throws GameException {
-        Animal animal = animals.get(id);
-        if (animal.currentHungry == 0) throw new GameException("This animal is fed!");
-        if (!animal.symbiosys.isEmpty()) {
-            for (int n : animal.symbiosys
-                    ) {
-                if (animals.get(n).currentHungry != 0)
-                    throw new GameException("You should feed the symbiont first");
-            }
-        }
-
-        if (!animal.communicateTo.isEmpty()) {};
-        if (!animal.cooperateTo.isEmpty()) {};
-        animal.currentHungry--;
-    }
 
     public void connectAnimal(int id1, int id2, String property) throws GameException {
 
@@ -69,15 +54,14 @@ public class Player {
         Animal animal2 = animals.get(id2);
 
         if (property.equals("Communication")) {
-            if (animal.isCommunicate(id2)) throw new GameException("These animals are already communicating");
+            if (animal.isCommunicate(id2) || animal.isCooperate(id2)) throw new GameException("These animals are already helping each other");
             else {
                 animal.setCommunicateTo(id2);
                 animal2.setCommunicateTo(id1);
             }
         } else if (property.equals("Cooperation")) {
-            if (animal.isCooperate(id2))
-                throw new GameException("These animals are already cooperating");
-            else {
+            if (animal.isCommunicate(id2) || animal.isCooperate(id2)) throw new GameException("These animals are already helping each other");
+            else{
                 animal.setCooperateTo(id2);
                 animal2.setCooperateTo(id1);
             }
@@ -88,6 +72,20 @@ public class Player {
                 animal.setSymbiosysWith(id2);
                 animal2.setSymbiontFor(id1);
             }
+        }
+    }
+
+    public void resetFedFlag(){
+        for (Animal an:animals.values()
+             ) {
+            an.fedFlag=false;
+        }
+    }
+
+    public void reserCurrentHungry(){
+        for (Animal an:animals.values()
+                ) {
+            an.currentHungry=an.totalHungry;
         }
     }
 

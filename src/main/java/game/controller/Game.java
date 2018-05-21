@@ -32,9 +32,9 @@ public class Game {
     private Map<String, Player> players = new LinkedHashMap<>();
     int food;
 
-    public void deleteFood(){
+    public void deleteFood() {
         food--;
-        if (food==0)
+        if (food == 0)
             goToNextPhase();
     }
 
@@ -47,17 +47,18 @@ public class Game {
             return;
         }
 
-        switch (phase) {
-            case EVOLUTION:
-                try {
+        try {
+            switch (phase) {
+                case EVOLUTION:
                     EvolutionPhase ep = new EvolutionPhase();
                     ep.playProperty(this, move);
-                } catch (GameException e) {
-                    error = e.getMessage();
-                }
-            case FEED:
-                FeedPhase fp=new FeedPhase();
 
+                case FEED:
+                    FeedPhase fp = new FeedPhase();
+                    fp.eat(this, move);
+            }
+        } catch (GameException e) {
+            error = e.getMessage();
         }
     }
 
@@ -80,8 +81,8 @@ public class Game {
                 start();
                 break;
             case EVOLUTION:
-                Random r=new Random();
-                food=r.nextInt(Constants.MAX_FOOD.getValue()-1)+Constants.MIN_FOOD.getValue();
+                Random r = new Random();
+                food = r.nextInt(Constants.MAX_FOOD.getValue() - 1) + Constants.MIN_FOOD.getValue();
                 phase = Phase.FEED;
                 break;
             case FEED:
@@ -141,7 +142,7 @@ public class Game {
             addCardsOnStart(players.get(name));
         }
         playerOnMove = 0;
-        phase=Phase.EVOLUTION;
+        phase = Phase.EVOLUTION;
     }
 
     private void addCardsOnStart(Player player) {
@@ -163,7 +164,7 @@ public class Game {
 
     }
 
-    Animal getAnimal(int i) {
+    public Animal getAnimal(int i) {
         return animalList.get(i);
     }
 
