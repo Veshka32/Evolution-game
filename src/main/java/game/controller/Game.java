@@ -117,7 +117,7 @@ public class Game {
             wins[i]=sorted.get(i).getName();
 
         winners=Arrays.toString(wins);
-        
+
     }
 
     public void addCards() {

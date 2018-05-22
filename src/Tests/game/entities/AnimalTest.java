@@ -32,7 +32,7 @@ class AnimalTest {
 
         predator.addProperty("Fat");
         predator.addProperty("Fat");
-        assert (predator.fatSupply==2);
+        assert (predator.totalFatSupply==2);
         assert (predator.totalHungry==2);
     }
 
