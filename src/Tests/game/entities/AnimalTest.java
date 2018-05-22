@@ -64,7 +64,7 @@ class AnimalTest {
 
         //feed animal 3 first
         player.resetFedFlag();
-        player.resetCurrentHungry();
+        player.resetFields();
         game.setFood(Constants.MAX_FOOD.getValue());
         animals[2].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
@@ -76,7 +76,7 @@ class AnimalTest {
 
         //feed animal 5 first
         player.resetFedFlag();
-        player.resetCurrentHungry();
+        player.resetFields();
         game.setFood(Constants.MAX_FOOD.getValue());
         animals[4].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
@@ -88,7 +88,7 @@ class AnimalTest {
 
         //feed animal 5 first, game has less food
         player.resetFedFlag();
-        player.resetCurrentHungry();
+        player.resetFields();
         game.setFood(2);
         animals[4].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
@@ -100,7 +100,7 @@ class AnimalTest {
 
         //feed animal 3 first, game has less food
         player.resetFedFlag();
-        player.resetCurrentHungry();
+        player.resetFields();
         game.setFood(2);
         animals[2].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
@@ -112,11 +112,11 @@ class AnimalTest {
 
         //feed big animal
         player.resetFedFlag();
-        player.resetCurrentHungry();
+        player.resetFields();
         game.setFood(Constants.MAX_FOOD.getValue());
         animals[0].addProperty("Big");
         animals[2].addProperty("Big");
-        player.resetCurrentHungry();
+        player.resetFields();
         animals[0].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
         assert (animals[0].currentHungry==1);

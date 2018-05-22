@@ -1,5 +1,6 @@
 package game.entities;
 
+import game.constants.Constants;
 import game.controller.CC;
 import game.controller.Graph;
 import game.controller.GameException;
@@ -10,6 +11,8 @@ public class Player {
     private final String name;
     List<Card> cards = new ArrayList<>();
     Map<Integer, Animal> animals = new HashMap<>();
+    private transient int cardNumber=Constants.START_NUMBER_OF_CARDS.getValue();
+    private transient int points;
 
     public Player(String login) {
         this.name = login;
@@ -21,6 +24,7 @@ public class Player {
 
     public void addCard(Card card) {
         cards.add(card);
+        cardNumber--;
     }
 
     public void deleteCard(int id) {
@@ -30,6 +34,23 @@ public class Player {
                 break;
             }
         }
+    }
+
+    public void setCardNumber(){
+        if (!hasAnimals() && !hasCards())
+            cardNumber=Constants.START_NUMBER_OF_CARDS.getValue();
+        else cardNumber=animals.size()+1;
+    }
+
+    public boolean needCards(){
+        return cardNumber>0;
+    }
+
+    public int getPoints(){
+        for (Animal animal:animals.values()){
+            points+=animal.totalHungry; //how to calculate double cards?
+        }
+        return points;
     }
 
     public void addAnimal(Animal animal) {
@@ -81,6 +102,16 @@ public class Player {
         }
     }
 
+    public void animalDie() {
+        Collection<Integer> all = animals.keySet(); //for safe removing from map while iterating
+        for (int id : all
+                ) {
+            Animal animal = animals.get(id);
+            if (animal.currentHungry > 0) animal.die();
+            if (animal.isPoisoned) animal.die();
+        }
+    }
+
     public void resetFedFlag() {
         for (Animal an : animals.values()
                 ) {
@@ -88,13 +119,13 @@ public class Player {
         }
     }
 
-    public void resetCurrentHungry() {
+    public void resetFields() {
         for (Animal an : animals.values()
                 ) {
             an.currentHungry = an.totalHungry;
+            an.attackFlag = false;
         }
     }
-
 
     public Animal getAnimal(int id) {
         return animals.get(id);

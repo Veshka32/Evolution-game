@@ -25,6 +25,7 @@ public class Game {
     transient String error;
     transient HashMap<Integer, Animal> animalList = new HashMap<>();
     private transient CardGenerator generator = new CardGenerator();
+    private transient String winners;
 
     //go to json
     private String moves;
@@ -82,33 +83,67 @@ public class Game {
                 break;
             case EVOLUTION:
                 food = new Random().nextInt(Constants.MAX_FOOD.getValue() - 1) + Constants.MIN_FOOD.getValue();
-                for (Player pl : players.values()
-                        ) {
-                    pl.resetCurrentHungry();
-                }
                 phase = Phase.FEED;
                 break;
             case FEED:
-                phase = Phase.DEAD;
-                break;
-            case DEAD:
-                phase = Phase.EVOLUTION;
+                if (cardList.isEmpty()) endGame();
+                else{
+                for (Player pl : players.values()
+                        ) {
+                    pl.animalDie();
+                    pl.resetFields();
+                    pl.setCardNumber();
+                }
+                addCards();
+                phase = Phase.EVOLUTION;}
                 break;
         }
         playersTurn = new LinkedList<>(players.keySet());
         playerOnMove = 0;
     }
 
+    public void endGame(){
+        phase=Phase.END;
+        List<Player> sorted=new ArrayList<>(players.values());
+        Collections.sort(sorted, Comparator.comparing(Player::getPoints).reversed());
+        int size=1;
+        for (int i=1;i<sorted.size();i++){
+            if (sorted.get(i).getPoints()<sorted.get(i-1).getPoints()) break;
+            size++;
+        }
+
+        String[] wins=new String[size];
+        for (int i=0;i<size;i++)
+            wins[i]=sorted.get(i).getName();
+
+        winners=Arrays.toString(wins);
+        
+    }
+
+    public void addCards() {
+
+        while (!cardList.isEmpty()) {
+            int flag = players.size();
+            for (Player player : players.values()) {
+                if (!player.needCards()) flag--;
+                else
+                    player.addCard(cardList.remove(cardList.size() - 1));
+                if (cardList.isEmpty()) break;
+            }
+            if (flag==0) break;
+        }
+    }
+
     public boolean onProgress() {
         return !phase.equals(Phase.START);
     }
 
-    public int getFood(){
+    public int getFood() {
         return food;
     }
 
-    public void setFood(int i){
-        food=i;
+    public void setFood(int i) {
+        food = i;
     }
 
     public String convertToJsonString(String name) {
@@ -166,7 +201,7 @@ public class Game {
         moves = s;
     }
 
-    public void feedScavenger(){
+    public void feedScavenger() {
         //
     }
 

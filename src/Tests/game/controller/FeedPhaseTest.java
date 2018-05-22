@@ -7,10 +7,7 @@ import game.entities.Move;
 import game.entities.Player;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class FeedPhaseTest {
 
@@ -53,7 +50,7 @@ class FeedPhaseTest {
         game.setFood(Constants.MAX_FOOD.getValue());
         for (Player pl : game.players.values()
                 ) {
-            pl.resetCurrentHungry();
+            pl.resetFields();
         }
         game.makeMove(new Move("pop",0,1,0,"eatFood",null,null));
         game.makeMove(new Move("test",0,2,0,"eatFood",null,null));
