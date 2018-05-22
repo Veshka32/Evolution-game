@@ -41,7 +41,7 @@ class EvolutionPhase {
         int id2=move.getSecondAnimalId();
         if (id1!=id2) throw new GameException("You should remove property from the same animal");
         String property=move.getProperty();
-        animal.removeProperty(property);
+        animal.removeProperty(property,move.getSecondAnimalId());
     }
 
     private boolean isDouble(String property) {

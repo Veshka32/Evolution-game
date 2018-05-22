@@ -33,12 +33,12 @@ public class FeedPhase {
             case "eatFat":
                 break;
         }
-        //what if food==0, but somebody want's to eat somebody?
-        if (game.getFood() == 0) {
-            game.goToNextPhase();
-            return;
-        } //if new phase, do not switch player, because playersTurn is update
-        game.switchPlayerOnMove();
+//        //what if food==0, but somebody want's to eat somebody?
+//        if (game.getFood() == 0) {
+//            game.goToNextPhase();
+//            return;
+//        } 
+        if (game.phase.equals(Phase.FEED)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
 
     }
 
