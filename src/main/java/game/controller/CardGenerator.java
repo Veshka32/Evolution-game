@@ -15,9 +15,7 @@ public class CardGenerator {
         int duplicate=Constants.NUMBER_OF_DUPLICATE_CARDS.getValue();
         cardList = new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());
         for (int i = 0; i < duplicate; i++) {
-            cardList.add(new Card(cardID++, "Camouflage"));
-            cardList.add(new Card(cardID++, "Burrowing"));
-            cardList.add(new Card(cardID++, "Sharp Vision"));
+
             cardList.add(new Card(cardID++, "Symbiosis"));
             cardList.add(new Card(cardID++, "Piracy"));
             cardList.add(new Card(cardID++, "Grazing"));
@@ -28,6 +26,9 @@ public class CardGenerator {
             cardList.add(new Card(cardID++, "Scavenger"));
             cardList.add(new Card(cardID++, "Running"));
             cardList.add(new Card(cardID++, "Mimicry"));
+            cardList.add(new Card(cardID++, "Camouflage"));
+            cardList.add(new Card(cardID++, "Burrowing"));
+            cardList.add(new Card(cardID++, "Sharp Vision"));
             cardList.add(new Card(cardID++, "Parasite", "Predator"));
             cardList.add(new Card(cardID++, "Parasite", "Fat"));
             cardList.add(new Card(cardID++, "Cooperation", "Predator"));

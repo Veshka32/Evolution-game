@@ -109,13 +109,19 @@ public class Animal {
         else if (property.equals("Predator") && propertyList.contains("Scavenger"))
             throw new GameException("Scavenger cannot be a predator");
 
-        else if (!(property.equals("Fat")) && propertyList.contains(property))
-            throw new GameException("This animal already has property: " + property);
-
         else if (property.equals("Fat")) {
             totalFatSupply++;
-            return;
-        } //do not put in property list
+            //put in list once, but if already has, do not throw exception
+            if (hasProperty(property)) return;
+        }
+
+        else if (property.equals("Communication") || property.equals("Cooperation") || property.equals("Symbiosis")) {
+            //put in list once, but if already has, do not throw exception
+            if (hasProperty(property)) return;
+        }
+
+        else if (propertyList.contains(property))
+            throw new GameException("This animal already has property: " + property);
 
         propertyList.add(property);
 
@@ -236,7 +242,7 @@ public class Animal {
         return propertyList.contains(property);
     }
 
-    public void removeProperty(String property) throws GameException {
+    public void removeProperty(String property,int id) throws GameException {
         if (!propertyList.contains(property)) throw new GameException("Animal has no property "+property);
         switch (property){
             case "Parasite":
@@ -248,10 +254,32 @@ public class Animal {
             case "Fat":
                 totalFatSupply--;
                 if (currentFatSupply>totalFatSupply) currentFatSupply=totalFatSupply;
+                if (totalFatSupply==0) propertyList.remove(property); //remove only there is no more fat supply
                 break;
             case "Predator":
                 totalHungry--;
                 break;
+            case "Cooperation":
+                cooperateTo.remove(id);
+                cooperateWith=cooperateTo.toString();
+                Animal an=owner.getAnimal(id);
+                an.cooperateTo.remove(this.id);
+                an.cooperateWith=an.cooperateTo.toString();
+                if (cooperateTo.isEmpty()) propertyList.remove(property);
+                if (an.cooperateTo.isEmpty()) an.propertyList.remove(property);
+                return;
+            case "Communication":
+                communicateTo.remove(id);
+                communicateWith=communicateTo.toString();
+                an=owner.getAnimal(id);
+                an.communicateTo.remove(this.id);
+                an.communicateWith=an.communicateTo.toString();
+                if (communicateTo.isEmpty()) propertyList.remove(property);
+                if (an.communicateTo.isEmpty()) an.propertyList.remove(property);
+                return;
+            case "Symbiosis":
+                return;
+
         }
         propertyList.remove(property);
     }

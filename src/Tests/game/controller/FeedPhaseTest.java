@@ -24,7 +24,7 @@ class FeedPhaseTest {
     }
 
     @Test
-    public void feedPhase() {
+    public void eatFood() {
         Game game = new Game();
         game.setGenerator(new TestCardGenerator());
         game.addPlayer(player1);
@@ -58,6 +58,10 @@ class FeedPhaseTest {
         game.makeMove(new Move("test",0,0,0,"EndPhase",null,null));
         assert (game.phase.equals(Phase.EVOLUTION));
         assert (game.getFood()==6);
+
+    }
+
+    public void eatAnimals(){
 
     }
 

@@ -82,6 +82,8 @@ public class Player {
                 else {
                     animal.setCommunicateTo(id2);
                     animal2.setCommunicateTo(id1);
+                    animal.addProperty(property);
+                    animal2.addProperty(property);
                 }
                 break;
             case "Cooperation":
@@ -90,6 +92,8 @@ public class Player {
                 else {
                     animal.setCooperateTo(id2);
                     animal2.setCooperateTo(id1);
+                    animal.addProperty(property);
+                    animal2.addProperty(property);
                 }
                 break;
             case "Symbiosis":
@@ -98,6 +102,8 @@ public class Player {
                 else {
                     animal.setSymbiosysWith(id2);
                     animal2.setSymbiontFor(id1);
+                    animal.addProperty(property);
+                    animal2.addProperty(property);
                 }
         }
     }
