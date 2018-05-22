@@ -166,6 +166,10 @@ public class Game {
         moves = s;
     }
 
+    public void feedScavenger(){
+        //
+    }
+
     void makeAnimal(Move move) {
         Player player = players.get(move.getPlayer());
         Animal animal = new Animal(animalID++, player);

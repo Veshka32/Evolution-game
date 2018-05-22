@@ -9,7 +9,7 @@ import java.util.*;
 public class Player {
     private final String name;
     List<Card> cards = new ArrayList<>();
-    private Map<Integer, Animal> animals = new HashMap<>();
+    Map<Integer, Animal> animals = new HashMap<>();
 
     public Player(String login) {
         this.name = login;
