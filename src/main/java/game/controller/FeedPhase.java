@@ -37,7 +37,7 @@ public class FeedPhase {
 //        if (game.getFood() == 0) {
 //            game.goToNextPhase();
 //            return;
-//        } 
+//        }
         if (game.phase.equals(Phase.FEED)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
 
     }

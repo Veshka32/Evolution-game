@@ -43,7 +43,7 @@ class FeedPhaseTest {
         game.setFood(2);
         game.makeMove(new Move("pop",0,1,0,"eatFood",null,null));
         game.makeMove(new Move("test",0,2,0,"eatFood",null,null));
-        assert (game.phase.equals(Phase.EVOLUTION));
+        assert (game.getFood()==0);
 
         //food=8;
         game.phase=Phase.FEED;
@@ -56,7 +56,6 @@ class FeedPhaseTest {
         game.makeMove(new Move("test",0,2,0,"eatFood",null,null));
         game.makeMove(new Move("pop",0,0,0,"EndPhase",null,null));
         game.makeMove(new Move("test",0,0,0,"EndPhase",null,null));
-        assert (game.phase.equals(Phase.EVOLUTION));
         assert (game.getFood()==6);
 
     }

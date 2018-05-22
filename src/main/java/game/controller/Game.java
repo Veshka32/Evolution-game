@@ -21,11 +21,13 @@ public class Game {
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
     private transient int whoStartPhase; //default 0
     transient List<String> playersTurn = new LinkedList<>();
-    transient int playerOnMove;
+    transient int round = 0;
+    transient int playerOnMove = round;
     transient String error;
     transient HashMap<Integer, Animal> animalList = new HashMap<>();
     private transient CardGenerator generator = new CardGenerator();
     private transient String winners;
+
 
     //go to json
     private String moves;
@@ -57,6 +59,8 @@ public class Game {
                     FeedPhase fp = new FeedPhase();
                     fp.eat(this, move);
                     break;
+                case END:
+                    break;
             }
         } catch (GameException e) {
             error = e.getMessage();
@@ -87,36 +91,39 @@ public class Game {
                 break;
             case FEED:
                 if (cardList.isEmpty()) endGame();
-                else{
-                for (Player pl : players.values()
-                        ) {
-                    pl.animalDie();
-                    pl.resetFields();
-                    pl.setCardNumber();
+                else {
+                    for (Player pl : players.values()
+                            ) {
+                        pl.animalDie();
+                        pl.resetFields();
+                        pl.setCardNumber();
+                    }
+                    addCards();
+                    phase = Phase.EVOLUTION;
+                    round++;
+                    playerOnMove = round%players.size(); //circular array; each round starts next player
                 }
-                addCards();
-                phase = Phase.EVOLUTION;}
                 break;
         }
         playersTurn = new LinkedList<>(players.keySet());
-        playerOnMove = 0;
+
     }
 
-    public void endGame(){
-        phase=Phase.END;
-        List<Player> sorted=new ArrayList<>(players.values());
+    public void endGame() {
+        phase = Phase.END;
+        List<Player> sorted = new ArrayList<>(players.values());
         Collections.sort(sorted, Comparator.comparing(Player::getPoints).reversed());
-        int size=1;
-        for (int i=1;i<sorted.size();i++){
-            if (sorted.get(i).getPoints()<sorted.get(i-1).getPoints()) break;
+        int size = 1;
+        for (int i = 1; i < sorted.size(); i++) {
+            if (sorted.get(i).getPoints() < sorted.get(i - 1).getPoints()) break;
             size++;
         }
 
-        String[] wins=new String[size];
-        for (int i=0;i<size;i++)
-            wins[i]=sorted.get(i).getName();
+        String[] wins = new String[size];
+        for (int i = 0; i < size; i++)
+            wins[i] = sorted.get(i).getName();
 
-        winners=Arrays.toString(wins);
+        winners = Arrays.toString(wins);
 
     }
 
@@ -130,7 +137,7 @@ public class Game {
                     player.addCard(cardList.remove(cardList.size() - 1));
                 if (cardList.isEmpty()) break;
             }
-            if (flag==0) break;
+            if (flag == 0) break;
         }
     }
 
