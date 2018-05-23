@@ -17,13 +17,13 @@
     <b>Your status: </b><span id="status"></span><br>
     <div id="feedPanel">
         <span >food: </span><div id="food"></div>
-        <button>eat food</button>
-        <button>attack animal</button>
-        <button>play property</button>
+        <button onclick="eatFood()">eat food</button>
+        <button onclick="attack()">attack animal</button>
+        <button onclick="playExtraProp()">play property</button>
     </div>
     <div id="movePanel">
         <div class="doing"><span>Your move: </span><span id="doing"></span></div>
-        <button id="Clear">Clear</button>
+        <button id="Clear" onclick="clearMove()">Clear</button>
         <button id="Make move" onclick="makeMove()">Make move</button>
         <button id="endPhase" onclick="endPhase()">EndPhase</button>
     </div>

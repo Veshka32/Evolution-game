@@ -5,11 +5,25 @@ socket.onmessage = onMessage;
 var playerName;
 var move;
 var draggedProperty;
-var targedAnimalId;
+var firstAnimalId;
 var secondAnimalId;
 var playedCardId;
+var firstAnimalText = JSON.parse('{"EVOLUTION":" on animal #","FEED":"Feed animal #"}');
+var secondAnimalText = JSON.parse('{"EVOLUTION":" and animal #","FEED": "attack animal #"}');
 
-//element.style.display = 'none';           // Hide
+function eatFood() {
+    move = "eatFood";
+    alert("click animal"); // set firstAnimalId
+}
+
+function attack() {
+    move = "attack";
+    alert("click your predator, then victim"); //set firstAnimalId and secondAnimalId
+}
+
+function playExtraProp() {
+    alert("click animal property");
+}
 
 function onMessage(event) {
     clearFields();
@@ -23,7 +37,12 @@ function onMessage(event) {
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
-    if (game.phase=="FOOD") document.getElementById("food").innerText=game.food;
+    if (game.phase == "FEED") {
+        document.getElementById("feedPanel").style.display = 'block'; //show panel
+        document.getElementById("food").innerText = game.food;
+    }
+    else document.getElementById("feedPanel").style.display = 'none';
+
     document.getElementById("players").innerText = game.playersList;
     var yourStatus = document.getElementById("status");
 
@@ -71,7 +90,7 @@ function buildPlayerBlock(player) {
     }
 
     for (let id in player.animals) {
-        let animal=player.animals[id];
+        let animal = player.animals[id];
         playerBlock.appendChild(buildAnimal(animal));
     }
 
@@ -90,24 +109,24 @@ function buildAnimal(an) {
                 animDiv.appendChild(span);
             }
         }
-        else if(an[key]!==null && an[key]!==0)
-            {
-                let span = document.createElement("span");
-                span.setAttribute("class","parameter");
-                span.innerText = key + ": " + an[key];
-                animDiv.appendChild(span);
-            }
+        else if (an[key] !== null) {
+            let span = document.createElement("span");
+            span.setAttribute("class", "parameter");
+            span.innerText = key + ": " + an[key];
+            animDiv.appendChild(span);
         }
+    }
 
-        animDiv.addEventListener("click", function () {
-        if (targedAnimalId == null || targedAnimalId == undefined) {
-            targedAnimalId = an.id;
+    animDiv.addEventListener("click", function () {
+        if (firstAnimalId == null || firstAnimalId == undefined) {
+            firstAnimalId = an.id;
         }
         else secondAnimalId = an.id;
 
         var doing = document.getElementById("doing");
-        doing.innerHTML = "play property=" + draggedProperty + "<br/>" + "on animal #" + targedAnimalId;
-        if (!(secondAnimalId == null || secondAnimalId == undefined)) doing.innerText += "and animal #" + secondAnimalId;
+        if (secondAnimalId == null || secondAnimalId == undefined)
+            doing.innerText += firstAnimalText[document.getElementById("phase").innerText] + firstAnimalId;
+        else doing.innerText += secondAnimalText[document.getElementById("phase").innerText] + secondAnimalId;
     });
 
     return animDiv;
@@ -124,6 +143,7 @@ function playProperty(property, cardId) {
             move = "PlayProperty";
             draggedProperty = property;
             playedCardId = cardId;
+            document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
             alert("Click animal");
         }
     }
@@ -152,9 +172,6 @@ function buildCommunication() {
     return comm;
 }
 
-
-
-
 function buildCard(card) {
     var cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "card");
@@ -175,9 +192,7 @@ function makeMove() {
         let json = buildMessage();
         clearFields();
         socket.send(json);
-
     }
-
 }
 
 function endPhase() {
@@ -194,7 +209,7 @@ function buildMessage() {
     return JSON.stringify({
         "player": playerName,
         "cardId": playedCardId,
-        "animalId": targedAnimalId,
+        "animalId": firstAnimalId,
         "secondAnimalId": secondAnimalId,
         "move": move,
         "property": draggedProperty,
@@ -203,12 +218,17 @@ function buildMessage() {
 }
 
 function clearFields() {
-    targedAnimalId = null;
-    draggedProperty = null;
-    playedCardId = null;
-    document.getElementById("doing").innerText = "";
-    move = null;
+    clearMove();
     status = "";
+}
+
+function clearMove() {
+    move = null;
+    draggedProperty = null;
+    firstAnimalId = null;
+    secondAnimalId = null;
+    playedCardId = null;
+    document.getElementById("doing").textContent = "";
 }
 
 function leave() {
