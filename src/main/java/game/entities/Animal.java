@@ -87,18 +87,18 @@ public class Animal {
 
     public void die() {
         for (int id : cooperateTo)
-            owner.getAnimal(id).cooperateTo.remove(id);
+            owner.getAnimal(id).cooperateTo.remove(Integer.valueOf(this.id));
 
         for (int id : communicateTo)
-            owner.getAnimal(id).communicateTo.remove(id);
+            owner.getAnimal(id).communicateTo.remove(Integer.valueOf(this.id));
 
         for (int id : symbiosys)
-            owner.getAnimal(id).symbiontFor.remove(id);
+            owner.getAnimal(id).symbiontFor.remove(Integer.valueOf(this.id));
 
         for (int id : symbiontFor)
-            owner.getAnimal(id).symbiosys.remove(id);
+            owner.getAnimal(id).symbiosys.remove(Integer.valueOf(this.id));
 
-        owner.animals.remove(this.id);
+        owner.animals.remove(Integer.valueOf(this.id));
     }
 
     public void addProperty(String property) throws GameException {
@@ -260,19 +260,19 @@ public class Animal {
                 totalHungry--;
                 break;
             case "Cooperation":
-                cooperateTo.remove(id);
+                cooperateTo.remove(Integer.valueOf(id));
                 cooperateWith=cooperateTo.toString();
                 Animal an=owner.getAnimal(id);
-                an.cooperateTo.remove(this.id);
+                an.cooperateTo.remove(Integer.valueOf(this.id));
                 an.cooperateWith=an.cooperateTo.toString();
                 if (cooperateTo.isEmpty()) propertyList.remove(property);
                 if (an.cooperateTo.isEmpty()) an.propertyList.remove(property);
                 return;
             case "Communication":
-                communicateTo.remove(id);
+                communicateTo.remove(Integer.valueOf(id));
                 communicateWith=communicateTo.toString();
                 an=owner.getAnimal(id);
-                an.communicateTo.remove(this.id);
+                an.communicateTo.remove(Integer.valueOf(this.id));
                 an.communicateWith=an.communicateTo.toString();
                 if (communicateTo.isEmpty()) propertyList.remove(property);
                 if (an.communicateTo.isEmpty()) an.propertyList.remove(property);

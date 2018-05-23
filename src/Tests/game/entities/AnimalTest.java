@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnimalTest {
+
     @Test
     void addProperty() throws GameException {
         Player owner1=new Player("test");
@@ -128,5 +129,63 @@ class AnimalTest {
         assert (animals[0].currentHungry==0);
         assert (animals[1].currentHungry==0);
         assert (animals[2].currentHungry==1);
+    }
+
+    @Test
+    public void attack() throws GameException {
+        //build animals for players;
+        Player test=new Player("test");
+        Player pop=new Player("pop");
+
+        //create predator
+        final Animal predator=new Animal(1,test);
+        predator.addProperty("Predator");
+        test.addAnimal(predator);
+
+        //swim animal
+        Animal swim=new Animal(2,pop);
+        swim.addProperty("Swimming");
+        pop.addAnimal(swim);
+
+        //animal in symbiosis with swim
+        Animal small=new Animal(3,pop);
+        pop.addAnimal(small);
+        pop.connectAnimal(3,2,"Symbiosis");
+
+        //simple animal connect with small
+        Animal simple=new Animal(4,pop);
+        pop.addAnimal(simple);
+        pop.connectAnimal(3,4,"Cooperation");
+
+        //Big animal connect with small
+        Animal big=new Animal(5,pop);
+        big.addProperty("Big");
+        pop.addAnimal(big);
+        pop.connectAnimal(3,5,"Cooperation");
+
+        //non-swim predator attack swim animal
+        assertThrows(GameException.class,()->{predator.attack(swim);},"Not-swimming predator can't eat swimming animal");
+
+        //predator attack animal under symbiont defence
+        assertThrows(GameException.class,()->{predator.attack(small);},"You can't eat this animal while its symbiont is alive");
+
+        //predator become swimming
+        predator.addProperty("Swimming");
+        assert (predator.attack(swim));
+        swim.die();
+        predator.eatFish(2);
+        assert (pop.getAnimal(2)==null);
+        assert (predator.currentHungry==0);
+        assertThrows(GameException.class,()->{predator.attack(small);},"This predator has been used");
+
+        //new predator eat non-defend small
+        Animal predator1=new Animal(6,test);
+        predator1.addProperty("Predator");
+        pop.addAnimal(predator1);
+        assert (predator1.attack(small));
+        small.die();
+        predator1.eatFish(2);
+        assert (big.cooperateTo.isEmpty());
+        assert (simple.cooperateTo.isEmpty());
     }
 }

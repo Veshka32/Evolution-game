@@ -32,6 +32,8 @@ public class FeedPhase {
                 break;
             case "eatFat":
                 break;
+            case "Grazing":
+                break;
         }
 //        //what if food==0, but somebody want's to eat somebody?
 //        if (game.getFood() == 0) {

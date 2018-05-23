@@ -1,8 +1,6 @@
 package game.entities;
 
 import game.constants.Constants;
-import game.controller.CC;
-import game.controller.Graph;
 import game.controller.GameException;
 
 import java.util.*;

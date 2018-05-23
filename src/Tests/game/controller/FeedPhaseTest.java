@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 class FeedPhaseTest {
-
     String player1 = "pop";
     String player2 = "test";
     int cardIndex = 84;
@@ -59,9 +58,4 @@ class FeedPhaseTest {
         assert (game.getFood()==6);
 
     }
-
-    public void eatAnimals(){
-
-    }
-
 }
