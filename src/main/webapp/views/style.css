@@ -1,8 +1,8 @@
 .card {
-    width: 80px;
+    width: 90px;
     height: 120px;
     margin: 10px;
-    padding: 6px;
+    padding: 3px;
     background-color: forestgreen;
     vertical-align: top;
     border: solid 1px black;
@@ -10,16 +10,19 @@
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     display: inline-block;
+    font-size: 12px;
 }
 
-.card span {
-    display: block;
-    background-color: lightgreen;
+.card button {
+    font-size: 12px;
+    width: 96%;
+    margin:auto;
+    margin-top: 3px;
 }
 
 .animal {
-    width: 80px;
-    height: 120px;
+    width: 100px;
+    height: 130px;
     margin: 15px;
     padding: 6px;
     background-color: burlywood;
@@ -29,6 +32,7 @@
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     display: inline-block;
+    font-size: 12px;
 }
 
 .animal span {
@@ -42,13 +46,33 @@
     vertical-align: top;
     font-size: 12px;
     border: solid 1px black;
-    margin:3px;
-    position:relative;
+    margin: 3px;
+    position: relative;
 
 }
 
-.parameter {
-    display: block;font-size: 12px;
+#feedPanel {
+    background-color: darkgray;
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
 
+}
+
+#movePanel {
+    background-color: darkseagreen;
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+}
+
+.doing {
+    width: 50%;
+    margin: auto;
+    margin-bottom: 5px;
+    padding: 5px;
+    border: solid 1px black;
+    text-align: left;
+    background-color: white;
 }
 

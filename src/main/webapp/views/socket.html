@@ -5,31 +5,42 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../js/websocket.js"></script>
     <link rel="stylesheet" href="style.css">
+    <style type="text/css"></style>
 </head>
 <body>
 
 <div id="wrapper">
-    You are: <div id="player"></div><br/>
+    You are: <span id="player"></span><br/>
     Active players: <span id="players"></span><br/>
 
-    Game phase: <span id="phase"></span><br/>  <span id="food"></span>
-    <b>Your status: </b><span id="status"></span><br/>
-    You are doing:
-    <div id="doing"></div><button id="Make move" onclick=makeMove()>Make move</button><br/>
-
-    <button id="endPhase" onclick=endPhase()>EndPhase</button><br/>
+    Game phase: <span id="phase"></span><br>
+    <b>Your status: </b><span id="status"></span><br>
+    <div id="feedPanel">
+        <span >food: </span><div id="food"></div>
+        <button>eat food</button>
+        <button>attack animal</button>
+        <button>play property</button>
+    </div>
+    <div id="movePanel">
+        <div class="doing"><span>Your move: </span><span id="doing"></span></div>
+        <button id="Clear">Clear</button>
+        <button id="Make move" onclick="makeMove()">Make move</button>
+        <button id="endPhase" onclick="endPhase()">EndPhase</button>
+    </div>
 
     <div id="common"></div>
     <hr>
 
-    Your cards:<div id="personal"></div>
-    <hr><br/>
+    Your cards:
+    <div id="personal"></div>
+    <hr>
+    <br>
 
-    <button id="restart" onclick=restart()>Restart</button><br/>
+    <button id="restart" onclick="restart()">Restart</button>
+    <br/><br/>
 
     Game log:
     <div id="log"></div>
 </div>
-
 </body>
 </html>

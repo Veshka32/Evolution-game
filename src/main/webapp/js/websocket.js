@@ -9,6 +9,8 @@ var targedAnimalId;
 var secondAnimalId;
 var playedCardId;
 
+//element.style.display = 'none';           // Hide
+
 function onMessage(event) {
     clearFields();
     var game = JSON.parse(event.data);
@@ -17,7 +19,6 @@ function onMessage(event) {
         status = "true";
         return;
     }
-
 
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
@@ -38,7 +39,6 @@ function onMessage(event) {
     var common = document.getElementById("common");
     common.innerText = "";
 
-
     for (var name in game.players) {
         var player = game.players[name];
         common.appendChild(buildPlayerBlock(player));
@@ -55,7 +55,7 @@ function buildPlayerBlock(player) {
     playerBlock.id = player.name;
 
     let playerName = document.createElement("div");
-    playerName.innerText = player.name + "'s animals";
+    playerName.innerText = player.name + "'s animals:";
 
     playerBlock.appendChild(playerName);
 

@@ -120,9 +120,7 @@ public class Game {
             if (sorted.get(i).getUsedCards()<sorted.get(i-1).getUsedCards()) break;
             joiner.add(sorted.get(i).getName()); //append another winners if points and usedCard are not less;
         }
-
         winners = joiner.toString();
-
     }
 
     public void addCards() {
