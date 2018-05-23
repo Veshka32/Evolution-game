@@ -38,10 +38,17 @@ function onMessage(event) {
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
     if (game.phase == "FEED") {
+        document.getElementById("movePanel").style.display = 'block';
         document.getElementById("feedPanel").style.display = 'block'; //show panel
         document.getElementById("food").innerText = game.food;
+    } else if(game.phase=="START"){
+        document.getElementById("movePanel").style.display = 'none';
+        document.getElementById("feedPanel").style.display = 'none';//hide panel
     }
-    else document.getElementById("feedPanel").style.display = 'none';
+    else {
+        document.getElementById("movePanel").style.display = 'block'; //evolution phase
+        document.getElementById("feedPanel").style.display = 'none';
+    }
 
     document.getElementById("players").innerText = game.playersList;
     var yourStatus = document.getElementById("status");
@@ -69,69 +76,6 @@ function onMessage(event) {
     log.innerHTML += "<br/>" + game.moves + "   on " + today.toLocaleString();
 }
 
-function buildPlayerBlock(player) {
-    let playerBlock = document.createElement("div");
-    playerBlock.id = player.name;
-
-    let playerName = document.createElement("div");
-    playerName.innerText = player.name + "'s animals:";
-
-    playerBlock.appendChild(playerName);
-
-    if (player.name == this.playerName) {
-
-        var personal = document.getElementById("personal");
-        personal.innerHTML = "";
-
-        for (let k = 0; k < player.cards.length; k++) {
-            var card = player.cards[k];
-            personal.appendChild(buildCard(card));
-        }
-    }
-
-    for (let id in player.animals) {
-        let animal = player.animals[id];
-        playerBlock.appendChild(buildAnimal(animal));
-    }
-
-    return playerBlock;
-}
-
-function buildAnimal(an) {
-    var animDiv = document.createElement("div");
-    animDiv.setAttribute("class", "animal");
-    for (var key in an) {
-        if (key == "propertyList") {
-            for (let m in an.propertyList) {
-                let span = document.createElement("span");
-                span.setAttribute("class", "property");
-                span.appendChild(document.createTextNode(an.propertyList[m]));
-                animDiv.appendChild(span);
-            }
-        }
-        else if (an[key] !== null) {
-            let span = document.createElement("span");
-            span.setAttribute("class", "parameter");
-            span.innerText = key + ": " + an[key];
-            animDiv.appendChild(span);
-        }
-    }
-
-    animDiv.addEventListener("click", function () {
-        if (firstAnimalId == null || firstAnimalId == undefined) {
-            firstAnimalId = an.id;
-        }
-        else secondAnimalId = an.id;
-
-        var doing = document.getElementById("doing");
-        if (secondAnimalId == null || secondAnimalId == undefined)
-            doing.innerText += firstAnimalText[document.getElementById("phase").innerText] + firstAnimalId;
-        else doing.innerText += secondAnimalText[document.getElementById("phase").innerText] + secondAnimalId;
-    });
-
-    return animDiv;
-}
-
 function playProperty(property, cardId) {
     if (status) {
         if (property === "MakeAnimal") {
@@ -147,44 +91,6 @@ function playProperty(property, cardId) {
             alert("Click animal");
         }
     }
-}
-
-function buildButton(name, cardId) {
-    var property = document.createElement("button");
-    property.addEventListener("click", function () {
-        playProperty(name, cardId);
-    });
-    property.innerText = name;
-    return property;
-}
-
-function buildCooperation() {
-    var comm = document.createElement("span");
-    comm.setAttribute("class", "cooperation");
-    comm.appendChild(document.createTextNode("Cooperation"));
-    return comm;
-}
-
-function buildCommunication() {
-    var comm = document.createElement("span");
-    comm.setAttribute("class", "communication");
-    comm.appendChild(document.createTextNode("Communication"));
-    return comm;
-}
-
-function buildCard(card) {
-    var cardDiv = document.createElement("div");
-    cardDiv.setAttribute("class", "card");
-    cardDiv.innerHTML = card.id + "<br/>";
-
-    cardDiv.appendChild(buildButton(card.property, card.id));
-
-    if (card.hasOwnProperty("extraProperty")) {
-        cardDiv.appendChild(buildButton(card.extraProperty, card.id));
-    }
-
-    cardDiv.appendChild(buildButton("MakeAnimal", card.id));
-    return cardDiv;
 }
 
 function makeMove() {
@@ -203,18 +109,6 @@ function endPhase() {
         clearFields();
         socket.send(json);
     }
-}
-
-function buildMessage() {
-    return JSON.stringify({
-        "player": playerName,
-        "cardId": playedCardId,
-        "animalId": firstAnimalId,
-        "secondAnimalId": secondAnimalId,
-        "move": move,
-        "property": draggedProperty,
-        "log": document.getElementById("doing").innerText
-    });
 }
 
 function clearFields() {
