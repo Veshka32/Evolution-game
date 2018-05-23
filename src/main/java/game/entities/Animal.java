@@ -87,19 +87,28 @@ public class Animal {
     }
 
     public void die() {
-        for (int id : cooperateTo)
+        for (int id : cooperateTo) {
             owner.getAnimal(id).cooperateTo.remove(Integer.valueOf(this.id));
+            owner.usedCards++;
+        }
 
-        for (int id : communicateTo)
+        for (int id : communicateTo) {
             owner.getAnimal(id).communicateTo.remove(Integer.valueOf(this.id));
+            owner.usedCards++;
+        }
 
-        for (int id : symbiosis)
+        for (int id : symbiosis) {
             owner.getAnimal(id).symbiontFor.remove(Integer.valueOf(this.id));
+            owner.usedCards++;
+        }
 
-        for (int id : symbiontFor)
+        for (int id : symbiontFor) {
             owner.getAnimal(id).symbiosis.remove(Integer.valueOf(this.id));
+            owner.usedCards++;
+        }
 
         owner.animals.remove(Integer.valueOf(this.id));
+        owner.usedCards += this.totalHungry;
     }
 
     public void addProperty(String property) throws GameException {
@@ -114,19 +123,15 @@ public class Animal {
             totalFatSupply++;
             //put in list once, but if already has, do not throw exception
             if (hasProperty(property)) return;
-        }
-
-        else if (property.equals("Communication") || property.equals("Cooperation") || property.equals("Symbiosis")) {
+        } else if (property.equals("Communication") || property.equals("Cooperation") || property.equals("Symbiosis")) {
             //put in list once, but if already has, do not throw exception
             if (hasProperty(property)) return;
-        }
-
-        else if (propertyList.contains(property))
+        } else if (propertyList.contains(property))
             throw new GameException("This animal already has property: " + property);
 
         propertyList.add(property);
 
-        if (property.equals("Predator") || property.equals("Big")) totalHungry+=Constants.PREDATOR_POINTS.getValue();
+        if (property.equals("Predator") || property.equals("Big")) totalHungry += Constants.PREDATOR_POINTS.getValue();
         if (property.equals("Parasite")) totalHungry += Constants.PARASITE_POINTS.getValue();
     }
 
@@ -243,38 +248,38 @@ public class Animal {
         return propertyList.contains(property);
     }
 
-    public void removeProperty(String property,int id) throws GameException {
-        if (!propertyList.contains(property)) throw new GameException("Animal has no property "+property);
-        switch (property){
+    public void removeProperty(String property, int id) throws GameException {
+        if (!propertyList.contains(property)) throw new GameException("Animal has no property " + property);
+        switch (property) {
             case "Parasite":
-                totalHungry-=2;
+                totalHungry -= 2;
                 break;
             case "Big":
                 totalHungry--;
                 break;
             case "Fat":
                 totalFatSupply--;
-                if (currentFatSupply>totalFatSupply) currentFatSupply=totalFatSupply;
-                if (totalFatSupply==0) propertyList.remove(property); //remove only there is no more fat supply
+                if (currentFatSupply > totalFatSupply) currentFatSupply = totalFatSupply;
+                if (totalFatSupply == 0) propertyList.remove(property); //remove only there is no more fat supply
                 break;
             case "Predator":
                 totalHungry--;
                 break;
             case "Cooperation":
                 cooperateTo.remove(Integer.valueOf(id));
-                cooperateWith=cooperateTo.toString();
-                Animal an=owner.getAnimal(id);
+                cooperateWith = cooperateTo.toString();
+                Animal an = owner.getAnimal(id);
                 an.cooperateTo.remove(Integer.valueOf(this.id));
-                an.cooperateWith=an.cooperateTo.toString();
+                an.cooperateWith = an.cooperateTo.toString();
                 if (cooperateTo.isEmpty()) propertyList.remove(property);
                 if (an.cooperateTo.isEmpty()) an.propertyList.remove(property);
                 return;
             case "Communication":
                 communicateTo.remove(Integer.valueOf(id));
-                communicateWith=communicateTo.toString();
-                an=owner.getAnimal(id);
+                communicateWith = communicateTo.toString();
+                an = owner.getAnimal(id);
                 an.communicateTo.remove(Integer.valueOf(this.id));
-                an.communicateWith=an.communicateTo.toString();
+                an.communicateWith = an.communicateTo.toString();
                 if (communicateTo.isEmpty()) propertyList.remove(property);
                 if (an.communicateTo.isEmpty()) an.propertyList.remove(property);
                 return;
@@ -283,10 +288,11 @@ public class Animal {
 
         }
         propertyList.remove(property);
+        owner.usedCards++;
     }
 
     public void addFat() throws GameException {
-        if (currentFatSupply==totalFatSupply) throw new GameException("This animal can't get more fat");
+        if (currentFatSupply == totalFatSupply) throw new GameException("This animal can't get more fat");
         currentFatSupply++;
     }
 

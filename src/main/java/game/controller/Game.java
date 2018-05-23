@@ -112,18 +112,16 @@ public class Game {
     public void endGame() {
         phase = Phase.END;
         List<Player> sorted = new ArrayList<>(players.values());
-        Collections.sort(sorted, Comparator.comparing(Player::getPoints).reversed());
-        int size = 1;
+        Collections.sort(sorted, Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
+        StringJoiner joiner=new StringJoiner(",");
+        joiner.add(sorted.get(0).getName());
         for (int i = 1; i < sorted.size(); i++) {
             if (sorted.get(i).getPoints() < sorted.get(i - 1).getPoints()) break;
-            size++;
+            if (sorted.get(i).getUsedCards()<sorted.get(i-1).getUsedCards()) break;
+            joiner.add(sorted.get(i).getName()); //append another winners if points and usedCard are not less;
         }
 
-        String[] wins = new String[size];
-        for (int i = 0; i < size; i++)
-            wins[i] = sorted.get(i).getName();
-
-        winners = Arrays.toString(wins);
+        winners = joiner.toString();
 
     }
 

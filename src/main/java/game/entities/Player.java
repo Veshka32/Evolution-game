@@ -11,6 +11,7 @@ public class Player {
     Map<Integer, Animal> animals = new HashMap<>();
     private transient int cardNumber=Constants.START_NUMBER_OF_CARDS.getValue();
     private transient int points;
+    transient int usedCards;
 
     public Player(String login) {
         this.name = login;
@@ -145,6 +146,10 @@ public class Player {
 
     public Animal getAnimal(int id) {
         return animals.get(id);
+    }
+
+    public int getUsedCards(){
+        return usedCards;
     }
 
     public boolean hasAnimal(int id) {
