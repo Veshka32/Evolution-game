@@ -208,8 +208,21 @@ public class Game {
         moves = s;
     }
 
-    public void feedScavenger() {
-        //
+    public void feedScavenger(String name) {
+        String[] scavengerOwners=players.values().toArray(new String[players.size()]);
+        int start=0;
+        for (int i = 0; i < scavengerOwners.length; i++) {
+            if (scavengerOwners[i].equals(name)){
+                start=i;
+                break;
+            }
+        }
+        for (int i=start;i<scavengerOwners.length+start;i++){
+            int k=i%scavengerOwners.length; //circular array
+            Player player=players.get(scavengerOwners[k]);
+            if (player.feedScavenger())
+                break;
+        }
     }
 
     void makeAnimal(Move move) {

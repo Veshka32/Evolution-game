@@ -76,7 +76,7 @@ public class FeedPhase {
             }
             predator.eatFish(2);
             victim.die();
-            game.feedScavenger();
+            game.feedScavenger(move.getPlayer());
         }
     }
 

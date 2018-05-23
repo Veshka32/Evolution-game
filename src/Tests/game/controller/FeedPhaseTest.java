@@ -56,6 +56,5 @@ class FeedPhaseTest {
         game.makeMove(new Move("pop",0,0,0,"EndPhase",null,null));
         game.makeMove(new Move("test",0,0,0,"EndPhase",null,null));
         assert (game.getFood()==6);
-
     }
 }

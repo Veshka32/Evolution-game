@@ -37,7 +37,7 @@ public class Player {
     public void setCardNumber(){
         if (!hasAnimals() && !hasCards())
             cardNumber=Constants.START_NUMBER_OF_CARDS.getValue();
-        else cardNumber=animals.size()+1;
+        else cardNumber=animals.size()+Constants.NUMBER_OF_EXTRA_CARD.getValue();
     }
 
     public boolean needCards(){
@@ -53,6 +53,18 @@ public class Player {
 
     public void addAnimal(Animal animal) {
         animals.put(animal.getId(), animal);
+    }
+
+    //return true if player has any scavenger that can be feeded; feed only one of them. Player should choose which one, actually
+    public boolean feedScavenger(){
+        for (Animal animal:animals.values()
+             ) {
+            if (animal.hasProperty("Scavenger")&&animal.currentHungry>0){
+                animal.eatFish(1);
+                return true;
+            }
+        }
+        return false;
     }
 
 

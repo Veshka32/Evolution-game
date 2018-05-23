@@ -1,6 +1,7 @@
 
 package game.entities;
 
+import game.constants.Constants;
 import game.controller.Game;
 import game.controller.GameException;
 
@@ -10,7 +11,7 @@ public class Animal {
     transient ArrayList<Integer> cooperateTo = new ArrayList<>(); //default 0
     transient ArrayList<Integer> communicateTo = new ArrayList<>();
     transient ArrayList<Integer> symbiontFor = new ArrayList<>();
-    transient ArrayList<Integer> symbiosys = new ArrayList<>();
+    transient ArrayList<Integer> symbiosis = new ArrayList<>();
     transient Player owner;
     transient boolean attackFlag = false;
     transient boolean fedFlag = false;
@@ -19,7 +20,7 @@ public class Animal {
     //go to json
     List<String> propertyList = new ArrayList<>();
     int id;
-    int totalHungry = 1;
+    int totalHungry = Constants.MIN_HUNGRY.getValue();
     int currentHungry = totalHungry;
     int totalFatSupply;
     int currentFatSupply;
@@ -54,7 +55,7 @@ public class Animal {
             if (!hasProperty("Big")) throw new GameException("You can't eat such a big animal");
         }
 
-        if (!victim.symbiosys.isEmpty())
+        if (!victim.symbiosis.isEmpty())
             throw new GameException("You can't eat this animal while its symbiont is alive");
         if (victim.hasProperty("Burrowing") && victim.currentHungry == 0)
             throw new GameException("This animal is fed and in burrow");
@@ -92,11 +93,11 @@ public class Animal {
         for (int id : communicateTo)
             owner.getAnimal(id).communicateTo.remove(Integer.valueOf(this.id));
 
-        for (int id : symbiosys)
+        for (int id : symbiosis)
             owner.getAnimal(id).symbiontFor.remove(Integer.valueOf(this.id));
 
         for (int id : symbiontFor)
-            owner.getAnimal(id).symbiosys.remove(Integer.valueOf(this.id));
+            owner.getAnimal(id).symbiosis.remove(Integer.valueOf(this.id));
 
         owner.animals.remove(Integer.valueOf(this.id));
     }
@@ -125,8 +126,8 @@ public class Animal {
 
         propertyList.add(property);
 
-        if (property.equals("Predator") || property.equals("Big")) totalHungry++;
-        if (property.equals("Parasite")) totalHungry += 2;
+        if (property.equals("Predator") || property.equals("Big")) totalHungry+=Constants.PREDATOR_POINTS.getValue();
+        if (property.equals("Parasite")) totalHungry += Constants.PARASITE_POINTS.getValue();
     }
 
     public Player getOwner() {
@@ -183,8 +184,8 @@ public class Animal {
     }
 
     public boolean checkSymbiosis(Player player) { //return false if not all of the symbionts are fed;
-        if (!symbiosys.isEmpty()) {
-            for (int id : symbiosys
+        if (!symbiosis.isEmpty()) {
+            for (int id : symbiosis
                     ) {
                 if (player.getAnimal(id).currentHungry != 0)
                     return false;
@@ -211,7 +212,7 @@ public class Animal {
     }
 
     public boolean isInSymbiosis(int id) {
-        return symbiosys.contains(id);
+        return symbiosis.contains(id);
     }
 
     public boolean isSymbiontFor(int id) {
@@ -229,8 +230,8 @@ public class Animal {
     }
 
     public void setSymbiosysWith(int id) {
-        symbiosys.add(id);
-        symbiosisWith = symbiosys.toString();
+        symbiosis.add(id);
+        symbiosisWith = symbiosis.toString();
     }
 
     public void setSymbiontFor(int id) {
