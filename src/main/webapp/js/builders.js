@@ -1,7 +1,3 @@
-function test() {
-    alert("in test");
-}
-
 function buildPlayerBlock(player) {
     let playerBlock = document.createElement("div");
     playerBlock.id = player.name;
@@ -19,15 +15,53 @@ function buildPlayerBlock(player) {
             var card = player.cards[k];
             personal.appendChild(buildCard(card));
         }
-    } else
+        for (let id in player.animals) {
+            let animal = player.animals[id];
+            playerBlock.appendChild(buildAnimalWithButtons(animal));
+        }
+
+    } else {
         playerName.innerText = player.name + "'s animals:";
 
-    for (let id in player.animals) {
-        let animal = player.animals[id];
-        playerBlock.appendChild(buildAnimal(animal));
+        for (let id in player.animals) {
+            let animal = player.animals[id];
+            playerBlock.appendChild(buildAnimal(animal));
+        }
+    }
+    return playerBlock;
+}
+
+function buildAnimalWithButtons(an) {
+    var animDiv = document.createElement("div");
+    animDiv.setAttribute("class", "animal");
+    for (var key in an) {
+        if (key == "propertyList") {
+            for (let m in an.propertyList) {
+                let prop = an.propertyList[m];
+                animDiv.appendChild(buttonOnAnimal(prop));
+            }
+        }
+        else if (an[key] !== null) {
+            let span = document.createElement("span");
+            span.setAttribute("class", "parameter");
+            span.innerText = key + ": " + an[key];
+            animDiv.appendChild(span);
+        }
     }
 
-    return playerBlock;
+    animDiv.addEventListener("click", function () {
+        if (firstAnimalId == null || firstAnimalId == undefined) {
+            firstAnimalId = an.id;
+        }
+        else secondAnimalId = an.id;
+
+        var doing = document.getElementById("doing");
+        if (secondAnimalId == null || secondAnimalId == undefined)
+            doing.innerText += firstAnimalText[document.getElementById("phase").innerText] + firstAnimalId;
+        else doing.innerText += secondAnimalText[document.getElementById("phase").innerText] + secondAnimalId;
+    });
+
+    return animDiv;
 }
 
 function buildAnimal(an) {
@@ -63,6 +97,15 @@ function buildAnimal(an) {
     });
 
     return animDiv;
+}
+
+function buttonOnAnimal(name) {
+    var property = document.createElement("button");
+    property.addEventListener("click", function () {
+        playAnimalProperty(name);
+    });
+    property.innerText = name;
+    return property;
 }
 
 function buildButton(name, cardId) {

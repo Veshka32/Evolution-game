@@ -83,6 +83,7 @@ public class FeedPhase {
     public void eatFood(Game game, Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
+        if (animal==null) throw new GameException("Feeding stranger animal is danger!");
         animal.eatMeet(player, game);
         player.resetFedFlag();
     }
