@@ -8,10 +8,6 @@ import game.controller.GameException;
 import java.util.*;
 
 public class Animal {
-    transient ArrayList<Integer> cooperateTo = new ArrayList<>(); //default 0
-    transient ArrayList<Integer> communicateTo = new ArrayList<>();
-    transient ArrayList<Integer> symbiontFor = new ArrayList<>();
-    transient ArrayList<Integer> symbiosis = new ArrayList<>();
     transient Player owner;
     transient boolean attackFlag = false;
     transient boolean fedFlag = false;
@@ -19,16 +15,16 @@ public class Animal {
     transient int hibernationRound;
 
     //go to json
-    List<String> propertyList = new ArrayList<>();
     int id;
+    List<String> propertyList = new ArrayList<>();
+    ArrayList<Integer> cooperateTo = new ArrayList<>(); //default 0
+    ArrayList<Integer> communicateTo = new ArrayList<>();
+    ArrayList<Integer> symbiontFor = new ArrayList<>();
+    ArrayList<Integer> symbiosis = new ArrayList<>();
     int totalHungry = Constants.MIN_HUNGRY.getValue();
     int currentHungry = totalHungry;
     int totalFatSupply;
     int currentFatSupply;
-    String cooperateWith;
-    String communicateWith;
-    String symbiont;
-    String symbiosisWith;
 
     public Animal(int id, Player player) {
         this.id = id;
@@ -241,22 +237,18 @@ public class Animal {
 
     public void setCommunicateTo(int id) {
         communicateTo.add(id);
-        communicateWith = communicateTo.toString();
     }
 
     public void setCooperateTo(int id) {
         cooperateTo.add(id);
-        cooperateWith = cooperateTo.toString();
     }
 
     public void setSymbiosysWith(int id) {
         symbiosis.add(id);
-        symbiosisWith = symbiosis.toString();
     }
 
     public void setSymbiontFor(int id) {
         symbiontFor.add(id);
-        symbiont = symbiontFor.toString();
     }
 
     public boolean hasProperty(String property) {
@@ -285,19 +277,15 @@ public class Animal {
                 break;
             case "Cooperation":
                 cooperateTo.remove(Integer.valueOf(id));
-                cooperateWith = cooperateTo.toString();
                 Animal an = owner.getAnimal(id);
                 an.cooperateTo.remove(Integer.valueOf(this.id));
-                an.cooperateWith = an.cooperateTo.toString();
                 if (cooperateTo.isEmpty()) propertyList.remove(property);
                 if (an.cooperateTo.isEmpty()) an.propertyList.remove(property);
                 return;
             case "Communication":
                 communicateTo.remove(Integer.valueOf(id));
-                communicateWith = communicateTo.toString();
                 an = owner.getAnimal(id);
                 an.communicateTo.remove(Integer.valueOf(this.id));
-                an.communicateWith = an.communicateTo.toString();
                 if (communicateTo.isEmpty()) propertyList.remove(property);
                 if (an.communicateTo.isEmpty()) an.propertyList.remove(property);
                 return;

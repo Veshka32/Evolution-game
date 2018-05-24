@@ -57,7 +57,7 @@ function buildAnimal(animal, flag) {
             let span = document.createElement("span");
             span.setAttribute("class", "parameter");
             if (Array.isArray(animal[key])) {
-                let arr = JSON.parse(animal[key]);
+                let arr = animal[key];
                 if (arr.length > 0)
                     span.innerText = key + ": " + arr.toString();
             } else {
