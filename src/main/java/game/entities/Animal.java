@@ -40,7 +40,8 @@ public class Animal {
     }
 
     public void hibernate (int round) throws GameException{
-        if (round-hibernationRound<=1) throw new GameException("You can't hibernate 2 rounds in a row");
+        if (round==-1) throw new GameException("You can't hibernate in last round");
+        else if (round-hibernationRound<=1) throw new GameException("You can't hibernate 2 rounds in a row");
         hibernationRound=round;
         currentHungry=0;
     }

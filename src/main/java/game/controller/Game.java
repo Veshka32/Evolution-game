@@ -103,6 +103,7 @@ public class Game {
                     round++;
                     playerOnMove = round%players.size(); //circular array; each round starts next player
                 }
+                if (cardList.isEmpty()) round=-1;//last round
                 break;
         }
         playersTurn = new LinkedList<>(players.keySet());
