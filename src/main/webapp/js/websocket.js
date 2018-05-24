@@ -5,23 +5,31 @@ socket.onmessage = onMessage;
 var playerName;
 var move;
 var draggedProperty;
-var firstAnimalId;
-var secondAnimalId;
+var firstAnimalId=null;
+var secondAnimalId=null;
 var playedCardId;
 
 function eatFood() {
-    move = "eatFood";
-    document.getElementById("doing").innerText="Feed ";
-    alert("click animal"); // set firstAnimalId
+    if (status) {
+        move = "eatFood";
+        document.getElementById("doing").innerText = "Feed ";
+        alert("click animal"); // set firstAnimalId
+    }
 }
 
 function attack() {
-    move = "attack";
-    alert("click your predator, then victim"); //set firstAnimalId and secondAnimalId
+    if (status) {
+        move = "attack";
+        alert("click your predator, then victim"); //set firstAnimalId and secondAnimalId
+    }
 }
 
 function makeFatSupply() {
-    
+    if (status){
+        move="makeFatSupply";
+        document.getElementById("doing").innerText = "Make fat supply for animal# ";
+        alert("click animal");
+    }
 }
 
 function onMessage(event) {
@@ -32,7 +40,6 @@ function onMessage(event) {
         status = "true";
         return;
     }
-
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
@@ -70,22 +77,21 @@ function onMessage(event) {
         //build divider
     }
 
-    var log = document.getElementById("log");
-    var today = new Date();
-    log.innerHTML += "<br/>" + game.moves + "   on " + today.toLocaleString();
+    document.getElementById("log").innerHTML += "<br/>" + game.moves + "   on " + new Date().toLocaleString();
+
+    if (game.hasOwnProperty("winners")) alert(game.winners+ " win!");
 }
 
 function playProperty(property, cardId) {
     if (status) {
+        playedCardId = cardId;
         if (property === "MakeAnimal") {
             move = "MakeAnimal";
-            playedCardId = cardId;
             document.getElementById("doing").innerText = "Make animal from card # " + cardId;
         }
         else {
             move = "PlayProperty";
             draggedProperty = property;
-            playedCardId = cardId;
             document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
             alert("Click animal");
         }
@@ -95,7 +101,7 @@ function playProperty(property, cardId) {
 function makeMove() {
     if (status) {
         let json = buildMessage();
-        clearFields();
+        clearFields();//clear fields after message is built!
         socket.send(json);
     }
 }
@@ -105,7 +111,7 @@ function endPhase() {
         move = "EndPhase";
         document.getElementById("doing").innerText = "end move";
         let json = buildMessage();
-        clearFields();
+        clearFields(); //clear fields after message is built!
         socket.send(json);
     }
 }
@@ -135,7 +141,6 @@ function restart() {
         move = "Restart";
         socket.send(buildMessage());
     }
-
 }
 
 function init() {

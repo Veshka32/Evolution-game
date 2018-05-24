@@ -28,7 +28,6 @@ public class Game {
     private transient CardGenerator generator = new CardGenerator();
     private transient String winners;
 
-
     //go to json
     private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
@@ -113,7 +112,7 @@ public class Game {
     public void endGame() {
         phase = Phase.END;
         List<Player> sorted = new ArrayList<>(players.values());
-        Collections.sort(sorted, Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
+        sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
         StringJoiner joiner=new StringJoiner(",");
         joiner.add(sorted.get(0).getName());
         for (int i = 1; i < sorted.size(); i++) {
@@ -164,6 +163,8 @@ public class Game {
             else element.getAsJsonObject().addProperty("status", false);
         }
 
+        if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners",winners);
+
         return gson.toJson(element);
     }
 
@@ -206,17 +207,17 @@ public class Game {
     }
 
     public void feedScavenger(String name) {
-        String[] scavengerOwners=players.values().toArray(new String[players.size()]);
+        List<String> scavengerOwners=new ArrayList(players.keySet());
         int start=0;
-        for (int i = 0; i < scavengerOwners.length; i++) {
-            if (scavengerOwners[i].equals(name)){
+        for (int i = 0; i < scavengerOwners.size(); i++) {
+            if (scavengerOwners.get(i).equals(name)){
                 start=i;
                 break;
             }
         }
-        for (int i=start;i<scavengerOwners.length+start;i++){
-            int k=i%scavengerOwners.length; //circular array
-            Player player=players.get(scavengerOwners[k]);
+        for (int i=start;i<scavengerOwners.size()+start;i++){
+            int k=i%scavengerOwners.size(); //circular array
+            Player player=players.get(scavengerOwners.get(k));
             if (player.feedScavenger())
                 break;
         }

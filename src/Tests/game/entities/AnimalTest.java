@@ -34,6 +34,7 @@ class AnimalTest {
         predator.addProperty("Fat");
         predator.addProperty("Fat");
         assert (predator.totalFatSupply==2);
+        assert (predator.currentHungry==2);
         assert (predator.totalHungry==2);
     }
 

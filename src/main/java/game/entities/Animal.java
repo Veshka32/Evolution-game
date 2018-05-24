@@ -16,6 +16,7 @@ public class Animal {
     transient boolean attackFlag = false;
     transient boolean fedFlag = false;
     transient boolean isPoisoned = false;
+    transient int hibernationRound;
 
     //go to json
     List<String> propertyList = new ArrayList<>();
@@ -28,7 +29,7 @@ public class Animal {
     String communicateWith;
     String symbiont;
     String symbiosisWith;
-    int hibernationRound;
+
 
     public Animal(int id, Player player) {
         this.id = id;
@@ -55,6 +56,7 @@ public class Animal {
 
     public boolean attack(Animal victim) throws GameException {
         //exceptions
+        if (hasProperty("Predator")) throw new GameException("This animal is not a predator");
         if (attackFlag) throw new GameException("This predator has been used");
 
         if (victim.hasProperty("Swimming")) {

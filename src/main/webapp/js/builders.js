@@ -32,18 +32,20 @@ function buildPlayerBlock(player) {
 }
 
 function buildAnimal(animal, flag) {
-    var animDiv = document.createElement("div");
+    let animDiv = document.createElement("div");
     animDiv.setAttribute("class", "animal");
-    for (var key in animal) {
+    for (let key in animal) {
         if (key == "propertyList") {
             for (let m in animal.propertyList) {
 
                 if (flag) {
-                    let prop = animal.propertyList[m];
-                    animDiv.appendChild(buttonOnAnimal(prop,animal.id));
-                }
-
-                else {
+                    // let prop = animal.propertyList[m];
+                    // animDiv.appendChild(buttonOnAnimal(prop, animal.id));
+                    let span = document.createElement("span");
+                    span.setAttribute("class", "property");
+                    span.appendChild(document.createTextNode(animal.propertyList[m]));
+                    animDiv.appendChild(span);
+                } else {
                     let span = document.createElement("span");
                     span.setAttribute("class", "property");
                     span.appendChild(document.createTextNode(animal.propertyList[m]));
@@ -60,40 +62,39 @@ function buildAnimal(animal, flag) {
     }
 
     animDiv.addEventListener("click", function () {
-        var doing = document.getElementById("doing");
-        if (firstAnimalId == null || firstAnimalId == undefined) {
+        let doing = document.getElementById("doing");
+        if (firstAnimalId == null) {
             firstAnimalId = animal.id;
-            doing.innerText += " animal #"+firstAnimalId;
+            doing.innerText += " animal #" + firstAnimalId;
         }
         else {
             secondAnimalId = animal.id;
-            var text;
-            if (document.getElementById("phase").innerText=="EVOLUTION") text=" and animal #";
-            else if (document.getElementById("phase").innerText=="FEED") text=" attack animal #";
+            let text;
+            if (document.getElementById("phase").innerText == "EVOLUTION") text = " and animal #";
+            else if (document.getElementById("phase").innerText == "FEED") text = " attack animal #";
             doing.innerText += text + secondAnimalId;
         }
-
     });
 
     return animDiv;
 }
 
-function buttonOnAnimal(name,id) {
+function buttonOnAnimal(name, id) {
     var property = document.createElement("button");
     property.addEventListener("click", function (event) {
         event.stopPropagation();
-        playAnimalProperty(name,id);
+        playAnimalProperty(name, id);
     });
     property.innerText = name;
     return property;
 }
 
-function playAnimalProperty(property,animalId) {
-    if (status){
-            move = "playAnimalProperty";
-            draggedProperty = property;
-            firstAnimalId=animalId;
-            document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;
+function playAnimalProperty(property, animalId) {
+    if (status) {
+        move = "playAnimalProperty";
+        draggedProperty = property;
+        firstAnimalId = animalId;
+        document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;
     }
 }
 
