@@ -229,7 +229,6 @@ public class Game {
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
         animalList.put(animal.getId(), animal);
-
     }
 
     Animal getAnimal(int i) {

@@ -56,7 +56,7 @@ public class Animal {
 
     public boolean attack(Animal victim) throws GameException {
         //exceptions
-        if (hasProperty("Predator")) throw new GameException("This animal is not a predator");
+        if (!hasProperty("Predator")) throw new GameException("This animal is not a predator");
         if (attackFlag) throw new GameException("This predator has been used");
 
         if (victim.hasProperty("Swimming")) {

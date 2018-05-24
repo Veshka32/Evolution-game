@@ -52,8 +52,8 @@ class EvolutionPhase {
         Player player = game.getPlayer(move.getPlayer());
         int id1=move.getAnimalId();
         int id2=move.getSecondAnimalId();
-
         player.connectAnimal(id1,id2,move.getProperty());
+        player.deleteCard(move.getCardId());
 
     }
 

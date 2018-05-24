@@ -67,6 +67,7 @@ public class FeedPhase {
         Animal animal = player.getAnimal(move.getAnimalId());
         if (animal == null) throw new GameException("It's not your animal");
         animal.addFat();
+        game.deleteFood();
     }
 
     public void attack(Game game, Move move) throws GameException {

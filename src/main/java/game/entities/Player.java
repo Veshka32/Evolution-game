@@ -6,12 +6,14 @@ import game.controller.GameException;
 import java.util.*;
 
 public class Player {
-    private final String name;
-    List<Card> cards = new ArrayList<>();
-    Map<Integer, Animal> animals = new HashMap<>();
     private transient int cardNumber=Constants.START_NUMBER_OF_CARDS.getValue();
     private transient int points;
     transient int usedCards;
+    //go to json
+    private final String name;
+    List<Card> cards = new ArrayList<>();
+    Map<Integer, Animal> animals = new HashMap<>();
+
 
     public Player(String login) {
         this.name = login;
