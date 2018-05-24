@@ -8,11 +8,10 @@ var draggedProperty;
 var firstAnimalId;
 var secondAnimalId;
 var playedCardId;
-var firstAnimalText = JSON.parse('{"EVOLUTION":" on animal #","FEED":"Feed animal #"}');
-var secondAnimalText = JSON.parse('{"EVOLUTION":" and animal #","FEED": "attack animal #"}');
 
 function eatFood() {
     move = "eatFood";
+    document.getElementById("doing").innerText="Feed ";
     alert("click animal"); // set firstAnimalId
 }
 
@@ -21,8 +20,8 @@ function attack() {
     alert("click your predator, then victim"); //set firstAnimalId and secondAnimalId
 }
 
-function playExtraProp() {
-    alert("click animal property");
+function makeFatSupply() {
+    
 }
 
 function onMessage(event) {

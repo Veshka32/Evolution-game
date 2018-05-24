@@ -17,7 +17,7 @@ function buildPlayerBlock(player) {
         }
         for (let id in player.animals) {
             let animal = player.animals[id];
-            playerBlock.appendChild(buildAnimalWithButtons(animal));
+            playerBlock.appendChild(buildAnimal(animal, true));
         }
 
     } else {
@@ -25,87 +25,76 @@ function buildPlayerBlock(player) {
 
         for (let id in player.animals) {
             let animal = player.animals[id];
-            playerBlock.appendChild(buildAnimal(animal));
+            playerBlock.appendChild(buildAnimal(animal, false));
         }
     }
     return playerBlock;
 }
 
-function buildAnimalWithButtons(an) {
+function buildAnimal(animal, flag) {
     var animDiv = document.createElement("div");
     animDiv.setAttribute("class", "animal");
-    for (var key in an) {
+    for (var key in animal) {
         if (key == "propertyList") {
-            for (let m in an.propertyList) {
-                let prop = an.propertyList[m];
-                animDiv.appendChild(buttonOnAnimal(prop));
+            for (let m in animal.propertyList) {
+
+                if (flag) {
+                    let prop = animal.propertyList[m];
+                    animDiv.appendChild(buttonOnAnimal(prop,animal.id));
+                }
+
+                else {
+                    let span = document.createElement("span");
+                    span.setAttribute("class", "property");
+                    span.appendChild(document.createTextNode(animal.propertyList[m]));
+                    animDiv.appendChild(span);
+                }
             }
         }
-        else if (an[key] !== null) {
+        else if (animal[key] !== null) {
             let span = document.createElement("span");
             span.setAttribute("class", "parameter");
-            span.innerText = key + ": " + an[key];
+            span.innerText = key + ": " + animal[key];
             animDiv.appendChild(span);
         }
     }
 
     animDiv.addEventListener("click", function () {
-        if (firstAnimalId == null || firstAnimalId == undefined) {
-            firstAnimalId = an.id;
-        }
-        else secondAnimalId = an.id;
-
         var doing = document.getElementById("doing");
-        if (secondAnimalId == null || secondAnimalId == undefined)
-            doing.innerText += firstAnimalText[document.getElementById("phase").innerText] + firstAnimalId;
-        else doing.innerText += secondAnimalText[document.getElementById("phase").innerText] + secondAnimalId;
+        if (firstAnimalId == null || firstAnimalId == undefined) {
+            firstAnimalId = animal.id;
+            doing.innerText += " animal #"+firstAnimalId;
+        }
+        else {
+            secondAnimalId = animal.id;
+            var text;
+            if (document.getElementById("phase").innerText=="EVOLUTION") text=" and animal #";
+            else if (document.getElementById("phase").innerText=="FEED") text=" attack animal #";
+            doing.innerText += text + secondAnimalId;
+        }
+
     });
 
     return animDiv;
 }
 
-function buildAnimal(an) {
-    var animDiv = document.createElement("div");
-    animDiv.setAttribute("class", "animal");
-    for (var key in an) {
-        if (key == "propertyList") {
-            for (let m in an.propertyList) {
-                let span = document.createElement("span");
-                span.setAttribute("class", "property");
-                span.appendChild(document.createTextNode(an.propertyList[m]));
-                animDiv.appendChild(span);
-            }
-        }
-        else if (an[key] !== null) {
-            let span = document.createElement("span");
-            span.setAttribute("class", "parameter");
-            span.innerText = key + ": " + an[key];
-            animDiv.appendChild(span);
-        }
-    }
-
-    animDiv.addEventListener("click", function () {
-        if (firstAnimalId == null || firstAnimalId == undefined) {
-            firstAnimalId = an.id;
-        }
-        else secondAnimalId = an.id;
-
-        var doing = document.getElementById("doing");
-        if (secondAnimalId == null || secondAnimalId == undefined)
-            doing.innerText += firstAnimalText[document.getElementById("phase").innerText] + firstAnimalId;
-        else doing.innerText += secondAnimalText[document.getElementById("phase").innerText] + secondAnimalId;
-    });
-
-    return animDiv;
-}
-
-function buttonOnAnimal(name) {
+function buttonOnAnimal(name,id) {
     var property = document.createElement("button");
-    property.addEventListener("click", function () {
-        playAnimalProperty(name);
+    property.addEventListener("click", function (event) {
+        event.stopPropagation();
+        playAnimalProperty(name,id);
     });
     property.innerText = name;
     return property;
+}
+
+function playAnimalProperty(property,animalId) {
+    if (status){
+            move = "playAnimalProperty";
+            draggedProperty = property;
+            firstAnimalId=animalId;
+            document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;
+    }
 }
 
 function buildButton(name, cardId) {

@@ -21,18 +21,10 @@ public class FeedPhase {
             case "attack":
                 attack(game, move);
                 break;
+            case "playAnimalProperty": //piracy, Hibernation, tail loss,Crazing, fat (eatFat)
+                break;
             case "makeFatSupply":
                 makeFatSupply(game, move);
-                break;
-            case "Piracy":
-                break;
-            case "Hibernation":
-                break;
-            case "Tail loss":
-                break;
-            case "eatFat":
-                break;
-            case "Grazing":
                 break;
         }
 //        //what if food==0, but somebody want's to eat somebody?
