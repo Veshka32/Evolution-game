@@ -127,7 +127,7 @@ public class Player {
                 ) {
             Animal animal = animals.get(id);
             if (animal.currentHungry > 0) animal.die();
-            if (animal.isPoisoned) animal.die();
+            else if (animal.isPoisoned) animal.die();
         }
     }
 

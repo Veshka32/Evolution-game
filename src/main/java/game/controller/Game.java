@@ -70,7 +70,6 @@ public class Game {
         playersTurn.remove(name);
         if (playersTurn.isEmpty())
             goToNextPhase();
-
     }
 
 

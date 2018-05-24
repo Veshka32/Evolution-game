@@ -30,7 +30,6 @@ public class Animal {
     String symbiont;
     String symbiosisWith;
 
-
     public Animal(int id, Player player) {
         this.id = id;
         owner = player;
@@ -124,7 +123,7 @@ public class Animal {
             owner.usedCards++;
         }
 
-        owner.animals.remove(Integer.valueOf(this.id));
+        owner.animals.remove(this.id);
         owner.usedCards += this.totalHungry;
     }
 
@@ -211,7 +210,6 @@ public class Animal {
                     ) {
                 if (player.getAnimal(id).currentHungry != 0)
                     return false;
-
             }
         }
         return true;
@@ -270,9 +268,11 @@ public class Animal {
         switch (property) {
             case "Parasite":
                 totalHungry -= 2;
+                currentHungry=totalHungry;
                 break;
             case "Big":
                 totalHungry--;
+                currentHungry=totalHungry;
                 break;
             case "Fat":
                 totalFatSupply--;
@@ -281,6 +281,7 @@ public class Animal {
                 break;
             case "Predator":
                 totalHungry--;
+                currentHungry=totalHungry;
                 break;
             case "Cooperation":
                 cooperateTo.remove(Integer.valueOf(id));
@@ -312,6 +313,4 @@ public class Animal {
         if (currentFatSupply == totalFatSupply) throw new GameException("This animal can't get more fat");
         currentFatSupply++;
     }
-
-
 }

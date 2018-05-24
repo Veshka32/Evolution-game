@@ -27,7 +27,7 @@ function attack() {
 function makeFatSupply() {
     if (status){
         move="makeFatSupply";
-        document.getElementById("doing").innerText = "Make fat supply for animal# ";
+        document.getElementById("doing").innerText = "Make fat supply for ";
         alert("click animal");
     }
 }
@@ -80,22 +80,6 @@ function onMessage(event) {
     document.getElementById("log").innerHTML += "<br/>" + game.moves + "   on " + new Date().toLocaleString();
 
     if (game.hasOwnProperty("winners")) alert(game.winners+ " win!");
-}
-
-function playProperty(property, cardId) {
-    if (status) {
-        playedCardId = cardId;
-        if (property === "MakeAnimal") {
-            move = "MakeAnimal";
-            document.getElementById("doing").innerText = "Make animal from card # " + cardId;
-        }
-        else {
-            move = "PlayProperty";
-            draggedProperty = property;
-            document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
-            alert("Click animal");
-        }
-    }
 }
 
 function makeMove() {

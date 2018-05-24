@@ -56,7 +56,13 @@ function buildAnimal(animal, flag) {
         else if (animal[key] !== null) {
             let span = document.createElement("span");
             span.setAttribute("class", "parameter");
-            span.innerText = key + ": " + animal[key];
+            if (Array.isArray(animal[key])) {
+                let arr = JSON.parse(animal[key]);
+                if (arr.length > 0)
+                    span.innerText = key + ": " + arr.toString();
+            } else {
+                span.innerText = key + ": " + animal[key];
+            }
             animDiv.appendChild(span);
         }
     }
@@ -95,6 +101,22 @@ function playAnimalProperty(property, animalId) {
         draggedProperty = property;
         firstAnimalId = animalId;
         document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;
+    }
+}
+
+function playProperty(property, cardId) {
+    if (status && document.getElementById("phase").innerText == "EVOLUTION") {
+        playedCardId = cardId;
+        if (property === "MakeAnimal") {
+            move = "MakeAnimal";
+            document.getElementById("doing").innerText = "Make animal from card # " + cardId;
+        }
+        else {
+            move = "PlayProperty";
+            draggedProperty = property;
+            document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
+            alert("Click animal");
+        }
     }
 }
 
