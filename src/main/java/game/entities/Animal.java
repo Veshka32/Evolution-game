@@ -28,6 +28,7 @@ public class Animal {
     String communicateWith;
     String symbiont;
     String symbiosisWith;
+    int hibernationRound;
 
     public Animal(int id, Player player) {
         this.id = id;
@@ -36,6 +37,19 @@ public class Animal {
 
     public void poison() {
         isPoisoned = true;
+    }
+
+    public void hibernate (int round) throws GameException{
+        if (round-hibernationRound<=1) throw new GameException("You can't hibernate 2 rounds in a row");
+        hibernationRound=round;
+        currentHungry=0;
+    }
+
+    public void eatFat() throws GameException{
+        if (currentFatSupply<1) throw new GameException("You have no fat supply");
+        if (currentHungry<1) throw new GameException("Animal is fed");
+        currentHungry--;
+        currentFatSupply--;
     }
 
     public boolean attack(Animal victim) throws GameException {
@@ -131,8 +145,8 @@ public class Animal {
 
         propertyList.add(property);
 
-        if (property.equals("Predator") || property.equals("Big")) totalHungry += Constants.PREDATOR_POINTS.getValue();
-        if (property.equals("Parasite")) totalHungry += Constants.PARASITE_POINTS.getValue();
+        if (property.equals("Predator") || property.equals("Big")) {totalHungry += Constants.PREDATOR_POINTS.getValue(); currentHungry=totalHungry;}
+        if (property.equals("Parasite")) {totalHungry += Constants.PARASITE_POINTS.getValue(); currentHungry=totalHungry;}
     }
 
     public Player getOwner() {
