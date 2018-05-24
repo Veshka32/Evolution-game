@@ -58,7 +58,7 @@ public class Player {
         animals.put(animal.getId(), animal);
     }
 
-    //return true if player has any scavenger that can be feeded; feed only one of them. Player should choose which one, actually
+    //return true if player has any scavenger that can be fed; feed only one of them. Player should choose which one, actually
     public boolean feedScavenger(){
         for (Animal animal:animals.values()
              ) {
@@ -83,7 +83,6 @@ public class Player {
 
         else if (id1 == id2)
             throw new GameException("You must play this property on two different animals");
-
 
         Animal animal = animals.get(id1);
         Animal animal2 = animals.get(id2);
@@ -110,7 +109,7 @@ public class Player {
                 }
                 break;
             case "Symbiosis":
-                if (animal.isInSymbiosis(id2))
+                if (animal.isInSymbiosis(id2) || animal.isSymbiontFor(id2))
                     throw new GameException("Animal #" + id1 + " is already in symbiosis with animal #" + id2);
                 else {
                     animal.setSymbiosysWith(id2);
@@ -152,14 +151,6 @@ public class Player {
 
     public int getUsedCards(){
         return usedCards;
-    }
-
-    public boolean hasAnimal(int id) {
-        return animals.containsKey(id);
-    }
-
-    public int howManyAnimals() {
-        return animals.size();
     }
 
     public boolean hasCards() {

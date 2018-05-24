@@ -13,14 +13,14 @@ function eatFood() {
     if (status) {
         move = "eatFood";
         document.getElementById("doing").innerText = "Feed ";
-        alert("click animal"); // set firstAnimalId
+        // set firstAnimalId
     }
 }
 
 function attack() {
     if (status) {
         move = "attack";
-        alert("click your predator, then victim"); //set firstAnimalId and secondAnimalId
+        //set firstAnimalId and secondAnimalId
     }
 }
 
@@ -28,7 +28,6 @@ function makeFatSupply() {
     if (status){
         move="makeFatSupply";
         document.getElementById("doing").innerText = "Make fat supply for ";
-        alert("click animal");
     }
 }
 

@@ -8,36 +8,36 @@ import game.entities.Player;
 import java.util.Random;
 
 public class FeedPhase {
+    private Game game;
 
-    void eat(Game game, Move move) throws GameException {
+    public FeedPhase(Game game){
+        this.game=game;
+    }
+
+    void eat(Move move) throws GameException {
 
         switch (move.getMove()) {
             case "EndPhase":
                 game.playerEndsPhase(move.getPlayer());
                 break;
             case "eatFood":
-                eatFood(game, move);
+                eatFood(move);
                 break;
             case "attack":
-                attack(game, move);
+                attack(move);
                 break;
             case "playAnimalProperty": //piracy, Hibernation, tail loss,Crazing, fat (eatFat), mimicry
-                playAnimalProperty(game,move);
+                playAnimalProperty(move);
                 return; //do not switch player?
             case "makeFatSupply":
-                makeFatSupply(game, move);
+                makeFatSupply(move);
                 break;
         }
-//        //what if food==0, but somebody want's to eat somebody?
-//        if (game.getFood() == 0) {
-//            game.goToNextPhase();
-//            return;
-//        }
         if (game.phase.equals(Phase.FEED)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
 
     }
 
-    public void playAnimalProperty(Game game,Move move) throws GameException{
+    public void playAnimalProperty(Move move) throws GameException{
         String property=move.getProperty();
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
@@ -61,7 +61,7 @@ public class FeedPhase {
         }
     }
 
-    public void makeFatSupply(Game game, Move move) throws GameException {
+    public void makeFatSupply(Move move) throws GameException {
         if (game.getFood() == 0) throw new GameException("There is nothing to make fat supply of");
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
@@ -70,7 +70,7 @@ public class FeedPhase {
         game.deleteFood();
     }
 
-    public void attack(Game game, Move move) throws GameException {
+    public void attack(Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal predator = player.getAnimal(move.getAnimalId());
         if (predator == null) throw new GameException("It's not your animal");
@@ -98,7 +98,7 @@ public class FeedPhase {
         }
     }
 
-    public void eatFood(Game game, Move move) throws GameException {
+    public void eatFood(Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
         if (animal==null) throw new GameException("Feeding stranger animal is danger!");

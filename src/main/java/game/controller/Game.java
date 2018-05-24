@@ -50,13 +50,13 @@ public class Game {
         try {
             switch (phase) {
                 case EVOLUTION:
-                    EvolutionPhase ep = new EvolutionPhase();
-                    ep.playProperty(this, move);
+                    EvolutionPhase ep = new EvolutionPhase(this);
+                    ep.playProperty( move);
                     break;
 
                 case FEED:
-                    FeedPhase fp = new FeedPhase();
-                    fp.eat(this, move);
+                    FeedPhase fp = new FeedPhase(this);
+                    fp.eat(move);
                     break;
                 case END:
                     break;
@@ -105,7 +105,6 @@ public class Game {
                 break;
         }
         playersTurn = new LinkedList<>(players.keySet());
-
     }
 
     public void endGame() {
@@ -168,11 +167,9 @@ public class Game {
     }
 
     public void addPlayer(String userName) {
-
         players.put(userName, new Player(userName));
-
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
-            goToNextPhase();
+            goToNextPhase(); //start game
         }
     }
 
@@ -251,5 +248,4 @@ public class Game {
         moves = userName + "left the game";
         phase = Phase.START;
     }
-
 }

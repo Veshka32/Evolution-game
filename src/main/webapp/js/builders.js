@@ -115,7 +115,6 @@ function playProperty(property, cardId) {
             move = "PlayProperty";
             draggedProperty = property;
             document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
-            alert("Click animal");
         }
     }
 }

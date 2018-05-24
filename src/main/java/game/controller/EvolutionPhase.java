@@ -6,8 +6,13 @@ import game.entities.Move;
 import game.entities.Player;
 
 class EvolutionPhase {
+    private Game game;
 
-    void playProperty(Game game, Move move) throws GameException {
+    public EvolutionPhase(Game game){
+        this.game=game;
+    }
+
+    void playProperty(Move move) throws GameException {
 
         switch (move.getMove()) {
             case "MakeAnimal":
@@ -15,7 +20,7 @@ class EvolutionPhase {
                 break;
 
             case "TailLoss":
-                tailLoss(game,move);
+                tailLoss(move);
                 break;
 
             case "EndPhase":
@@ -24,16 +29,16 @@ class EvolutionPhase {
 
             case "PlayProperty":
                 if (isDouble(move.getProperty()))
-                    processDoubleProperty(game, move);
+                    processDoubleProperty(move);
 
                 else {
-                    processSimpleProperty(game, move);
+                    processSimpleProperty(move);
                 }
         }
         if (game.phase.equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
     }
 
-    private void tailLoss(Game game,Move move) throws GameException {
+    private void tailLoss(Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal=player.getAnimal(move.getAnimalId());
         if (animal==null) throw new GameException("It's not your animal");
@@ -48,7 +53,7 @@ class EvolutionPhase {
         return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
     }
 
-    private void processDoubleProperty(Game game, Move move) throws GameException {
+    private void processDoubleProperty(Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         int id1=move.getAnimalId();
         int id2=move.getSecondAnimalId();
@@ -57,7 +62,7 @@ class EvolutionPhase {
 
     }
 
-    private void processSimpleProperty(Game game, Move move) throws GameException {
+    private void processSimpleProperty(Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
         String property=move.getProperty();
