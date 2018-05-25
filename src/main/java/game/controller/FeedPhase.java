@@ -29,9 +29,6 @@ public class FeedPhase {
             case "playAnimalProperty": //piracy, Hibernation, tail loss,Crazing, fat (eatFat), mimicry
                 playAnimalProperty(move);
                 return; //do not switch player?
-            case "makeFatSupply":
-                makeFatSupply(move);
-                break;
         }
         if (game.phase.equals(Phase.FEED)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
 
@@ -59,15 +56,6 @@ public class FeedPhase {
                 animal.eatFat();
                 break;
         }
-    }
-
-    public void makeFatSupply(Move move) throws GameException {
-        if (game.getFood() == 0) throw new GameException("There is nothing to make fat supply of");
-        Player player = game.getPlayer(move.getPlayer());
-        Animal animal = player.getAnimal(move.getAnimalId());
-        if (animal == null) throw new GameException("It's not your animal");
-        animal.addFat();
-        game.deleteFood();
     }
 
     public void attack(Move move) throws GameException {
@@ -99,11 +87,11 @@ public class FeedPhase {
     }
 
     public void eatFood(Move move) throws GameException {
+        if (game.getFood()==0) throw new GameException("There is no more food");
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
         if (animal==null) throw new GameException("Feeding stranger animal is danger!");
         animal.eatMeet(player, game);
         player.resetFedFlag();
     }
-
 }

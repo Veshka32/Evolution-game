@@ -5,31 +5,22 @@ socket.onmessage = onMessage;
 var playerName;
 var move;
 var draggedProperty;
-var firstAnimalId=null;
-var secondAnimalId=null;
+var firstAnimalId = null;
+var secondAnimalId = null;
 var playedCardId;
 var status;
 
 function eatFood() {
     if (status) {
         move = "eatFood";
-        document.getElementById("doing").innerText = "Feed ";
-        // set firstAnimalId
+        document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
     }
 }
 
 function attack() {
-    if (status) {
-        move = "attack";
-        //set firstAnimalId and secondAnimalId
-    }
-}
+    if (status)
+        move = "attack"; //set firstAnimalId and secondAnimalId
 
-function makeFatSupply() {
-    if (status){
-        move="makeFatSupply";
-        document.getElementById("doing").innerText = "Make fat supply for ";
-    }
 }
 
 function onMessage(event) {
@@ -46,8 +37,14 @@ function onMessage(event) {
     if (game.phase == "FEED") {
         document.getElementById("movePanel").style.display = 'block';
         document.getElementById("feedPanel").style.display = 'block'; //show panel
-        document.getElementById("food").innerText = game.food;
-    } else if(game.phase=="START"){
+        let food = document.getElementById("food");
+        while (food.firstChild) {
+            food.removeChild(food.firstChild);
+        }
+        for (let i = 0; i < game.food; i++) food.appendChild(buildFood())
+
+
+    } else if (game.phase == "START") {
         document.getElementById("movePanel").style.display = 'none';
         document.getElementById("feedPanel").style.display = 'none';//hide panel
     }
@@ -79,7 +76,7 @@ function onMessage(event) {
 
     document.getElementById("log").innerHTML += "<br/>" + game.moves + "   on " + new Date().toLocaleString();
 
-    if (game.hasOwnProperty("winners")) alert(game.winners+ " win!");
+    if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
 }
 
 function makeMove() {

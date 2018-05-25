@@ -160,7 +160,10 @@ public class Animal {
 
     public void eatMeet(Player player, Game game) throws GameException {
 
-        if (hungry == 0) throw new GameException("This animal is fed!");
+        if (hungry == 0) {
+            if (currentFatSupply==totalFatSupply) throw new GameException("This animal is fed!");
+            else {currentFatSupply++; game.deleteFood();return;}
+        }
         if (!checkSymbiosis(player)) throw new GameException("You should feed the symbiont first");
 
         fedFlag = true;
@@ -301,10 +304,5 @@ public class Animal {
         }
         propertyList.remove(property);
         owner.usedCards++;
-    }
-
-    public void addFat() throws GameException {
-        if (currentFatSupply == totalFatSupply) throw new GameException("This animal can't get more fat");
-        currentFatSupply++;
     }
 }

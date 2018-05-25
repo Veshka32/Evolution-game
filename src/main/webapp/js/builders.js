@@ -1,3 +1,11 @@
+function buildFood() {
+    let img = document.createElement('IMG');
+    img.setAttribute('src', '../images/food.png');
+    img.setAttribute('class', 'food');
+    return img;
+
+}
+
 function buildPlayerBlock(player) {
     let playerBlock = document.createElement("div");
     playerBlock.id = player.name;
