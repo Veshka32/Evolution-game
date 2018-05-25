@@ -8,39 +8,30 @@ var draggedProperty;
 var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
-var status;
 
 function eatFood() {
-    if (status) {
-        move = "eatFood";
-        document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
-    }
+    move = "eatFood";
+    document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
 }
 
 function attack() {
-    if (status)
-        move = "attack"; //set firstAnimalId and secondAnimalId
-
+    move = "attack"; //set firstAnimalId and secondAnimalId
 }
 
 function endMove() {
-    if (status){
-        move="endMove";
-        document.getElementById("doing").innerText = "end move";
-        let json=buildMessage();
-        clearFields();
-        socket.send(json);
-    }
+    move = "endMove";
+    document.getElementById("doing").innerText = "end move";
+    let json = buildMessage();
+    clearFields();
+    socket.send(json);
 }
 
 function endPhase() {
-    if (status) {
-        move = "EndPhase";
-        document.getElementById("doing").innerText = "end "+document.getElementById("phase");
-        let json = buildMessage();
-        clearFields(); //clear fields after message is built!
-        socket.send(json);
-    }
+    move = "EndPhase";
+    document.getElementById("doing").innerText = "end " + document.getElementById("phase");
+    let json = buildMessage();
+    clearFields(); //clear fields after message is built!
+    socket.send(json);
 }
 
 function onMessage(event) {
@@ -48,13 +39,15 @@ function onMessage(event) {
     var game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")) {
         alert(game.error);
-        status = "true";
+        document.getElementById("wrapper").style.pointerEvents = "auto";
         return;
     }
+
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
     if (game.phase == "FEED") {
+        document.getElementById("personal").style.pointerEvents = "none"; //card non-clickable
         document.getElementById("movePanel").style.display = 'block';
         document.getElementById("feedPanel").style.display = 'block'; //show panel
         let food = document.getElementById("food");
@@ -68,22 +61,14 @@ function onMessage(event) {
         document.getElementById("movePanel").style.display = 'none';
         document.getElementById("feedPanel").style.display = 'none';//hide panel
     }
-    else {
+    else { //case evolution
+        document.getElementById("personal").style.pointerEvents = "auto"; // card clickable
         document.getElementById("movePanel").style.display = 'block'; //evolution phase
-        document.getElementById("feedPanel").style.display = 'none';
+        document.getElementById("feedPanel").style.display = 'none'; //hide panel
     }
 
     document.getElementById("players").innerText = game.playersList;
     var yourStatus = document.getElementById("status");
-
-    if (game.status == true) {
-        yourStatus.innerText = "It's your turn!";
-        status = true;
-    }
-    else {
-        yourStatus.innerText = "Please, wait...";
-        status = false; //mean false in js
-    }
 
     var common = document.getElementById("common");
     common.innerText = "";
@@ -91,26 +76,36 @@ function onMessage(event) {
     for (var name in game.players) {
         var player = game.players[name];
         common.appendChild(buildPlayerBlock(player));
-        //build divider
     }
 
     document.getElementById("log").innerHTML += "<br/>" + game.moves + "   on " + new Date().toLocaleString();
 
-    if (game.hasOwnProperty("last")) document.getElementById("last").style.display="block";
+    if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
     if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
+
+    if (game.status == true) {
+        yourStatus.innerText = "It's your turn!";
+        document.getElementById("wrapper").style.pointerEvents = "auto"; //clickable whole page
+    }
+    else {
+        yourStatus.innerText = "Please, wait...";
+        document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
+        document.getElementById("personal").style.pointerEvents="none";
+
+    }
 }
 
 function makeMove() {
-    if (status) {
-        let json = buildMessage();
-        clearFields();//clear fields after message is built!
-        socket.send(json);
-    }
+
+    let json = buildMessage();
+    clearFields();//clear fields after message is built!
+    socket.send(json);
+
 }
 
 function clearFields() {
     clearMove();
-    status = false;
+    document.getElementById("wrapper").style.pointerEvents = "none";
 }
 
 function clearMove() {
@@ -129,10 +124,8 @@ function leave() {
 }
 
 function restart() {
-    if (status) {
-        move = "Restart";
-        socket.send(buildMessage());
-    }
+    move = "Restart";
+    socket.send(buildMessage());
 }
 
 function init() {

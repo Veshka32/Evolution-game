@@ -120,16 +120,16 @@ function buttonOnAnimal(name, id) {
 }
 
 function playAnimalProperty(property, animalId) {
-    if (status) {
+
         move = "playAnimalProperty";
         draggedProperty = property;
         firstAnimalId = animalId;
         document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;
-    }
+
 }
 
 function playProperty(property, cardId) {
-    if (status && document.getElementById("phase").innerText == "EVOLUTION") {
+    if (document.getElementById("phase").innerText == "EVOLUTION") {
         playedCardId = cardId;
         if (property === "MakeAnimal") {
             move = "MakeAnimal";

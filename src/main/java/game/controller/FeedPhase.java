@@ -59,6 +59,7 @@ public class FeedPhase {
 
     public void attack(Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
+        if (player.isDoEat()) throw new GameException("You've already made attack ");
         Animal predator = player.getAnimal(move.getAnimalId());
         if (predator == null) throw new GameException("It's not your animal");
 
@@ -91,6 +92,7 @@ public class FeedPhase {
     public void eatFood(Move move) throws GameException {
         if (game.getFood()==0) throw new GameException("There is no more food");
         Player player = game.getPlayer(move.getPlayer());
+        if (player.isDoEat()) throw new GameException("You've already taken food");
         Animal animal = player.getAnimal(move.getAnimalId());
         if (animal==null) throw new GameException("Feeding stranger animal is danger!");
         animal.eatMeet(player, game);

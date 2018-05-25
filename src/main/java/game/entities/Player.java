@@ -27,6 +27,10 @@ public class Player {
         doEat=true;
     }
 
+    public boolean isDoEat(){
+        return doEat;
+    }
+
     public void resetEatFlag(){
         doEat=false;
     }
