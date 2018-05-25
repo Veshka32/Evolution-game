@@ -134,10 +134,8 @@ public class Player {
     }
 
     public void resetFedFlag() {
-        for (Animal an : animals.values()
-                ) {
+        for (Animal an : animals.values())
             an.fedFlag = false;
-        }
     }
 
     public void resetFields() {
@@ -145,6 +143,7 @@ public class Player {
                 ) {
             an.setHungry();
             an.attackFlag = false;
+            an.fedFlag=false;
         }
     }
 
@@ -152,7 +151,7 @@ public class Player {
         return animals.get(id);
     }
 
-    public void deleteAnimal(int id){
+    public void deleteAnimal(int id) {
         animals.remove(id);
     }
 
