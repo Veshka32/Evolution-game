@@ -83,6 +83,7 @@ public class FeedPhase {
             predator.eatFish(2);
             victim.die();
             victim.getOwner().deleteAnimal(victim.getId());
+            player.resetFedFlag();
             game.feedScavenger(move.getPlayer());
         }
     }

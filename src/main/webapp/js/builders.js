@@ -6,6 +6,13 @@ function buildFood() {
 
 }
 
+function buildFat(){
+    let img=document.createElement('IMG');
+    img.setAttribute('src','../images/fat.png');
+    img.setAttribute('class','fat');
+    return img;
+}
+
 function buildPlayerBlock(player) {
     let playerBlock = document.createElement("div");
     playerBlock.id = player.name;
@@ -60,6 +67,12 @@ function buildAnimal(animal, flag) {
                     animDiv.appendChild(span);
                 }
             }
+        }
+        else if (key==currentFatSupply){
+            for (let i=0;i<animal[key];i++){
+                animDiv.appendChild(buildFat());
+            }
+
         }
         else if (animal[key] !== null) {
             let span = document.createElement("span");

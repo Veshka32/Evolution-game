@@ -106,22 +106,30 @@ public class Animal {
 
     public void die() {
         for (int id : cooperateTo) {
-            owner.getAnimal(id).cooperateTo.remove(Integer.valueOf(this.id));
+            Animal animal=owner.getAnimal(id);
+            animal.cooperateTo.remove(Integer.valueOf(this.id));
+            if (animal.cooperateTo.isEmpty()) animal.propertyList.remove("Cooperation");
             owner.usedCards++;
         }
 
         for (int id : communicateTo) {
-            owner.getAnimal(id).communicateTo.remove(Integer.valueOf(this.id));
+            Animal animal=owner.getAnimal(id);
+            animal.communicateTo.remove(Integer.valueOf(this.id));
+            if (animal.communicateTo.isEmpty()) animal.propertyList.remove("Communication");
             owner.usedCards++;
         }
 
         for (int id : symbiosis) {
-            owner.getAnimal(id).symbiontFor.remove(Integer.valueOf(this.id));
+            Animal animal=owner.getAnimal(id);
+            animal.symbiontFor.remove(Integer.valueOf(this.id));
+            if (animal.symbiontFor.isEmpty() && animal.symbiosis.isEmpty()) animal.propertyList.remove("Symbiosis");
             owner.usedCards++;
         }
 
         for (int id : symbiontFor) {
-            owner.getAnimal(id).symbiosis.remove(Integer.valueOf(this.id));
+            Animal animal=owner.getAnimal(id);
+            animal.symbiosis.remove(Integer.valueOf(this.id));
+            if (animal.symbiontFor.isEmpty() && animal.symbiosis.isEmpty()) animal.propertyList.remove("Symbiosis");
             owner.usedCards++;
         }
     }
@@ -136,8 +144,6 @@ public class Animal {
 
         else if (property.equals("Fat")) {
             totalFatSupply++;
-            //put in list once, but if already has, do not throw exception
-            if (hasProperty(property)) return;
         } else if (property.equals("Communication") || property.equals("Cooperation") || property.equals("Symbiosis")) {
             //put in list once, but if already has, do not throw exception
             if (hasProperty(property)) return;

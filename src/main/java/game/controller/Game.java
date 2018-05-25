@@ -97,12 +97,13 @@ public class Game {
                     addCards();
                     phase = Phase.EVOLUTION;
                     round++;
-                    playerOnMove = round%players.size(); //circular array; each round starts next player
+
                 }
                 if (cardList.isEmpty()) round=-1;//last round
                 break;
         }
         playersTurn = new LinkedList<>(players.keySet());
+        playerOnMove = round%players.size(); //circular array; each round starts next player
     }
 
     public void endGame() {
@@ -160,6 +161,7 @@ public class Game {
         }
 
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners",winners);
+        if (round==-1) element.getAsJsonObject().addProperty("last",0);
 
         return gson.toJson(element);
     }
@@ -201,7 +203,7 @@ public class Game {
     }
 
     public void feedScavenger(String name) {
-        List<String> scavengerOwners=new ArrayList(players.keySet());
+        List<String> scavengerOwners=new ArrayList<String>(players.keySet());
         int start=0;
         for (int i = 0; i < scavengerOwners.size(); i++) {
             if (scavengerOwners.get(i).equals(name)){

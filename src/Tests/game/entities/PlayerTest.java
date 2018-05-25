@@ -33,7 +33,6 @@ class PlayerTest {
         }, "These animals are already communicating");
 
         player.animalsDie();
-
     }
 
 

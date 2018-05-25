@@ -76,6 +76,7 @@ function onMessage(event) {
 
     document.getElementById("log").innerHTML += "<br/>" + game.moves + "   on " + new Date().toLocaleString();
 
+    if (game.hasOwnProperty("last")) document.getElementById("last").style.display="block";
     if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
 }
 
