@@ -118,9 +118,6 @@ public class Animal {
             owner.getAnimal(id).symbiosis.remove(Integer.valueOf(this.id));
             owner.usedCards++;
         }
-
-        owner.animals.remove(this.id);
-        owner.usedCards += this.totalHungry;
     }
 
     public void addProperty(String property) throws GameException {

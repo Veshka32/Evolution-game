@@ -6,7 +6,7 @@ import game.controller.GameException;
 import java.util.*;
 
 public class Player {
-    private transient int cardNumber=Constants.START_NUMBER_OF_CARDS.getValue();
+    private transient int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
     private transient int points;
     transient int usedCards;
     //go to json
@@ -37,19 +37,19 @@ public class Player {
         }
     }
 
-    public void setCardNumber(){
+    public void setCardNumber() {
         if (!hasAnimals() && !hasCards())
-            cardNumber=Constants.START_NUMBER_OF_CARDS.getValue();
-        else cardNumber=animals.size()+Constants.NUMBER_OF_EXTRA_CARD.getValue();
+            cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
+        else cardNumber = animals.size() + Constants.NUMBER_OF_EXTRA_CARD.getValue();
     }
 
-    public boolean needCards(){
-        return cardNumber>0;
+    public boolean needCards() {
+        return cardNumber > 0;
     }
 
-    public int getPoints(){
-        for (Animal animal:animals.values()){
-            points+=animal.totalHungry; //how to calculate double cards?
+    public int getPoints() {
+        for (Animal animal : animals.values()) {
+            points += animal.totalHungry; //how to calculate double cards?
         }
         return points;
     }
@@ -59,10 +59,10 @@ public class Player {
     }
 
     //return true if player has any scavenger that can be fed; feed only one of them. Player should choose which one, actually
-    public boolean feedScavenger(){
-        for (Animal animal:animals.values()
-             ) {
-            if (animal.hasProperty("Scavenger")&&animal.currentHungry>0){
+    public boolean feedScavenger() {
+        for (Animal animal : animals.values()
+                ) {
+            if (animal.hasProperty("Scavenger") && animal.currentHungry > 0) {
                 animal.eatFish(1);
                 return true;
             }
@@ -121,12 +121,15 @@ public class Player {
     }
 
     public void animalDie() {
-        Collection<Integer> all = animals.keySet(); //for safe removing from map while iterating
-        for (int id : all
-                ) {
-            Animal animal = animals.get(id);
-            if (animal.currentHungry > 0) animal.die();
-            else if (animal.isPoisoned) animal.die();
+        Collection<Animal> all = animals.values();
+        Iterator<Animal> it = all.iterator(); //to remove animal safety;
+        while (it.hasNext()) {
+            Animal animal = it.next();
+            if (animal.currentHungry > 0 || animal.isPoisoned) {
+                animal.die();
+                usedCards += animal.totalHungry;
+                it.remove();
+            }
         }
     }
 
@@ -149,7 +152,7 @@ public class Player {
         return animals.get(id);
     }
 
-    public int getUsedCards(){
+    public int getUsedCards() {
         return usedCards;
     }
 

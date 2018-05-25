@@ -53,7 +53,6 @@ public class Game {
                     EvolutionPhase ep = new EvolutionPhase(this);
                     ep.playProperty( move);
                     break;
-
                 case FEED:
                     FeedPhase fp = new FeedPhase(this);
                     fp.eat(move);
@@ -71,7 +70,6 @@ public class Game {
         if (playersTurn.isEmpty())
             goToNextPhase();
     }
-
 
     void switchPlayerOnMove() {
         playerOnMove = (playerOnMove + 1) % playersTurn.size(); // circular array;

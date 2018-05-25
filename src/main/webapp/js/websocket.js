@@ -8,6 +8,7 @@ var draggedProperty;
 var firstAnimalId=null;
 var secondAnimalId=null;
 var playedCardId;
+var status;
 
 function eatFood() {
     if (status) {
@@ -64,7 +65,7 @@ function onMessage(event) {
     }
     else {
         yourStatus.innerText = "Please, wait...";
-        status = ""; //mean false in js
+        status = false; //mean false in js
     }
 
     var common = document.getElementById("common");
@@ -101,7 +102,7 @@ function endPhase() {
 
 function clearFields() {
     clearMove();
-    status = "";
+    status = false;
 }
 
 function clearMove() {

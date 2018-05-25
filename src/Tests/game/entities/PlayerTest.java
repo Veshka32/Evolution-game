@@ -35,6 +35,11 @@ class PlayerTest {
         assertThrows(GameException.class, ()->{
             player.connectAnimal(1,3,"Communication");
         }, "These animals are already communicating");
+
+        player.animalDie();
+
     }
+
+
 
 }
