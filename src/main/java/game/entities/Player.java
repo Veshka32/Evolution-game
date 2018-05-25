@@ -49,7 +49,7 @@ public class Player {
 
     public int getPoints() {
         for (Animal animal : animals.values()) {
-            points += animal.totalHungry; //how to calculate double cards?
+            points += animal.hungry; //how to calculate double cards?
         }
         return points;
     }
@@ -62,7 +62,7 @@ public class Player {
     public boolean feedScavenger() {
         for (Animal animal : animals.values()
                 ) {
-            if (animal.hasProperty("Scavenger") && animal.currentHungry > 0) {
+            if (animal.hasProperty("Scavenger") && animal.hungry > 0) {
                 animal.eatFish(1);
                 return true;
             }
@@ -125,9 +125,9 @@ public class Player {
         Iterator<Animal> it = all.iterator(); //to remove animal safety;
         while (it.hasNext()) {
             Animal animal = it.next();
-            if (animal.currentHungry > 0 || animal.isPoisoned) {
+            if (animal.hungry > 0 || animal.isPoisoned) {
                 animal.die();
-                usedCards += animal.totalHungry;
+                usedCards += animal.hungry;
                 it.remove();
             }
         }
@@ -143,7 +143,7 @@ public class Player {
     public void resetFields() {
         for (Animal an : animals.values()
                 ) {
-            an.currentHungry = an.totalHungry;
+            an.setHungry();
             an.attackFlag = false;
         }
     }

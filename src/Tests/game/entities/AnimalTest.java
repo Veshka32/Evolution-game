@@ -34,8 +34,7 @@ class AnimalTest {
         predator.addProperty("Fat");
         predator.addProperty("Fat");
         assert (predator.totalFatSupply==2);
-        assert (predator.currentHungry==2);
-        assert (predator.totalHungry==2);
+        assert (predator.hungry ==2);
     }
 
     @Test
@@ -61,8 +60,8 @@ class AnimalTest {
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[2].eatMeet(player,game);},"This animal is fed!");
-        assert (animals[3].currentHungry==1);
-        assert (animals[4].currentHungry==1);
+        assert (animals[3].hungry ==1);
+        assert (animals[4].hungry ==1);
 
         //feed animal 3 first
         player.resetFedFlag();
@@ -96,9 +95,9 @@ class AnimalTest {
         assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[4].eatMeet(player,game);},"This animal is fed!");
         assert (game.getFood()==0);
-        assert (animals[0].currentHungry==1);
-        assert (animals[1].currentHungry==1);
-        assert (animals[2].currentHungry==1);
+        assert (animals[0].hungry ==1);
+        assert (animals[1].hungry ==1);
+        assert (animals[2].hungry ==1);
 
         //feed animal 3 first, game has less food
         player.resetFedFlag();
@@ -109,7 +108,7 @@ class AnimalTest {
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[2].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
-        assert (animals[4].currentHungry==1);
+        assert (animals[4].hungry ==1);
         assert (game.getFood()==0);
 
         //feed big animal
@@ -121,15 +120,15 @@ class AnimalTest {
         player.resetFields();
         animals[0].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
-        assert (animals[0].currentHungry==1);
-        assert (animals[1].currentHungry==0);
-        assert (animals[2].currentHungry==1);
+        assert (animals[0].hungry ==1);
+        assert (animals[1].hungry ==0);
+        assert (animals[2].hungry ==1);
 
         //feed big animal again
         animals[0].eatMeet(player,game);
-        assert (animals[0].currentHungry==0);
-        assert (animals[1].currentHungry==0);
-        assert (animals[2].currentHungry==1);
+        assert (animals[0].hungry ==0);
+        assert (animals[1].hungry ==0);
+        assert (animals[2].hungry ==1);
     }
 
     @Test
@@ -175,8 +174,7 @@ class AnimalTest {
         assert (predator.attack(swim));
         swim.die();
         predator.eatFish(2);
-        assert (pop.getAnimal(2)==null);
-        assert (predator.currentHungry==0);
+        assert (predator.hungry ==0);
         assertThrows(GameException.class,()->{predator.attack(small);},"This predator has been used");
 
         //new predator eat non-defend small
