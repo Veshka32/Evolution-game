@@ -120,7 +120,7 @@ public class Player {
         }
     }
 
-    public void animalDie() {
+    public void animalsDie() {
         Collection<Animal> all = animals.values();
         Iterator<Animal> it = all.iterator(); //to remove animal safety;
         while (it.hasNext()) {
@@ -150,6 +150,10 @@ public class Player {
 
     public Animal getAnimal(int id) {
         return animals.get(id);
+    }
+
+    public void deleteAnimal(int id){
+        animals.remove(id);
     }
 
     public int getUsedCards() {

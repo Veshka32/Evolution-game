@@ -90,7 +90,7 @@ public class Game {
                 else {
                     for (Player pl : players.values()
                             ) {
-                        pl.animalDie();
+                        pl.animalsDie();
                         pl.resetFields();
                         pl.setCardNumber();
                     }

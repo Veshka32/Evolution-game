@@ -3,10 +3,6 @@ package game.entities;
 import game.controller.GameException;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
@@ -36,7 +32,7 @@ class PlayerTest {
             player.connectAnimal(1,3,"Communication");
         }, "These animals are already communicating");
 
-        player.animalDie();
+        player.animalsDie();
 
     }
 
