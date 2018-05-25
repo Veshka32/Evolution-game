@@ -13,7 +13,7 @@ public class Player {
     private final String name;
     List<Card> cards = new ArrayList<>();
     Map<Integer, Animal> animals = new HashMap<>();
-
+    boolean doEat=false;
 
     public Player(String login) {
         this.name = login;
@@ -21,6 +21,14 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public void doEat(){
+        doEat=true;
+    }
+
+    public void resetEatFlag(){
+        doEat=false;
     }
 
     public void addCard(Card card) {

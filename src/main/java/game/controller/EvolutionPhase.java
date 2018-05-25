@@ -22,11 +22,6 @@ class EvolutionPhase {
             case "TailLoss":
                 tailLoss(move);
                 break;
-
-            case "EndPhase":
-                game.playerEndsPhase(move.getPlayer());
-                break;
-
             case "PlayProperty":
                 if (isDouble(move.getProperty()))
                     processDoubleProperty(move);

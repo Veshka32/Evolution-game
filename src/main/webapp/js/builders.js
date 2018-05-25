@@ -7,7 +7,6 @@ function buildFood() {
 }
 
 function buildFat(int){
-
     let img=document.createElement('IMG');
     img.setAttribute('src','../images/fat.png');
     return img;
@@ -21,8 +20,12 @@ function buildPlayerBlock(player) {
     playerBlock.appendChild(playerName);
 
     if (player.name == this.playerName) {
-        playerName.innerText = 'Your animals:';
+        if (player.doEat)
+            document.getElementById("feedPanel").style.pointerEvents = "none";
+         else
+            document.getElementById("feedPanel").style.pointerEvents = "auto";//disable food and attack buttons}
 
+        playerName.innerText = 'Your animals:';
         var personal = document.getElementById("personal");
         personal.innerHTML = "";
 
@@ -54,12 +57,9 @@ function buildAnimal(animal, flag) {
             for (let m in animal.propertyList) {
 
                 if (flag) {
-                    // let prop = animal.propertyList[m];
-                    // animDiv.appendChild(buttonOnAnimal(prop, animal.id));
-                    let span = document.createElement("span");
-                    span.setAttribute("class", "property");
-                    span.appendChild(document.createTextNode(animal.propertyList[m]));
-                    animDiv.appendChild(span);
+                    let prop = animal.propertyList[m];
+                    animDiv.appendChild(buttonOnAnimal(prop, animal.id));
+
                 } else {
                     let span = document.createElement("span");
                     span.setAttribute("class", "property");

@@ -23,6 +23,26 @@ function attack() {
 
 }
 
+function endMove() {
+    if (status){
+        move="endMove";
+        document.getElementById("doing").innerText = "end move";
+        let json=buildMessage();
+        clearFields();
+        socket.send(json);
+    }
+}
+
+function endPhase() {
+    if (status) {
+        move = "EndPhase";
+        document.getElementById("doing").innerText = "end "+document.getElementById("phase");
+        let json = buildMessage();
+        clearFields(); //clear fields after message is built!
+        socket.send(json);
+    }
+}
+
 function onMessage(event) {
     clearFields();
     var game = JSON.parse(event.data);
@@ -84,16 +104,6 @@ function makeMove() {
     if (status) {
         let json = buildMessage();
         clearFields();//clear fields after message is built!
-        socket.send(json);
-    }
-}
-
-function endPhase() {
-    if (status) {
-        move = "EndPhase";
-        document.getElementById("doing").innerText = "end move";
-        let json = buildMessage();
-        clearFields(); //clear fields after message is built!
         socket.send(json);
     }
 }

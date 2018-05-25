@@ -41,17 +41,18 @@ public class Game {
     public void makeMove(Move move) {
         error = null;
         moves = move.getPlayer() + " " + move.getLog();
-
-        if (move.getMove().equals("Restart")) {
+        if (move.getMove().equals("EndPhase")) {
+            playerEndsPhase(move.getPlayer());
+            return;
+        } else if (move.getMove().equals("Restart")) {
             restart();
             return;
         }
-
         try {
             switch (phase) {
                 case EVOLUTION:
                     EvolutionPhase ep = new EvolutionPhase(this);
-                    ep.playProperty( move);
+                    ep.playProperty(move);
                     break;
                 case FEED:
                     FeedPhase fp = new FeedPhase(this);
@@ -69,6 +70,7 @@ public class Game {
         playersTurn.remove(name);
         if (playersTurn.isEmpty())
             goToNextPhase();
+        else switchPlayerOnMove();
     }
 
     void switchPlayerOnMove() {
@@ -99,22 +101,22 @@ public class Game {
                     round++;
 
                 }
-                if (cardList.isEmpty()) round=-1;//last round
+                if (cardList.isEmpty()) round = -1;//last round
                 break;
         }
         playersTurn = new LinkedList<>(players.keySet());
-        playerOnMove = round%players.size(); //circular array; each round starts next player
+        playerOnMove = round % players.size(); //circular array; each round starts next player
     }
 
     public void endGame() {
         phase = Phase.END;
         List<Player> sorted = new ArrayList<>(players.values());
         sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
-        StringJoiner joiner=new StringJoiner(",");
+        StringJoiner joiner = new StringJoiner(",");
         joiner.add(sorted.get(0).getName());
         for (int i = 1; i < sorted.size(); i++) {
             if (sorted.get(i).getPoints() < sorted.get(i - 1).getPoints()) break;
-            if (sorted.get(i).getUsedCards()<sorted.get(i-1).getUsedCards()) break;
+            if (sorted.get(i).getUsedCards() < sorted.get(i - 1).getUsedCards()) break;
             joiner.add(sorted.get(i).getName()); //append another winners if points and usedCard are not less;
         }
         winners = joiner.toString();
@@ -160,8 +162,8 @@ public class Game {
             else element.getAsJsonObject().addProperty("status", false);
         }
 
-        if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners",winners);
-        if (round==-1) element.getAsJsonObject().addProperty("last",0);
+        if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
+        if (round == -1) element.getAsJsonObject().addProperty("last", 0);
 
         return gson.toJson(element);
     }
@@ -203,17 +205,17 @@ public class Game {
     }
 
     public void feedScavenger(String name) {
-        List<String> scavengerOwners=new ArrayList<String>(players.keySet());
-        int start=0;
+        List<String> scavengerOwners = new ArrayList<String>(players.keySet());
+        int start = 0;
         for (int i = 0; i < scavengerOwners.size(); i++) {
-            if (scavengerOwners.get(i).equals(name)){
-                start=i;
+            if (scavengerOwners.get(i).equals(name)) {
+                start = i;
                 break;
             }
         }
-        for (int i=start;i<scavengerOwners.size()+start;i++){
-            int k=i%scavengerOwners.size(); //circular array
-            Player player=players.get(scavengerOwners.get(k));
+        for (int i = start; i < scavengerOwners.size() + start; i++) {
+            int k = i % scavengerOwners.size(); //circular array
+            Player player = players.get(scavengerOwners.get(k));
             if (player.feedScavenger())
                 break;
         }

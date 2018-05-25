@@ -1,6 +1,5 @@
 package game.controller;
 
-import game.constants.Phase;
 import game.entities.Animal;
 import game.entities.Move;
 import game.entities.Player;
@@ -17,9 +16,6 @@ public class FeedPhase {
     void eat(Move move) throws GameException {
 
         switch (move.getMove()) {
-            case "EndPhase":
-                game.playerEndsPhase(move.getPlayer());
-                break;
             case "eatFood":
                 eatFood(move);
                 break;
@@ -29,8 +25,11 @@ public class FeedPhase {
             case "playAnimalProperty": //piracy, Hibernation, tail loss,Crazing, fat (eatFat), mimicry
                 playAnimalProperty(move);
                 return; //do not switch player?
+            case "endMove":
+                game.switchPlayerOnMove();
+                game.getPlayer(move.getPlayer()).resetEatFlag();
         }
-        if (game.phase.equals(Phase.FEED)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
+        //if (game.phase.equals(Phase.FEED)) //if new phase, do not switch player, because playersTurn is update
 
     }
 
@@ -86,6 +85,7 @@ public class FeedPhase {
             player.resetFedFlag();
             game.feedScavenger(move.getPlayer());
         }
+        player.doEat();
     }
 
     public void eatFood(Move move) throws GameException {
@@ -95,5 +95,6 @@ public class FeedPhase {
         if (animal==null) throw new GameException("Feeding stranger animal is danger!");
         animal.eatMeet(player, game);
         player.resetFedFlag();
+        player.doEat();
     }
 }
