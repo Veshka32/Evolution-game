@@ -13,6 +13,7 @@ public class Animal {
     transient boolean fedFlag = false;
     transient boolean isPoisoned = false;
     transient int hibernationRound;
+    transient int totalFatSupply;
 
     //go to json
     int id;
@@ -22,7 +23,6 @@ public class Animal {
     ArrayList<Integer> symbiontFor = new ArrayList<>();
     ArrayList<Integer> symbiosis = new ArrayList<>();
     int hungry = Constants.MIN_HUNGRY.getValue();
-    int totalFatSupply;
     int currentFatSupply;
 
     public Animal(int id, Player player) {

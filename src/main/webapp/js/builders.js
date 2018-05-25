@@ -6,10 +6,10 @@ function buildFood() {
 
 }
 
-function buildFat(){
+function buildFat(int){
+
     let img=document.createElement('IMG');
     img.setAttribute('src','../images/fat.png');
-    img.setAttribute('class','fat');
     return img;
 }
 
@@ -68,10 +68,13 @@ function buildAnimal(animal, flag) {
                 }
             }
         }
-        else if (key==currentFatSupply){
+        else if (key=="currentFatSupply"){
+            let span=document.createElement("span");
+            span.setAttribute("class","fat");
             for (let i=0;i<animal[key];i++){
-                animDiv.appendChild(buildFat());
+                span.appendChild(buildFat());
             }
+            animDiv.appendChild(span);
 
         }
         else if (animal[key] !== null) {
