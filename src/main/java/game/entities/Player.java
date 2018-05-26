@@ -23,16 +23,12 @@ public class Player {
         return name;
     }
 
-    public void doEat(){
-        doEat=true;
+    public void setDoEat(boolean bool){
+        doEat=bool;
     }
 
     public boolean isDoEat(){
         return doEat;
-    }
-
-    public void resetEatFlag(){
-        doEat=false;
     }
 
     public void addCard(Card card) {
@@ -156,6 +152,8 @@ public class Player {
             an.setHungry();
             an.attackFlag = false;
             an.fedFlag=false;
+            an.setDoPiracy(false);
+            doEat=false;
         }
     }
 
