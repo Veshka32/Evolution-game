@@ -8,51 +8,48 @@ import java.util.Random;
 
 public class FeedPhase {
     private Game game;
+    private Move move;
 
-    public FeedPhase(Game game){
+    public FeedPhase(Game game,Move move){
         this.game=game;
+        this.move=move;
     }
 
-    void eat(Move move) throws GameException {
-
+    void processMove() throws GameException {
         switch (move.getMove()) {
             case "eatFood":
-                eatFood(move);
+                eatFood();
                 break;
             case "attack":
-                attack(move);
+                attack();
                 break;
             case "playAnimalProperty": //piracy, Hibernation, tail loss,Crazing, mimicry
-                playAnimalProperty(move);
-                return; //do not switch player?
+                playAnimalProperty();
+                break;
             case "endMove":
                 game.switchPlayerOnMove();
                 game.getPlayer(move.getPlayer()).setDoEat(false);
             case "eatFat":
-                eatFat(move);
-
+                eatFat();
+                break;
         }
-        //if (game.phase.equals(Phase.FEED)) //if new phase, do not switch player, because playersTurn is update
-
     }
 
-    public void eatFat(Move move) throws GameException{
-        Player player=game.getPlayer(move.getPlayer());
-        Animal animal = player.getAnimal(move.getAnimalId());
+    public void eatFat() throws GameException{
+
+        Animal animal = game.getAnimal(move.getAnimalId());
         animal.eatFat();
     }
 
-    public void playAnimalProperty(Move move) throws GameException{
+    public void playAnimalProperty() throws GameException{
         String property=move.getProperty();
-        Player player = game.getPlayer(move.getPlayer());
-        Animal animal = player.getAnimal(move.getAnimalId());
+        Animal animal = game.getAnimal(move.getAnimalId());
         switch (property){
             case "Hibernation":
                 animal.hibernate(game.round);
                 break;
             case "Piracy":
-                pirate(move);
-                //??
+                pirate();
                 break;
             case "Tail loss": //only if animal is attacked
                 //??
@@ -64,20 +61,20 @@ public class FeedPhase {
         }
     }
 
-    public void pirate(Move move) throws GameException{
+    public void pirate() throws GameException{
         Animal animal=game.getAnimal(move.getAnimalId());
         if (animal.isDoPiracy()) throw new GameException("This animal has already pirated!");
         if (!animal.isHungry()) throw new GameException("The animal can't pirate when it's fed");
         Animal victim=game.getAnimal(move.getSecondAnimalId());
         if (!victim.isHungry()) throw new GameException("You can't pirate from fed animal");
         if (victim.calculateHungry()==1) throw new GameException("There is nothing to pirate"); //if isHungry, but total hungry==1;
-        if (!animal.checkSymbiosis(animal.getOwner())) throw new GameException("The animal can't eat while it's symbiont is hungry");
+        if (!animal.checkSymbiosis(animal.getOwner())) throw new GameException("The animal can't processMove while it's symbiont is hungry");
         victim.deleteFood();
         animal.eatFish(1);
         animal.setDoPiracy(true);
     }
 
-    public void attack(Move move) throws GameException {
+    public void attack() throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         if (player.isDoEat()) throw new GameException("You've already made attack ");
         Animal predator = player.getAnimal(move.getAnimalId());
@@ -109,7 +106,7 @@ public class FeedPhase {
         player.setDoEat(true);
     }
 
-    public void eatFood(Move move) throws GameException {
+    public void eatFood() throws GameException {
         if (game.getFood()==0) throw new GameException("There is no more food");
         Player player = game.getPlayer(move.getPlayer());
         if (player.isDoEat()) throw new GameException("You've already taken food");

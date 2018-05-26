@@ -7,12 +7,13 @@ import game.entities.Player;
 
 class EvolutionPhase {
     private Game game;
+    private Move move;
 
-    public EvolutionPhase(Game game){
-        this.game=game;
+    public EvolutionPhase(Game game,Move move){
+        this.game=game; this.move=move;
     }
 
-    void playProperty(Move move) throws GameException {
+    void processMove() throws GameException {
 
         switch (move.getMove()) {
             case "MakeAnimal":
@@ -20,20 +21,20 @@ class EvolutionPhase {
                 break;
 
             case "TailLoss":
-                tailLoss(move);
+                tailLoss();
                 break;
             case "PlayProperty":
                 if (isDouble(move.getProperty()))
-                    processDoubleProperty(move);
+                    processDoubleProperty();
 
                 else {
-                    processSimpleProperty(move);
+                    processSimpleProperty();
                 }
         }
         if (game.phase.equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
     }
 
-    private void tailLoss(Move move) throws GameException {
+    private void tailLoss() throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal=player.getAnimal(move.getAnimalId());
         if (animal==null) throw new GameException("It's not your animal");
@@ -48,7 +49,7 @@ class EvolutionPhase {
         return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
     }
 
-    private void processDoubleProperty(Move move) throws GameException {
+    private void processDoubleProperty() throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         int id1=move.getAnimalId();
         int id2=move.getSecondAnimalId();
@@ -57,7 +58,7 @@ class EvolutionPhase {
 
     }
 
-    private void processSimpleProperty(Move move) throws GameException {
+    private void processSimpleProperty() throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
         String property=move.getProperty();
@@ -73,6 +74,4 @@ class EvolutionPhase {
         }
         player.deleteCard(move.getCardId());
     }
-
-
 }

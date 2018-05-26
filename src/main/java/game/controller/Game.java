@@ -51,12 +51,12 @@ public class Game {
         try {
             switch (phase) {
                 case EVOLUTION:
-                    EvolutionPhase ep = new EvolutionPhase(this);
-                    ep.playProperty(move);
+                    EvolutionPhase ep = new EvolutionPhase(this,move);
+                    ep.processMove();
                     break;
                 case FEED:
-                    FeedPhase fp = new FeedPhase(this);
-                    fp.eat(move);
+                    FeedPhase fp = new FeedPhase(this,move);
+                    fp.processMove();
                     break;
                 case END:
                     break;
