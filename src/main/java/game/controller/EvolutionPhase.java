@@ -19,9 +19,8 @@ class EvolutionPhase {
             case "MakeAnimal":
                 game.makeAnimal(move);
                 break;
-
-            case "TailLoss":
-                tailLoss();
+            case "DeleteProperty":
+                deleteProperty();
                 break;
             case "PlayProperty":
                 if (isDouble(move.getProperty()))
@@ -34,15 +33,10 @@ class EvolutionPhase {
         if (game.phase.equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
     }
 
-    private void tailLoss() throws GameException {
-        Player player = game.getPlayer(move.getPlayer());
-        Animal animal=player.getAnimal(move.getAnimalId());
-        if (animal==null) throw new GameException("It's not your animal");
-        int id1=move.getAnimalId();
-        int id2=move.getSecondAnimalId();
-        if (id1!=id2) throw new GameException("You should remove property from the same animal");
-        String property=move.getProperty();
-        animal.removeProperty(property,move.getSecondAnimalId());
+    private void deleteProperty() {
+        Animal animal=game.getAnimal(move.getAnimalId());
+        animal.removeProperty(move.getProperty());
+        game.getPlayer(move.getPlayer()).deleteCard(move.getCardId());
     }
 
     private boolean isDouble(String property) {

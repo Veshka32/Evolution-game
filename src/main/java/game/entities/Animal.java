@@ -293,12 +293,10 @@ public class Animal {
         return propertyList.contains(property);
     }
 
-    public void removeProperty(String property, int id) throws GameException {
-        if (!propertyList.contains(property)) throw new GameException("Animal has no property " + property);
+    public void removeProperty(String property){
         switch (property) {
             case "Parasite":
-                hungry -= 2;
-                //,=hungry;
+                hungry-=2;
                 break;
             case "Big":
                 hungry--;
@@ -306,29 +304,10 @@ public class Animal {
             case "Fat":
                 totalFatSupply--;
                 if (currentFatSupply > totalFatSupply) currentFatSupply = totalFatSupply;
-                if (totalFatSupply == 0) propertyList.remove(property); //remove only there is no more fat supply
                 break;
             case "Predator":
                 hungry--;
-
                 break;
-            case "Cooperation":
-                cooperateTo.remove(Integer.valueOf(id));
-                Animal an = owner.getAnimal(id);
-                an.cooperateTo.remove(Integer.valueOf(this.id));
-                if (cooperateTo.isEmpty()) propertyList.remove(property);
-                if (an.cooperateTo.isEmpty()) an.propertyList.remove(property);
-                return;
-            case "Communication":
-                communicateTo.remove(Integer.valueOf(id));
-                an = owner.getAnimal(id);
-                an.communicateTo.remove(Integer.valueOf(this.id));
-                if (communicateTo.isEmpty()) propertyList.remove(property);
-                if (an.communicateTo.isEmpty()) an.propertyList.remove(property);
-                return;
-            case "Symbiosis":
-                return;
-
         }
         propertyList.remove(property);
         owner.usedCards++;

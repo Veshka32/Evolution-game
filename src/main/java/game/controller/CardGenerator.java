@@ -19,7 +19,7 @@ public class CardGenerator {
             cardList.add(new Card(cardID++, "Symbiosis"));
             cardList.add(new Card(cardID++, "Piracy"));
             cardList.add(new Card(cardID++, "Grazing"));
-            cardList.add(new Card(cardID++, "Tail loss"));
+            cardList.add(new Card(cardID++, "Tail loss","DeleteProperty"));
             cardList.add(new Card(cardID++, "Hibernation"));
             cardList.add(new Card(cardID++, "Poisonous"));
             cardList.add(new Card(cardID++, "Communication","Predator"));

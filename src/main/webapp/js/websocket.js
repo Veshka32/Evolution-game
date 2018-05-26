@@ -8,6 +8,7 @@ var draggedProperty;
 var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
+var tailLoss=false;
 
 function eatFood() {
     move = "eatFood";
@@ -111,6 +112,7 @@ function clearMove() {
     firstAnimalId = null;
     secondAnimalId = null;
     playedCardId = null;
+    tailLoss=false;
     document.getElementById("doing").textContent = "";
 }
 

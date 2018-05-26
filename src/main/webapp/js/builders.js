@@ -6,9 +6,9 @@ function buildFood() {
 
 }
 
-function buildFat(int){
-    let img=document.createElement('IMG');
-    img.setAttribute('src','../images/fat.png');
+function buildFat(int) {
+    let img = document.createElement('IMG');
+    img.setAttribute('src', '../images/fat.png');
     return img;
 }
 
@@ -22,7 +22,7 @@ function buildPlayerBlock(player) {
     if (player.name == this.playerName) {
         if (player.doEat)
             document.getElementById("feedPanel").style.pointerEvents = "none";
-         else
+        else
             document.getElementById("feedPanel").style.pointerEvents = "auto";//disable food and attack buttons}
 
         playerName.innerText = 'Your animals:';
@@ -68,21 +68,21 @@ function buildAnimal(animal, flag) {
                 }
             }
         }
-        else if (key=="currentFatSupply"){
-            let span=document.createElement("span");
-            span.setAttribute("class","fat");
-            for (let i=0;i<animal[key];i++){
+        else if (key == "currentFatSupply") {
+            let span = document.createElement("span");
+            span.setAttribute("class", "fat");
+            for (let i = 0; i < animal[key]; i++) {
                 span.appendChild(buildFat());
             }
-            span.addEventListener("click",function(){
-                move="eatFat";
-                firstAnimalId=animal.id;
-                document.getElementById("doing").innerText="animal #"+firstAnimalId+" eats fat supply";
+            span.addEventListener("click", function () {
+                move = "eatFat";
+                firstAnimalId = animal.id;
+                document.getElementById("doing").innerText = "animal #" + firstAnimalId + " eats fat supply";
             });
             animDiv.appendChild(span);
 
         }
-        else if (animal[key] !== null) {
+        else if (animal[key] !== null || animal[key] !== undefined) {
             let span = document.createElement("span");
             span.setAttribute("class", "parameter");
             if (Array.isArray(animal[key])) {
@@ -118,17 +118,22 @@ function buttonOnAnimal(name, id) {
     var property = document.createElement("button");
     property.addEventListener("click", function (event) {
         event.stopPropagation();
-        playAnimalProperty(name, id);
+        if (document.getElementById("phase").innerText == "FEED" || tailLoss) { //active only in feed phase
+            playAnimalProperty(name, id);
+        }
     });
     property.innerText = name;
     return property;
 }
 
 function playAnimalProperty(property, animalId) {
-        move = "playAnimalProperty";
-        draggedProperty = property;
-        firstAnimalId = animalId;
-        document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;
+    draggedProperty = property;
+    firstAnimalId = animalId;
+    if (tailLoss) {
+        move="DeleteProperty";
+        document.getElementById("doing").innerText = "Delete property " + draggedProperty + " from animal #" + animalId;
+    } else {move = "playAnimalProperty";
+    document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;}
 }
 
 function playProperty(property, cardId) {
@@ -137,6 +142,10 @@ function playProperty(property, cardId) {
         if (property === "MakeAnimal") {
             move = "MakeAnimal";
             document.getElementById("doing").innerText = "Make animal from card # " + cardId;
+        }else if(property==="DeleteProperty"){
+            alert("Click property on any animal to delete");
+            tailLoss=true;
+            move="DeleteProperty";
         }
         else {
             move = "PlayProperty";
@@ -163,7 +172,10 @@ function buildCard(card) {
     cardDiv.appendChild(buildButton(card.property, card.id));
 
     if (card.hasOwnProperty("extraProperty")) {
-        cardDiv.appendChild(buildButton(card.extraProperty, card.id));
+        if (card.extraProperty == "DeleteProperty")
+            cardDiv.appendChild(buildButton("DeleteProperty", card.id));
+        else
+            cardDiv.appendChild(buildButton(card.extraProperty, card.id));
     }
 
     cardDiv.appendChild(buildButton("MakeAnimal", card.id));
