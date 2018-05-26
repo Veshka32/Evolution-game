@@ -79,7 +79,7 @@ function onMessage(event) {
         common.appendChild(buildPlayerBlock(player));
     }
 
-    document.getElementById("log").innerHTML += "<br/>" + game.moves + "   on " + new Date().toLocaleString();
+    document.getElementById("log").innerText=game.log;
 
     if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
     if (game.hasOwnProperty("winners")) alert(game.winners + " win!");

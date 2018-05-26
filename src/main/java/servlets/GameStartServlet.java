@@ -27,7 +27,6 @@ public class GameStartServlet extends HttpServlet {
         }
         else {
             game.addPlayer(name);
-            game.setMoves(name + " joined game");
             req.setAttribute("playersList",game.getAllPlayers());
             resp.sendRedirect("views/socket.html");
         }

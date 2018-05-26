@@ -27,6 +27,7 @@ public class Game {
     transient HashMap<Integer, Animal> animalList = new HashMap<>();
     private transient CardGenerator generator = new CardGenerator();
     private transient String winners;
+    private transient StringBuilder log=new StringBuilder();
 
     //go to json
     private String moves;
@@ -40,7 +41,7 @@ public class Game {
 
     public void makeMove(Move move) {
         error = null;
-        moves = move.getPlayer() + " " + move.getLog();
+        log.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
         if (move.getMove().equals("EndPhase")) {
             playerEndsPhase(move.getPlayer());
             return;
@@ -154,6 +155,7 @@ public class Game {
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
+        element.getAsJsonObject().addProperty("log",log.toString());
         if (error != null && playersTurn.get(playerOnMove).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
         } else {
@@ -161,7 +163,6 @@ public class Game {
                 element.getAsJsonObject().addProperty("status", true);
             else element.getAsJsonObject().addProperty("status", false);
         }
-
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
 
@@ -170,6 +171,7 @@ public class Game {
 
     public void addPlayer(String userName) {
         players.put(userName, new Player(userName));
+        log.append(userName).append(" joined game at ").append(new Date());
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
             goToNextPhase(); //start game
         }
@@ -198,10 +200,6 @@ public class Game {
         for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++) {
             player.addCard(cardList.remove(cardList.size() - 1));
         }
-    }
-
-    public void setMoves(String s) {
-        moves = s;
     }
 
     public void feedScavenger(String name) {
