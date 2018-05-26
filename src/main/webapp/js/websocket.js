@@ -29,7 +29,7 @@ function endMove() {
 
 function endPhase() {
     move = "EndPhase";
-    document.getElementById("doing").innerText = "end " + document.getElementById("phase");
+    document.getElementById("doing").innerText = "end " + document.getElementById("phase").innerText;
     let json = buildMessage();
     clearFields(); //clear fields after message is built!
     socket.send(json);

@@ -253,8 +253,8 @@ public class Animal {
         return id;
     }
 
-    public boolean isHungry() {
-        return hungry != 0;
+    public boolean notHungry() {
+        return hungry == 0;
     }
 
     public boolean isCommunicate(int id) {

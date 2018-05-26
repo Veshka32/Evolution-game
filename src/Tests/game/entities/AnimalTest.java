@@ -193,7 +193,7 @@ class AnimalTest {
         Animal animal=new Animal(1,new Player("test"));
         animal.addProperty("Hibernation");
         animal.hibernate(0);
-        assert(!animal.isHungry());
+        assert(animal.notHungry());
         assertThrows(GameException.class,()->{
             animal.hibernate(1);
         },"You can't hibernate 2 rounds in a row");

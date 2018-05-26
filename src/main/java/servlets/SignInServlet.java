@@ -9,7 +9,6 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/signIn")
 public class SignInServlet extends HttpServlet {
@@ -25,12 +24,12 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
+        String login = req.getParameter("login").toLowerCase();
         String password = req.getParameter("password");
         HttpSession session = req.getSession();
 
         try {
-            if (usersDAO.isUserValid(login, password)) {
+            if (usersDAO.isPasswordValid(login, password)) {
                 Cookie cookie = new Cookie("player", login);
                 resp.addCookie(cookie);
                 session.setAttribute("player", login);

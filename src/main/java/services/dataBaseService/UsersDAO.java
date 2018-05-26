@@ -6,6 +6,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
@@ -22,19 +23,22 @@ public class UsersDAO {
     public UsersDAO() {
     }
 
-    public boolean isUserValid(String login, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public boolean isPasswordValid(String login, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        TypedQuery<byte[]> storedPasswordQuery = em.createQuery("select c.password from Users c where c.login=?1", byte[].class);
-        storedPasswordQuery.setParameter(1, login);
-        byte[] storedPassword = storedPasswordQuery.getSingleResult();
+        try {
+            TypedQuery<byte[]> storedPasswordQuery = em.createQuery("select c.password from Users c where c.login=?1", byte[].class);
+            storedPasswordQuery.setParameter(1, login);
+            byte[] storedPassword = storedPasswordQuery.getSingleResult();
 
-        TypedQuery<byte[]> saltQuery = em.createQuery("select c.salt from Users c where c.login=?1", byte[].class);
-        saltQuery.setParameter(1, login);
-        byte[] salt = saltQuery.getSingleResult();
+            TypedQuery<byte[]> saltQuery = em.createQuery("select c.salt from Users c where c.login=?1", byte[].class);
+            saltQuery.setParameter(1, login);
+            byte[] salt = saltQuery.getSingleResult(); //NoResultEx
 
-        return PasswordEncryptionService.authenticate(password, storedPassword, salt);
+            return PasswordEncryptionService.authenticate(password, storedPassword, salt);
+        } catch (NoResultException e) {
+            return false;
+        }
     }
-
 
     public boolean addUser(String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         if (!isLoginValid(login)) return false;
@@ -54,7 +58,6 @@ public class UsersDAO {
         TypedQuery<Long> tq = em.createQuery("SELECT c.id FROM Users c where c.login=?1", Long.class);
         tq.setParameter(1, login);
         List<Long> sameLogin = tq.getResultList();
-
         return sameLogin.size() == 0;
     }
 }

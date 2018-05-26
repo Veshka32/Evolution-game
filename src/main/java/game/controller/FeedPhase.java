@@ -29,6 +29,7 @@ public class FeedPhase {
             case "endMove":
                 game.switchPlayerOnMove();
                 game.getPlayer(move.getPlayer()).setDoEat(false);
+                break;
             case "eatFat":
                 eatFat();
                 break;
@@ -64,10 +65,10 @@ public class FeedPhase {
     public void pirate() throws GameException{
         Animal animal=game.getAnimal(move.getAnimalId());
         if (animal.isDoPiracy()) throw new GameException("This animal has already pirated!");
-        if (!animal.isHungry()) throw new GameException("The animal can't pirate when it's fed");
+        if (animal.notHungry()) throw new GameException("The animal can't pirate when it's fed");
         Animal victim=game.getAnimal(move.getSecondAnimalId());
-        if (!victim.isHungry()) throw new GameException("You can't pirate from fed animal");
-        if (victim.calculateHungry()==1) throw new GameException("There is nothing to pirate"); //if isHungry, but total hungry==1;
+        if (victim.notHungry()) throw new GameException("You can't pirate from fed animal");
+        if (victim.calculateHungry()==1) throw new GameException("There is nothing to pirate"); //if notHungry, but total hungry==1;
         if (!animal.checkSymbiosis(animal.getOwner())) throw new GameException("The animal can't processMove while it's symbiont is hungry");
         victim.deleteFood();
         animal.eatFish(1);
