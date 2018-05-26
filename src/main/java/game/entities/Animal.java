@@ -12,7 +12,7 @@ public class Animal {
     transient boolean attackFlag = false;
     transient boolean fedFlag = false;
     transient boolean isPoisoned = false;
-    transient int hibernationRound=-1; //if round=0 and hibernation==0 by default, you not be able to play hibernation in round 0;
+    transient int hibernationRound;
     transient int totalFatSupply;
     transient boolean doPiracy=false;
 
@@ -64,7 +64,7 @@ public class Animal {
 
     public void hibernate (int round) throws GameException{
         if (round==-1) throw new GameException("You can't hibernate in last round");
-        else if (round==hibernationRound) throw new GameException("This animal is already in hibernation");
+        else if (round!=0 && round==hibernationRound) throw new GameException("This animal is already in hibernation");//can hibernate in 0 round
         else if (round-hibernationRound==1) throw new GameException("You can't hibernate 2 rounds in a row");
         hibernationRound=round;
         hungry =0;

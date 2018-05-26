@@ -187,4 +187,11 @@ class AnimalTest {
         assert (big.cooperateTo.isEmpty());
         assert (simple.cooperateTo.isEmpty());
     }
+
+    @Test
+    public void playAnimalProperty() throws GameException {
+        Animal animal=new Animal(1,new Player("test"));
+        animal.addProperty("Hibernation");
+        animal.hibernate(0);
+    }
 }

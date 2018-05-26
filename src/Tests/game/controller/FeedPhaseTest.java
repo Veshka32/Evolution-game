@@ -2,6 +2,7 @@ package game.controller;
 
 import game.constants.Constants;
 import game.constants.Phase;
+import game.entities.Animal;
 import game.entities.Card;
 import game.entities.Move;
 import game.entities.Player;
@@ -56,5 +57,8 @@ class FeedPhaseTest {
         game.makeMove(new Move("pop",0,0,0,"EndPhase",null,null));
         game.makeMove(new Move("test",0,0,0,"EndPhase",null,null));
         assert (game.getFood()==6);
+
     }
+
+
 }
