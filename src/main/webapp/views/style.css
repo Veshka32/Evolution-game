@@ -88,6 +88,14 @@ img {
     color: red;
 }
 
+#log{
+    width:800px;
+    height:100px;
+    overflow:auto;
+    border:solid 1px gray;
+}
+
+
 .doing {
     width: 50%;
     margin: auto;
