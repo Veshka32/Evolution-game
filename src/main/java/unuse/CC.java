@@ -1,4 +1,6 @@
-package game.controller;
+package unuse;
+
+import unuse.Graph;
 
 public class CC {
     private boolean[] marked;   // marked[v] = has vertex v been marked?

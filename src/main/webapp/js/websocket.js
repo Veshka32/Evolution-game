@@ -90,17 +90,14 @@ function onMessage(event) {
     else {
         yourStatus.innerText = "Please, wait...";
         document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
-        document.getElementById("personal").style.pointerEvents="none";
-
+        document.getElementById("personal").style.pointerEvents="none";//why does not inherit from wrapper?
     }
 }
 
 function makeMove() {
-
     let json = buildMessage();
     clearFields();//clear fields after message is built!
     socket.send(json);
-
 }
 
 function clearFields() {

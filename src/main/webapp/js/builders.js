@@ -74,6 +74,11 @@ function buildAnimal(animal, flag) {
             for (let i=0;i<animal[key];i++){
                 span.appendChild(buildFat());
             }
+            span.addEventListener("click",function(){
+                move="eatFat";
+                firstAnimalId=animal.id;
+                document.getElementById("doing").innerText="animal #"+firstAnimalId+" eats fat supply";
+            });
             animDiv.appendChild(span);
 
         }
@@ -120,12 +125,10 @@ function buttonOnAnimal(name, id) {
 }
 
 function playAnimalProperty(property, animalId) {
-
         move = "playAnimalProperty";
         draggedProperty = property;
         firstAnimalId = animalId;
         document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;
-
 }
 
 function playProperty(property, cardId) {
