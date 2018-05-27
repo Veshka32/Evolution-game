@@ -62,7 +62,7 @@ public class Animal {
         return doPiracy;
     }
 
-    public void hibernate (int round) throws GameException{
+    public void hibernate (int round) throws GameException {
         if (round==-1) throw new GameException("You can't hibernate in last round");
         else if (round!=0 && round==hibernationRound) throw new GameException("This animal is already in hibernation");//can hibernate in 0 round
         else if (round-hibernationRound==1) throw new GameException("You can't hibernate 2 rounds in a row");
@@ -70,7 +70,7 @@ public class Animal {
         hungry =0;
     }
 
-    public void eatFat() throws GameException{
+    public void eatFat() throws GameException {
         if (currentFatSupply<1) throw new GameException("You have no fat supply");
         if (hungry <1) throw new GameException("Animal is fed");
         hungry--;
@@ -119,8 +119,6 @@ public class Animal {
             }
         }
 
-        if (victim.hasProperty("Tail loss")) {
-        } //what to do?
 
         attackFlag = true;
         return true;

@@ -38,6 +38,7 @@ function endPhase() {
 function onMessage(event) {
     clearFields();
     var game = JSON.parse(event.data);
+
     if (game.hasOwnProperty("error")) {
         alert(game.error);
         document.getElementById("wrapper").style.pointerEvents = "auto";
@@ -47,6 +48,19 @@ function onMessage(event) {
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
+    if (game.phase=="TAIL_LOSS"){
+        if (game.playerOnAttack==playerName){
+            alert("Wait for victim answer...");
+            yourStatus.innerText = "Please, wait...";
+            document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
+            document.getElementById("personal").style.pointerEvents="none";//why does not inherit from wrapper?
+        }
+
+        else if (game.playerUnderAttack==playerName){
+            alert("Animal #"+game.predator+" attack your animal #"+game.victim+" with tail loss property. Choose property to loose or click animal to die");
+            move="tailLoss";
+        }
+    }
     if (game.phase == "FEED") {
         document.getElementById("personal").style.pointerEvents = "none"; //card non-clickable
         document.getElementById("movePanel").style.display = 'block';

@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import game.constants.Constants;
 import game.constants.Phase;
-import game.entities.Animal;
-import game.entities.Card;
-import game.entities.Move;
-import game.entities.Player;
+import game.entities.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -27,7 +24,8 @@ public class Game {
     transient HashMap<Integer, Animal> animalList = new HashMap<>();
     private transient CardGenerator generator = new CardGenerator();
     private transient String winners;
-    private transient StringBuilder log=new StringBuilder();
+    transient StringBuilder log = new StringBuilder();
+    transient TailLossMessage tailLossMessage;
 
     //go to json
     private String moves;
@@ -37,6 +35,11 @@ public class Game {
 
     public void deleteFood() {
         food--;
+    }
+
+    public void tailLoss(Animal predator, Animal victim) {
+        phase = Phase.TAIL_LOSS;
+        tailLossMessage = new TailLossMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId());
     }
 
     public void makeMove(Move move) {
@@ -52,13 +55,20 @@ public class Game {
         try {
             switch (phase) {
                 case EVOLUTION:
-                    EvolutionPhase ep = new EvolutionPhase(this,move);
+                    EvolutionPhase ep = new EvolutionPhase(this, move);
                     ep.processMove();
                     break;
                 case FEED:
-                    FeedPhase fp = new FeedPhase(this,move);
+                    FeedPhase fp = new FeedPhase(this, move);
                     fp.processMove();
                     break;
+                case TAIL_LOSS:
+                    fp = new FeedPhase(this, move);
+                    fp.processMove();
+                    String pl=tailLossMessage.getPlayerOnAttack();
+                    playerOnMove=playersTurn.indexOf(pl);
+                    tailLossMessage=null;
+                    phase=Phase.FEED;
                 case END:
                     break;
             }
@@ -152,10 +162,15 @@ public class Game {
     public String convertToJsonString(String name) {
 
         Gson gson = new Gson();
+        if (phase.equals(Phase.TAIL_LOSS)) {
+            tailLossMessage.setCurrentPlayer(name);
+            return gson.toJson((tailLossMessage));
+        }
+
         JsonElement element = gson.toJsonTree(this);
         element.getAsJsonObject().addProperty("player", name); //with string
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
-        element.getAsJsonObject().addProperty("log",log.toString());
+        element.getAsJsonObject().addProperty("log", log.toString());
         if (error != null && playersTurn.get(playerOnMove).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
         } else {

@@ -59,6 +59,37 @@ class FeedPhaseTest {
         assert (game.getFood()==6);
 
     }
+    @Test
+    void tailLoss() throws GameException {
+        Game game=new Game();
+        game.setGenerator(new TestCardGenerator());
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        Player test=game.getPlayer(player1);
+        Player pop=game.getPlayer(player2);
+        Animal tailLoss=new Animal(1,test);
+        Animal predator=new Animal(2,pop);
+        tailLoss.addProperty("Tail loss");
+        predator.addProperty("Predator");
+        test.addAnimal(tailLoss);
+        pop.addAnimal(predator);
+        game.animalList.put(1,tailLoss);
+        game.animalList.put(2,predator);
+        game.phase=Phase.FEED;
+        game.makeMove(new Move("test",0,2,1,"attack",null,null));
+        assert(game.phase.equals(Phase.TAIL_LOSS));
+        assert (game.tailLossMessage.getPlayerOnAttack().equals("test"));
+        assert (game.tailLossMessage.getPredator()==2);
+        game.makeMove(new Move("pop",0,1,0,"tailLoss","Tail loss",null));
+        assert (game.phase.equals(Phase.FEED));
+        assert (game.tailLossMessage==null);
+        assert (!predator.notHungry());
+        assert (pop.isDoEat());
+        assert (!tailLoss.hasProperty("Tail loss"));
+
+
+
+    }
 
 
 }
