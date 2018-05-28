@@ -3,7 +3,6 @@ function buildFood() {
     img.setAttribute('src', '../images/food.png');
     img.setAttribute('class', 'food');
     return img;
-
 }
 
 function buildFat(int) {
@@ -116,7 +115,7 @@ function buildAnimal(animal, flag) {
 }
 
 function buttonOnAnimal(name, id) {
-    var property = document.createElement("button");
+    var property = document.createElement("span");
     property.addEventListener("click", function (event) {
         event.stopPropagation();
         if (document.getElementById("phase").innerText == "FEED" || tailLoss) { //active only in feed phase
@@ -160,7 +159,7 @@ function playProperty(property, cardId) {
 }
 
 function buildButton(name, cardId) {
-    var property = document.createElement("button");
+    let property = document.createElement("button");
     property.addEventListener("click", function () {
         playProperty(name, cardId);
     });
@@ -169,10 +168,11 @@ function buildButton(name, cardId) {
 }
 
 function buildCard(card) {
-    var cardDiv = document.createElement("div");
+    let cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "card");
-    cardDiv.innerHTML = card.id + "<br/>";
-
+    let number=document.createElement("span");
+    number.innerText=card.id;
+    cardDiv.appendChild(number);
     cardDiv.appendChild(buildButton(card.property, card.id));
 
     if (card.hasOwnProperty("extraProperty")) {

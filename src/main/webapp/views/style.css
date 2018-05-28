@@ -13,6 +13,10 @@
     font-size: 12px;
 }
 
+.card span{
+    display: block;
+}
+
 .card button {
     font-size: 12px;
     width: 96%;
@@ -33,10 +37,6 @@
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     display: inline-block;
-    font-size: 12px;
-}
-
-.animal button {
     font-size: 12px;
 }
 
