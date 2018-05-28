@@ -40,9 +40,9 @@ public class Animal {
 
     public int calculateHungry(){
         int result=Constants.MIN_HUNGRY.getValue();
-        if (hasProperty("Predator")) hungry++;
-        if (hasProperty("Big")) hungry++;
-        if (hasProperty("Parasite")) hungry +=2;
+        if (hasProperty("Predator")) result++;
+        if (hasProperty("Big")) result++;
+        if (hasProperty("Parasite")) result +=2;
         return result;
     }
 

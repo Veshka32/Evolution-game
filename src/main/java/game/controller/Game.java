@@ -165,6 +165,7 @@ public class Game {
         element.getAsJsonObject().addProperty("log", log.toString());
         if (error != null && playersTurn.get(playerOnMove).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
+            element.getAsJsonObject().addProperty("status", true);
         } else {
             if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
                 element.getAsJsonObject().addProperty("status", true);

@@ -10,5 +10,5 @@ function forEvolution(status) {
 function forFeed() {
     document.getElementById("personal").style.pointerEvents = "none"; //card non-clickable
     document.getElementById("feedPanel").style.display = 'block'; //show panel
-    document.getElementById("End move").style.display='block'; //show button
+    document.getElementById("End move").style.display='inline-block'; //show button
 }

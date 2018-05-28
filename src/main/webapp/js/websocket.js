@@ -9,11 +9,10 @@ var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
 var tailLoss = false;
-var doing = document.getElementById("doing");
 
 function eatFood() {
     move = "eatFood";
-    doing.innerText = "Feed ";// set firstAnimalId
+    document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
 }
 
 function attack() {
@@ -22,7 +21,7 @@ function attack() {
 
 function endMove() {
     move = "endMove";
-    doing.innerText = "end move";
+    document.getElementById("doing").innerText = "end move";
     let json = buildMessage();
     clearFields();
     socket.send(json);
@@ -30,21 +29,16 @@ function endMove() {
 
 function endPhase() {
     move = "EndPhase";
-    doing.innerText = "end " + document.getElementById("phase").innerText;
+    document.getElementById("doing").innerText = "end " + document.getElementById("phase").innerText;
     let json = buildMessage();
     clearFields(); //clear fields after message is built!
     socket.send(json);
 }
 
 function onMessage(event) {
+    doing = document.getElementById("doing");
     clearFields();
     var game = JSON.parse(event.data);
-
-    if (game.hasOwnProperty("error")) {
-        alert(game.error);
-        //document.getElementById("wrapper").style.pointerEvents = "auto";
-        return;
-    }
 
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
@@ -81,7 +75,7 @@ function onMessage(event) {
         let message = game.tailLoss;
 
         if (message.playerOnAttack === playerName) {
-            yourStatus.innerText = "Please, wait for victim answer...";
+            document.getElementById("status").innerText = "Please, wait for victim answer...";
             document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
             document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
         }
@@ -96,6 +90,7 @@ function onMessage(event) {
         }
     }
 
+    if (game.hasOwnProperty("error")) alert(game.error);
     if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
     if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
 }
@@ -125,7 +120,7 @@ function clearMove() {
     secondAnimalId = null;
     playedCardId = null;
     tailLoss = false;
-    doing.textContent = "";
+    document.getElementById("doing").innerText = "";
 }
 
 function leave() {

@@ -48,7 +48,7 @@ public class FeedPhase {
         }
         predator.eatFish(1);
         predator.getOwner().resetFedFlag();
-        predator.getOwner().setDoEat(true);
+        if (game.playersTurn.size()>1) predator.getOwner().setDoEat(true);
         game.afterTailLoss();
     }
 
@@ -81,7 +81,7 @@ public class FeedPhase {
         Animal victim = game.getAnimal(move.getSecondAnimalId());
         if (victim.notHungry()) throw new GameException("You can't pirate from fed animal");
         if (victim.calculateHungry() == 1)
-            throw new GameException("There is nothing to pirate"); //if notHungry, but total hungry==1;
+            throw new GameException("There is nothing to pirate"); //if hungry, but total hungry==1;
         if (!animal.checkSymbiosis(animal.getOwner()))
             throw new GameException("The animal can't processMove while it's symbiont is hungry");
         victim.deleteFood();
@@ -92,7 +92,7 @@ public class FeedPhase {
     public void attack() throws GameException {
 
         Player player = game.getPlayer(move.getPlayer());
-        if (player.isDoEat()) throw new GameException("You've already made attack ");
+        //if (player.isDoEat()) throw new GameException("You've already made attack ");
         Animal predator = player.getAnimal(move.getAnimalId());
         if (predator == null) throw new GameException("It's not your animal");
 
@@ -124,7 +124,7 @@ public class FeedPhase {
             player.resetFedFlag();
             game.feedScavenger(move.getPlayer());
         }
-        player.setDoEat(true);
+        if (game.playersTurn.size()>1) player.setDoEat(true);
     }
 
     public void eatFood() throws GameException {
@@ -135,6 +135,6 @@ public class FeedPhase {
         if (animal == null) throw new GameException("Feeding stranger animal is danger!");
         animal.eatMeet(player, game);
         player.resetFedFlag();
-        player.setDoEat(true);
+        if (game.playersTurn.size()>1) player.setDoEat(true);
     }
 }

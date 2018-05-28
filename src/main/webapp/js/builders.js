@@ -55,17 +55,16 @@ function buildAnimal(animal, flag) {
     for (let key in animal) {
         if (key == "propertyList") {
             for (let m in animal.propertyList) {
+                let span = document.createElement("span");
+                span.setAttribute("class", "property");
 
                 if (flag) {
-                    let prop = animal.propertyList[m];
-                    animDiv.appendChild(buttonOnAnimal(prop, animal.id));
-
-                } else {
-                    let span = document.createElement("span");
-                    span.setAttribute("class", "property");
+                    let property = animal.propertyList[m];
+                    buttonOnAnimal(span, property, animal.id);
+                } else
                     span.appendChild(document.createTextNode(animal.propertyList[m]));
-                    animDiv.appendChild(span);
-                }
+
+                animDiv.appendChild(span);
             }
         }
         else if (key == "currentFatSupply") {
@@ -100,30 +99,28 @@ function buildAnimal(animal, flag) {
         let doing = document.getElementById("doing");
         if (firstAnimalId == null) {
             firstAnimalId = animal.id;
-            doing.innerText += " animal #" + firstAnimalId;
+            document.getElementById("doing").innerText += " animal #" + firstAnimalId;
         }
         else {
             secondAnimalId = animal.id;
             let text;
             if (document.getElementById("phase").innerText == "EVOLUTION") text = " and animal #";
             else if (document.getElementById("phase").innerText == "FEED") text = " attack animal #";
-            doing.innerText += text + secondAnimalId;
+            document.getElementById("doing").innerText += text + secondAnimalId;
         }
     });
 
     return animDiv;
 }
 
-function buttonOnAnimal(name, id) {
-    var property = document.createElement("span");
-    property.addEventListener("click", function (event) {
+function buttonOnAnimal(span, name, id) {
+    span.addEventListener("click", function (event) {
         event.stopPropagation();
         if (document.getElementById("phase").innerText == "FEED" || tailLoss) { //active only in feed phase
             playAnimalProperty(name, id);
         }
     });
-    property.innerText = name;
-    return property;
+    span.innerText = name;
 }
 
 function playAnimalProperty(property, animalId) {
@@ -131,12 +128,12 @@ function playAnimalProperty(property, animalId) {
     firstAnimalId = animalId;
     if (tailLoss) {
         move = "DeleteProperty";
-        doing.innerText = "Delete property ";
+        document.getElementById("doing").innerText = "Delete property  ";
     } else {
         move = "playAnimalProperty";
-        doing.innerText = "Play property "
+        document.getElementById("doing").innerText = "Play property "
     }
-    doing.innerText += draggedProperty + " from animal #" + animalId;
+    document.getElementById("doing").innerText += draggedProperty + " from animal #" + animalId;
 }
 
 function playProperty(property, cardId) {
@@ -144,7 +141,7 @@ function playProperty(property, cardId) {
         playedCardId = cardId;
         if (property === "MakeAnimal") {
             move = "MakeAnimal";
-            doing.innerText = "Make animal from card # " + cardId;
+            document.getElementById("doing").innerText = "Make animal from card # " + cardId;
         } else if (property === "DeleteProperty") {
             alert("Click property on any animal to delete");
             tailLoss = true;
@@ -153,7 +150,7 @@ function playProperty(property, cardId) {
         else {
             move = "PlayProperty";
             draggedProperty = property;
-            doing.innerText = "play property " + draggedProperty + " from card #" + cardId;
+            document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
         }
     }
 }
@@ -170,8 +167,8 @@ function buildButton(name, cardId) {
 function buildCard(card) {
     let cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "card");
-    let number=document.createElement("span");
-    number.innerText=card.id;
+    let number = document.createElement("span");
+    number.innerText = card.id;
     cardDiv.appendChild(number);
     cardDiv.appendChild(buildButton(card.property, card.id));
 
@@ -194,6 +191,6 @@ function buildMessage() {
         "secondAnimalId": secondAnimalId,
         "move": move,
         "property": draggedProperty,
-        "log": doing.innerText
+        "log": document.getElementById("doing").innerText
     });
 }
