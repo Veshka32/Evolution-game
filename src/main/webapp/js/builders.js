@@ -96,7 +96,15 @@ function buildAnimal(animal, flag) {
     }
 
     animDiv.addEventListener("click", function () {
-        let doing = document.getElementById("doing");
+        if (mimicry) {
+            move = "playMimicry";
+            if (mimicryVictims.includes(animal.id)) document.getElementById("doing").innerText = "Redirect predator to animal #" + animal.id;
+            else {
+                (alert("You can't redirect the predator to this animal"));
+                return;
+            }
+        }
+
         if (firstAnimalId == null) {
             firstAnimalId = animal.id;
             document.getElementById("doing").innerText += " animal #" + firstAnimalId;
@@ -108,6 +116,7 @@ function buildAnimal(animal, flag) {
             else if (document.getElementById("phase").innerText == "FEED") text = " attack animal #";
             document.getElementById("doing").innerText += text + secondAnimalId;
         }
+
     });
 
     return animDiv;
@@ -129,7 +138,8 @@ function playAnimalProperty(property, animalId) {
     if (tailLoss) {
         move = "DeleteProperty";
         document.getElementById("doing").innerText = "Delete property  ";
-    } else {
+    }
+    else {
         move = "playAnimalProperty";
         document.getElementById("doing").innerText = "Play property "
     }

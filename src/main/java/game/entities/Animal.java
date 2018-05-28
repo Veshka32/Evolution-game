@@ -57,6 +57,7 @@ public class Animal {
     public void setDoPiracy(boolean bool){
         doPiracy=bool;
     }
+    public void setAttackFlag(boolean bool){attackFlag=bool;}
 
     public boolean isDoPiracy(){
         return doPiracy;
@@ -102,25 +103,6 @@ public class Animal {
         if (victim.hasProperty("Camouflage")) {
             if (!hasProperty("Sharp Vision")) throw new GameException("This animal is in camouflage");
         }
-
-        //extra info
-        if (victim.hasProperty("Mimicry")) {
-            boolean canAttack = false;
-            for (Animal an : victim.owner.animals.values()) {
-                try {
-                    canAttack = attack(an);
-                } catch (GameException e) {
-                }
-                if (canAttack) break;
-            }
-
-            if (canAttack) {
-                //{"pick animal for reattacking";}
-            }
-        }
-
-
-        attackFlag = true;
         return true;
     }
 

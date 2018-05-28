@@ -13,7 +13,7 @@ public class Player {
     private final String name;
     List<Card> cards = new ArrayList<>();
     Map<Integer, Animal> animals = new HashMap<>();
-    boolean doEat=false;
+    boolean doEat = false;
 
     public Player(String login) {
         this.name = login;
@@ -23,11 +23,11 @@ public class Player {
         return name;
     }
 
-    public void setDoEat(boolean bool){
-        doEat=bool;
+    public void setDoEat(boolean bool) {
+        doEat = bool;
     }
 
-    public boolean isDoEat(){
+    public boolean isDoEat() {
         return doEat;
     }
 
@@ -151,10 +151,23 @@ public class Player {
                 ) {
             an.setHungry();
             an.attackFlag = false;
-            an.fedFlag=false;
+            an.fedFlag = false;
             an.setDoPiracy(false);
-            doEat=false;
+            doEat = false;
         }
+    }
+
+    public List<Integer> canRedirect(Animal predator,int victim) {
+        ArrayList<Integer> canAttack = new ArrayList<>();
+
+        for (Animal an : animals.values()) {
+            if (an.getId()==victim) continue;
+            try {
+                if (predator.attack(an)) canAttack.add(an.getId());
+            } catch (GameException e) {
+            }
+        }
+        return canAttack;
     }
 
     public Animal getAnimal(int id) {

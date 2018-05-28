@@ -1,18 +1,18 @@
 package game.entities;
 
-import game.constants.Phase;
-
-public class TailLossMessage {
+public class ExtraMessage {
     String playerOnAttack;
     int predator;
     String playerUnderAttack;
     int victim;
+    String type;
 
-    public TailLossMessage(String name, int id, String name1, int id1){
+    public ExtraMessage(String name, int id, String name1, int id1, String type){
         playerOnAttack=name;
         predator=id;
         playerUnderAttack=name1;
         victim=id1;
+        this.type=type;
     }
 
     public int getPredator(){return predator;}
@@ -20,7 +20,8 @@ public class TailLossMessage {
     public String getPlayerOnAttack(){
         return playerOnAttack;
     }
-    public String getPlayerUnderAttack(){return playerUnderAttack;}
+    public String getType(){return type;
+    }
 
 
 

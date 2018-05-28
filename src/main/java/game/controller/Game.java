@@ -24,7 +24,7 @@ public class Game {
     private transient CardGenerator generator = new CardGenerator();
     private transient String winners;
     transient StringBuilder log = new StringBuilder();
-    transient TailLossMessage tailLossMessage;
+    transient ExtraMessage extraMessage;
 
     //go to json
     private String moves;
@@ -36,15 +36,26 @@ public class Game {
         food--;
     }
 
-    public void tailLoss(Animal predator, Animal victim) {
-        tailLossMessage = new TailLossMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId());
+    public void playTailLoss(Animal predator, Animal victim) {
+        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(),"tailLoss");
     }
 
     public void afterTailLoss(){
-        String pl = tailLossMessage.getPlayerOnAttack();
+        String pl = extraMessage.getPlayerOnAttack();
         playerOnMove = playersTurn.indexOf(pl);
-        tailLossMessage = null;
+        extraMessage = null;
     }
+
+    public void playMimicry(Animal predator,Animal victim, List<Integer> list){
+        extraMessage = new MimicryMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(),"mimicry",list);
+    }
+
+    public void afterMimicry(){
+        String pl = extraMessage.getPlayerOnAttack();
+        playerOnMove = playersTurn.indexOf(pl);
+        extraMessage = null;
+    }
+
 
     public void makeMove(Move move) {
         error = null;
@@ -172,9 +183,8 @@ public class Game {
             else element.getAsJsonObject().addProperty("status", false);
         }
 
-        if (tailLossMessage != null)
-            element.getAsJsonObject().add("tailLoss", new Gson().toJsonTree(tailLossMessage)); //add object
-
+        if (extraMessage != null)
+            element.getAsJsonObject().add(extraMessage.getType(), new Gson().toJsonTree(extraMessage)); //add object
 
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);

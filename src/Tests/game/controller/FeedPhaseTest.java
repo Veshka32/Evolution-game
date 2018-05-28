@@ -78,11 +78,11 @@ class FeedPhaseTest {
         game.phase=Phase.FEED;
         game.makeMove(new Move("test",0,2,1,"attack",null,null));
         assert(game.phase.equals(Phase.FEED));
-        assert (game.tailLossMessage.getPlayerOnAttack().equals("test"));
-        assert (game.tailLossMessage.getPredator()==2);
-        game.makeMove(new Move("pop",0,1,0,"tailLoss","Tail loss",null));
+        assert (game.extraMessage.getPlayerOnAttack().equals("test"));
+        assert (game.extraMessage.getPredator()==2);
+        game.makeMove(new Move("pop",0,1,0,"DeleteProperty","Tail loss",null));
         assert (game.phase.equals(Phase.FEED));
-        assert (game.tailLossMessage==null);
+        assert (game.extraMessage ==null);
         assert (!predator.notHungry());
         assert (pop.isDoEat());
         assert (!tailLoss.hasProperty("Tail loss"));

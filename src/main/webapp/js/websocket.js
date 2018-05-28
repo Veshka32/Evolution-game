@@ -9,6 +9,8 @@ var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
 var tailLoss = false;
+var mimicry=false;
+var mimicryVictims;
 
 function eatFood() {
     move = "eatFood";
@@ -85,6 +87,24 @@ function onMessage(event) {
             let animals = Array.from(document.getElementsByClassName("animal"));
             let animal = animals.find(x => x.id == message.victim);
             animal.style.pointerEvents = "auto"; //clikable only animals
+            document.getElementById("Make move").style.pointerEvents = "auto";
+            document.getElementById("Clear").style.pointerEvents = 'auto';
+        }
+    }
+
+    if (game.hasOwnProperty("mimicry")){
+        let message=game.mimicry;
+        if (message.playerOnAttack===playerName){
+            document.getElementById("status").innerText = "Please, wait for victim answer...";
+            document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
+            document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
+        }
+        else if(message.playerUnderAttack===playerName){
+            alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with mimicry property. Choose animal to redirect attack or click animal to die");
+            mimicry = true;
+            document.getElementById("common").style.pointerEvents="none";
+            document.getElementById(playerName).style.pointerEvents='auto';
+            mimicryVictims=message.victims;
             document.getElementById("Make move").style.pointerEvents = "auto";
             document.getElementById("Clear").style.pointerEvents = 'auto';
         }
