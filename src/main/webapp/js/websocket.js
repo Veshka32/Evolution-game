@@ -9,7 +9,7 @@ var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
 var tailLoss = false;
-var doing=document.getElementById("doing");
+var doing = document.getElementById("doing");
 
 function eatFood() {
     move = "eatFood";
@@ -42,58 +42,39 @@ function onMessage(event) {
 
     if (game.hasOwnProperty("error")) {
         alert(game.error);
-        document.getElementById("wrapper").style.pointerEvents = "auto";
+        //document.getElementById("wrapper").style.pointerEvents = "auto";
         return;
     }
 
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
-    if (game.phase == "FEED") {
-
-        document.getElementById("personal").style.pointerEvents = "none"; //card non-clickable
-        document.getElementById("movePanel").style.display = 'block';
-        document.getElementById("feedPanel").style.display = 'block'; //show panel
-        let food = document.getElementById("food");
-        while (food.firstChild)
-            food.removeChild(food.firstChild);
-
-        for (let i = 0; i < game.food; i++) food.appendChild(buildFood())
-
-    } else if (game.phase == "START") {
-        document.getElementById("movePanel").style.display = 'none';
-        document.getElementById("feedPanel").style.display = 'none';//hide panel
-    }
-    else { //case evolution
-        document.getElementById("personal").style.pointerEvents = "auto"; // card clickable
-        document.getElementById("movePanel").style.display = 'block'; //evolution phase
-        document.getElementById("feedPanel").style.display = 'none'; //hide panel
-    }
-
+    document.getElementById("log").innerText = game.log;
     document.getElementById("players").innerText = game.playersList;
-    var yourStatus = document.getElementById("status");
 
     var common = document.getElementById("common");
     common.innerText = "";
 
-    for (var name in game.players) {
-        var player = game.players[name];
+    for (let name in game.players) {
+        let player = game.players[name];
         common.appendChild(buildPlayerBlock(player));
     }
 
-    document.getElementById("log").innerText = game.log;
+    if (game.phase == "FEED") {
+        forFeed();
+        setFood(game);
 
-    if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
-    if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
+    }
+    else if (game.phase=="EVOLUTION")
+        forEvolution(game.status);
 
     if (game.status == true) {
-        yourStatus.innerText = "It's your turn!";
+        document.getElementById("status").innerText = "It's your turn!";
         document.getElementById("wrapper").style.pointerEvents = "auto"; //clickable whole page
     }
     else {
-        yourStatus.innerText = "Please, wait...";
+        document.getElementById("status").innerText = "Please, wait...";
         document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
-        document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
     }
 
     if (game.hasOwnProperty("tailLoss")) {
@@ -106,14 +87,17 @@ function onMessage(event) {
         }
         else if (message.playerUnderAttack === playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
-            tailLoss=true;
-            let animals=Array.from(document.getElementsByClassName("animal"));
-            let animal=animals.find(x=>x.id==message.victim);
-            animal.style.pointerEvents="auto"; //clikable only animals
-            document.getElementById("Make move").style.pointerEvents="auto";
-            document.getElementById("Clear").style.pointerEvents='auto';
+            tailLoss = true;
+            let animals = Array.from(document.getElementsByClassName("animal"));
+            let animal = animals.find(x => x.id == message.victim);
+            animal.style.pointerEvents = "auto"; //clikable only animals
+            document.getElementById("Make move").style.pointerEvents = "auto";
+            document.getElementById("Clear").style.pointerEvents = 'auto';
         }
     }
+
+    if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
+    if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
 }
 
 function makeMove() {
@@ -125,6 +109,13 @@ function makeMove() {
 function clearFields() {
     clearMove();
     document.getElementById("wrapper").style.pointerEvents = "none";
+}
+
+function setFood(game) {
+    let food = document.getElementById("food");
+    while (food.firstChild)
+        food.removeChild(food.firstChild);
+    for (let i = 0; i < game.food; i++) food.appendChild(buildFood())
 }
 
 function clearMove() {
