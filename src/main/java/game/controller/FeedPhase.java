@@ -49,10 +49,10 @@ public class FeedPhase {
         predator.eatFish(1);
         predator.getOwner().resetFedFlag();
         predator.getOwner().setDoEat(true);
+        game.afterTailLoss();
     }
 
     public void eatFat() throws GameException {
-
         Animal animal = game.getAnimal(move.getAnimalId());
         animal.eatFat();
     }

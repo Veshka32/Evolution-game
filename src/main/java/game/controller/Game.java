@@ -38,8 +38,13 @@ public class Game {
     }
 
     public void tailLoss(Animal predator, Animal victim) {
-        phase = Phase.TAIL_LOSS;
         tailLossMessage = new TailLossMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId());
+    }
+
+    public void afterTailLoss(){
+        String pl = tailLossMessage.getPlayerOnAttack();
+        playerOnMove = playersTurn.indexOf(pl);
+        tailLossMessage = null;
     }
 
     public void makeMove(Move move) {
@@ -62,13 +67,6 @@ public class Game {
                     FeedPhase fp = new FeedPhase(this, move);
                     fp.processMove();
                     break;
-                case TAIL_LOSS:
-                    fp = new FeedPhase(this, move);
-                    fp.processMove();
-                    String pl=tailLossMessage.getPlayerOnAttack();
-                    playerOnMove=playersTurn.indexOf(pl);
-                    tailLossMessage=null;
-                    phase=Phase.FEED;
                 case END:
                     break;
             }
@@ -162,13 +160,8 @@ public class Game {
     public String convertToJsonString(String name) {
 
         Gson gson = new Gson();
-        if (phase.equals(Phase.TAIL_LOSS)) {
-            tailLossMessage.setCurrentPlayer(name);
-            return gson.toJson((tailLossMessage));
-        }
-
         JsonElement element = gson.toJsonTree(this);
-        element.getAsJsonObject().addProperty("player", name); //with string
+        element.getAsJsonObject().addProperty("player", name); //add primitive
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
         element.getAsJsonObject().addProperty("log", log.toString());
         if (error != null && playersTurn.get(playerOnMove).equals(name)) {
@@ -178,6 +171,11 @@ public class Game {
                 element.getAsJsonObject().addProperty("status", true);
             else element.getAsJsonObject().addProperty("status", false);
         }
+
+        if (tailLossMessage != null)
+            element.getAsJsonObject().add("tailLoss", new Gson().toJsonTree(tailLossMessage)); //add object
+
+
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
 

@@ -8,7 +8,7 @@ var draggedProperty;
 var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
-var tailLoss=false;
+var tailLoss = false;
 
 function eatFood() {
     move = "eatFood";
@@ -48,29 +48,16 @@ function onMessage(event) {
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
     document.getElementById("phase").innerText = game.phase;
-    if (game.phase=="TAIL_LOSS"){
-        if (game.playerOnAttack==playerName){
-            alert("Wait for victim answer...");
-            yourStatus.innerText = "Please, wait...";
-            document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
-            document.getElementById("personal").style.pointerEvents="none";//why does not inherit from wrapper?
-        }
-
-        else if (game.playerUnderAttack==playerName){
-            alert("Animal #"+game.predator+" attack your animal #"+game.victim+" with tail loss property. Choose property to loose or click animal to die");
-            move="tailLoss";
-        }
-    }
     if (game.phase == "FEED") {
+
         document.getElementById("personal").style.pointerEvents = "none"; //card non-clickable
         document.getElementById("movePanel").style.display = 'block';
         document.getElementById("feedPanel").style.display = 'block'; //show panel
         let food = document.getElementById("food");
-        while (food.firstChild) {
+        while (food.firstChild)
             food.removeChild(food.firstChild);
-        }
-        for (let i = 0; i < game.food; i++) food.appendChild(buildFood())
 
+        for (let i = 0; i < game.food; i++) food.appendChild(buildFood())
 
     } else if (game.phase == "START") {
         document.getElementById("movePanel").style.display = 'none';
@@ -93,7 +80,7 @@ function onMessage(event) {
         common.appendChild(buildPlayerBlock(player));
     }
 
-    document.getElementById("log").innerText=game.log;
+    document.getElementById("log").innerText = game.log;
 
     if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
     if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
@@ -105,7 +92,26 @@ function onMessage(event) {
     else {
         yourStatus.innerText = "Please, wait...";
         document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
-        document.getElementById("personal").style.pointerEvents="none";//why does not inherit from wrapper?
+        document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
+    }
+
+    if (game.hasOwnProperty("tailLoss")) {
+        let message = game.tailLoss;
+
+        if (message.playerOnAttack == playerName) {
+            yourStatus.innerText = "Please, wait for victim answer...";
+            document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
+            document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
+        }
+        else if (message.playerUnderAttack == playerName) {
+            alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
+            move = "tailLoss";
+            let animals=document.getElementById(playerName);
+            let animal=animals.find(x=>x.id=message.victim);
+            animal.style.pointerEvents="auto"; //clikable only animals
+            document.getElementById("Make move").style.pointerEvents="auto";
+            document.getElementById("Clear").style.pointerEvents='auto';
+        }
     }
 }
 
@@ -126,7 +132,7 @@ function clearMove() {
     firstAnimalId = null;
     secondAnimalId = null;
     playedCardId = null;
-    tailLoss=false;
+    tailLoss = false;
     document.getElementById("doing").textContent = "";
 }
 
