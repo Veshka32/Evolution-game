@@ -171,7 +171,7 @@ class AnimalTest {
 
         //predator become swimming
         predator.addProperty("Swimming");
-        assert (predator.attack(swim));
+        predator.attack(swim);
         swim.die();
         predator.eatFish(2);
         assert (predator.hungry ==0);
@@ -181,7 +181,7 @@ class AnimalTest {
         Animal predator1=new Animal(6,test);
         predator1.addProperty("Predator");
         pop.addAnimal(predator1);
-        assert (predator1.attack(small));
+        predator1.attack(small);
         small.die();
         predator1.eatFish(2);
         assert (big.cooperateTo.isEmpty());
