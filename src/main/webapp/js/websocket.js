@@ -9,10 +9,11 @@ var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
 var tailLoss = false;
+var doing=document.getElementById("doing");
 
 function eatFood() {
     move = "eatFood";
-    document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
+    doing.innerText = "Feed ";// set firstAnimalId
 }
 
 function attack() {
@@ -21,7 +22,7 @@ function attack() {
 
 function endMove() {
     move = "endMove";
-    document.getElementById("doing").innerText = "end move";
+    doing.innerText = "end move";
     let json = buildMessage();
     clearFields();
     socket.send(json);
@@ -29,7 +30,7 @@ function endMove() {
 
 function endPhase() {
     move = "EndPhase";
-    document.getElementById("doing").innerText = "end " + document.getElementById("phase").innerText;
+    doing.innerText = "end " + document.getElementById("phase").innerText;
     let json = buildMessage();
     clearFields(); //clear fields after message is built!
     socket.send(json);
@@ -98,12 +99,12 @@ function onMessage(event) {
     if (game.hasOwnProperty("tailLoss")) {
         let message = game.tailLoss;
 
-        if (message.playerOnAttack == playerName) {
+        if (message.playerOnAttack === playerName) {
             yourStatus.innerText = "Please, wait for victim answer...";
             document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
             document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
         }
-        else if (message.playerUnderAttack == playerName) {
+        else if (message.playerUnderAttack === playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
             tailLoss=true;
             let animals=Array.from(document.getElementsByClassName("animal"));
@@ -133,7 +134,7 @@ function clearMove() {
     secondAnimalId = null;
     playedCardId = null;
     tailLoss = false;
-    document.getElementById("doing").textContent = "";
+    doing.textContent = "";
 }
 
 function leave() {

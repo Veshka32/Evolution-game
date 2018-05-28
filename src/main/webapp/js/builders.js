@@ -52,7 +52,7 @@ function buildPlayerBlock(player) {
 function buildAnimal(animal, flag) {
     let animDiv = document.createElement("div");
     animDiv.setAttribute("class", "animal");
-    animDiv.setAttribute("id",animal.id);
+    animDiv.setAttribute("id", animal.id);
     for (let key in animal) {
         if (key == "propertyList") {
             for (let m in animal.propertyList) {
@@ -131,10 +131,13 @@ function playAnimalProperty(property, animalId) {
     draggedProperty = property;
     firstAnimalId = animalId;
     if (tailLoss) {
-        move="DeleteProperty";
-        document.getElementById("doing").innerText = "Delete property " + draggedProperty + " from animal #" + animalId;
-    } else {move = "playAnimalProperty";
-    document.getElementById("doing").innerText = "Play property " + draggedProperty + " from animal #" + animalId;}
+        move = "DeleteProperty";
+        doing.innerText = "Delete property ";
+    } else {
+        move = "playAnimalProperty";
+        doing.innerText = "Play property "
+    }
+    doing.innerText += draggedProperty + " from animal #" + animalId;
 }
 
 function playProperty(property, cardId) {
@@ -142,16 +145,16 @@ function playProperty(property, cardId) {
         playedCardId = cardId;
         if (property === "MakeAnimal") {
             move = "MakeAnimal";
-            document.getElementById("doing").innerText = "Make animal from card # " + cardId;
-        }else if(property==="DeleteProperty"){
+            doing.innerText = "Make animal from card # " + cardId;
+        } else if (property === "DeleteProperty") {
             alert("Click property on any animal to delete");
-            tailLoss=true;
-            move="DeleteProperty";
+            tailLoss = true;
+            move = "DeleteProperty";
         }
         else {
             move = "PlayProperty";
             draggedProperty = property;
-            document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
+            doing.innerText = "play property " + draggedProperty + " from card #" + cardId;
         }
     }
 }
@@ -191,6 +194,6 @@ function buildMessage() {
         "secondAnimalId": secondAnimalId,
         "move": move,
         "property": draggedProperty,
-        "log": document.getElementById("doing").innerText
+        "log": doing.innerText
     });
 }

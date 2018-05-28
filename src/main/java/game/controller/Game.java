@@ -16,7 +16,6 @@ public class Game {
 
     private transient List<Card> cardList;
     private transient int animalID = Constants.START_CARD_INDEX.getValue();
-    private transient int whoStartPhase; //default 0
     transient List<String> playersTurn = new LinkedList<>();
     transient int round = 0;
     transient int playerOnMove = round;
@@ -75,7 +74,7 @@ public class Game {
         }
     }
 
-    void playerEndsPhase(String name) {
+    private void playerEndsPhase(String name) {
         playersTurn.remove(name);
         if (playersTurn.isEmpty())
             goToNextPhase();
@@ -86,7 +85,7 @@ public class Game {
         playerOnMove = (playerOnMove + 1) % playersTurn.size(); // circular array;
     }
 
-    void goToNextPhase() {
+    private void goToNextPhase() {
         switch (phase) {
             case START:
                 phase = Phase.EVOLUTION;
