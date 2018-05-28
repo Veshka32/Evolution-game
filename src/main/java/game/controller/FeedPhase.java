@@ -33,7 +33,7 @@ public class FeedPhase {
             case "eatFat":
                 eatFat();
                 break;
-            case "tailLoss":
+            case "DeleteProperty":
                 processTailLoss();
         }
     }

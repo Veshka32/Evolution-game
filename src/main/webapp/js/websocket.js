@@ -105,9 +105,9 @@ function onMessage(event) {
         }
         else if (message.playerUnderAttack == playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
-            move = "tailLoss";
-            let animals=document.getElementById(playerName);
-            let animal=animals.find(x=>x.id=message.victim);
+            tailLoss=true;
+            let animals=Array.from(document.getElementsByClassName("animal"));
+            let animal=animals.find(x=>x.id==message.victim);
             animal.style.pointerEvents="auto"; //clikable only animals
             document.getElementById("Make move").style.pointerEvents="auto";
             document.getElementById("Clear").style.pointerEvents='auto';

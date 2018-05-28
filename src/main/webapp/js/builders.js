@@ -52,6 +52,7 @@ function buildPlayerBlock(player) {
 function buildAnimal(animal, flag) {
     let animDiv = document.createElement("div");
     animDiv.setAttribute("class", "animal");
+    animDiv.setAttribute("id",animal.id);
     for (let key in animal) {
         if (key == "propertyList") {
             for (let m in animal.propertyList) {
