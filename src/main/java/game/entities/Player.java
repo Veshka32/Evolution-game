@@ -27,6 +27,11 @@ public class Player {
         doEat = bool;
     }
 
+    public void resetGrazing(){
+        for (Animal animal:animals.values())
+            animal.setDoGrazing(false);
+    }
+
     public boolean isDoEat() {
         return doEat;
     }
@@ -153,6 +158,7 @@ public class Player {
             an.attackFlag = false;
             an.fedFlag = false;
             an.setDoPiracy(false);
+            an.setDoGrazing(false);
             doEat = false;
         }
     }

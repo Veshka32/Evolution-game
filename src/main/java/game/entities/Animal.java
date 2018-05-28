@@ -15,6 +15,7 @@ public class Animal {
     transient int hibernationRound;
     transient int totalFatSupply;
     transient boolean doPiracy=false;
+    transient boolean doGrazing=false;
 
     //go to json
     int id;
@@ -58,10 +59,12 @@ public class Animal {
         doPiracy=bool;
     }
     public void setAttackFlag(boolean bool){attackFlag=bool;}
+    public void setDoGrazing(boolean bool){doGrazing=bool;}
 
     public boolean isDoPiracy(){
         return doPiracy;
     }
+    public boolean isDoGrazing(){return doGrazing;}
 
     public void hibernate (int round) throws GameException {
         if (round==-1) throw new GameException("You can't hibernate in last round");

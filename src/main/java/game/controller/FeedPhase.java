@@ -30,6 +30,7 @@ public class FeedPhase {
             case "endMove":
                 game.switchPlayerOnMove();
                 game.getPlayer(move.getPlayer()).setDoEat(false);
+                game.getPlayer(move.getPlayer()).resetGrazing();
                 break;
             case "eatFat":
                 eatFat();
@@ -45,7 +46,7 @@ public class FeedPhase {
 
     public void processMimicry() throws GameException {
         Animal victim = game.getAnimal(move.getAnimalId());
-        Animal predator = game.getAnimal(game.mimicryMessage.getPredator());
+        Animal predator = game.getAnimal(game.extraMessage.getPredator());
         if (!predator.attack(victim)) { //no errors allowed
             if (victim.hasProperty("Poisonous")) predator.poison();
             predator.eatFish(2);
@@ -89,10 +90,18 @@ public class FeedPhase {
                 pirate();
                 break;
             case "Grazing":
-                if (game.getFood() < 1) throw new GameException("There is no food left");
-                game.deleteFood();
+                graze();
+
                 break;
         }
+    }
+
+    public void graze() throws GameException{
+        Animal animal = game.getAnimal(move.getAnimalId());
+        if (animal.isDoGrazing()) throw new GameException("This animal is already grazed");
+        if (game.getFood() < 1) throw new GameException("There is no food left");
+        game.deleteFood();
+        animal.setDoGrazing(true);
     }
 
     public void pirate() throws GameException {
