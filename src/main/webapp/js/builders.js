@@ -98,14 +98,17 @@ function buildAnimal(animal, flag) {
     animDiv.addEventListener("click", function () {
         if (mimicry) {
             move = "playMimicry";
-            if (mimicryVictims.includes(animal.id)) document.getElementById("doing").innerText = "Redirect predator to animal #" + animal.id;
+            if (mimicryVictims.includes(animal.id)) {
+                document.getElementById("doing").innerText = "Redirect predator to animal #" + animal.id;
+                firstAnimalId = animal.id;
+            }
             else {
                 (alert("You can't redirect the predator to this animal"));
                 return;
             }
         }
 
-        if (firstAnimalId == null) {
+        else if (firstAnimalId == null) {
             firstAnimalId = animal.id;
             document.getElementById("doing").innerText += " animal #" + firstAnimalId;
         }

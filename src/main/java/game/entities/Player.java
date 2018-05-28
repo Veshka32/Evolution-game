@@ -167,7 +167,7 @@ public class Player {
         ArrayList<Integer> canAttack = new ArrayList<>();
 
         for (Animal an : animals.values()) {
-            if (an.getId()==victim) continue;
+            if (an.getId()==victim || an.hasProperty("Mimicry")) continue;
             try {
                 if (predator.attack(an)) canAttack.add(an.getId());
             } catch (GameException e) {

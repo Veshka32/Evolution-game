@@ -44,20 +44,21 @@ public class FeedPhase {
         }
     }
 
-    public void processMimicry() throws GameException {
+    public void processMimicry() {
         Animal victim = game.getAnimal(move.getAnimalId());
         Animal predator = game.getAnimal(game.extraMessage.getPredator());
-        if (!predator.attack(victim)) { //no errors allowed
-            if (victim.hasProperty("Poisonous")) predator.poison();
-            predator.eatFish(2);
-            victim.die();
-            victim.getOwner().deleteAnimal(victim.getId());
-            predator.getOwner().resetFedFlag();
-            game.feedScavenger(move.getPlayer());
+        if (victim.hasProperty("Tail loss")) {
+            game.playTailLoss(predator, victim);
+            return;
         }
+        if (victim.hasProperty("Poisonous")) predator.poison();
+        predator.eatFish(2);
+        victim.die();
+        victim.getOwner().deleteAnimal(victim.getId());
+        predator.getOwner().resetFedFlag();
+        game.feedScavenger(move.getPlayer());
         if (game.playersTurn.size() > 1) predator.getOwner().setDoEat(true);
         game.afterMimicry();
-
     }
 
     public void processTailLoss() {
@@ -65,6 +66,13 @@ public class FeedPhase {
         String property = move.getProperty();
         victim.removeProperty(property);
         Animal predator = game.getAnimal(game.extraMessage.getPredator());
+        if (victim.hasProperty("Mimicry")) {
+            List<Integer> animalsToRedirect = victim.getOwner().canRedirect(predator, victim.getId());
+            if (!animalsToRedirect.isEmpty()) {
+                game.playMimicry(predator, victim, animalsToRedirect);
+                return;
+            }
+        }
         if (victim.hasProperty("Poisonous")) {
             predator.poison();
         }
@@ -91,32 +99,8 @@ public class FeedPhase {
                 break;
             case "Grazing":
                 graze();
-
                 break;
         }
-    }
-
-    public void graze() throws GameException{
-        Animal animal = game.getAnimal(move.getAnimalId());
-        if (animal.isDoGrazing()) throw new GameException("This animal is already grazed");
-        if (game.getFood() < 1) throw new GameException("There is no food left");
-        game.deleteFood();
-        animal.setDoGrazing(true);
-    }
-
-    public void pirate() throws GameException {
-        Animal animal = game.getAnimal(move.getAnimalId());
-        if (animal.isDoPiracy()) throw new GameException("This animal has already pirated!");
-        if (animal.notHungry()) throw new GameException("The animal can't pirate when it's fed");
-        Animal victim = game.getAnimal(move.getSecondAnimalId());
-        if (victim.notHungry()) throw new GameException("You can't pirate from fed animal");
-        if (victim.calculateHungry() == 1)
-            throw new GameException("There is nothing to pirate"); //if hungry, but total hungry==1;
-        if (!animal.checkSymbiosis(animal.getOwner()))
-            throw new GameException("The animal can't processMove while it's symbiont is hungry");
-        victim.deleteFood();
-        animal.eatFish(1);
-        animal.setDoPiracy(true);
     }
 
     public void attack() throws GameException {
@@ -178,5 +162,28 @@ public class FeedPhase {
         animal.eatMeet(player, game);
         player.resetFedFlag();
         if (game.playersTurn.size() > 1) player.setDoEat(true);
+    }
+
+    public void graze() throws GameException {
+        Animal animal = game.getAnimal(move.getAnimalId());
+        if (animal.isDoGrazing()) throw new GameException("This animal is already grazed");
+        if (game.getFood() < 1) throw new GameException("There is no food left");
+        game.deleteFood();
+        animal.setDoGrazing(true);
+    }
+
+    public void pirate() throws GameException {
+        Animal animal = game.getAnimal(move.getAnimalId());
+        if (animal.isDoPiracy()) throw new GameException("This animal has already pirated!");
+        if (animal.notHungry()) throw new GameException("The animal can't pirate when it's fed");
+        Animal victim = game.getAnimal(move.getSecondAnimalId());
+        if (victim.notHungry()) throw new GameException("You can't pirate from fed animal");
+        if (victim.calculateHungry() == 1)
+            throw new GameException("There is nothing to pirate"); //if hungry, but total hungry==1;
+        if (!animal.checkSymbiosis(animal.getOwner()))
+            throw new GameException("The animal can't processMove while it's symbiont is hungry");
+        victim.deleteFood();
+        animal.eatFish(1);
+        animal.setDoPiracy(true);
     }
 }

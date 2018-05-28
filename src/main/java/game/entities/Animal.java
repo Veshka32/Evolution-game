@@ -12,10 +12,10 @@ public class Animal {
     transient boolean attackFlag = false;
     transient boolean fedFlag = false;
     transient boolean isPoisoned = false;
+    transient boolean doPiracy = false;
+    transient boolean doGrazing = false;
     transient int hibernationRound;
     transient int totalFatSupply;
-    transient boolean doPiracy=false;
-    transient boolean doGrazing=false;
 
     //go to json
     int id;
@@ -32,22 +32,22 @@ public class Animal {
         owner = player;
     }
 
-    public void setHungry(){
-        hungry =Constants.MIN_HUNGRY.getValue();
+    public void setHungry() {
+        hungry = Constants.MIN_HUNGRY.getValue();
         if (hasProperty("Predator")) hungry++;
         if (hasProperty("Big")) hungry++;
-        if (hasProperty("Parasite")) hungry +=2;
+        if (hasProperty("Parasite")) hungry += 2;
     }
 
-    public int calculateHungry(){
-        int result=Constants.MIN_HUNGRY.getValue();
+    public int calculateHungry() {
+        int result = Constants.MIN_HUNGRY.getValue();
         if (hasProperty("Predator")) result++;
         if (hasProperty("Big")) result++;
-        if (hasProperty("Parasite")) result +=2;
+        if (hasProperty("Parasite")) result += 2;
         return result;
     }
 
-    public void deleteFood(){
+    public void deleteFood() {
         hungry++;
     }
 
@@ -55,28 +55,38 @@ public class Animal {
         isPoisoned = true;
     }
 
-    public void setDoPiracy(boolean bool){
-        doPiracy=bool;
+    public void setDoPiracy(boolean bool) {
+        doPiracy = bool;
     }
-    public void setAttackFlag(boolean bool){attackFlag=bool;}
-    public void setDoGrazing(boolean bool){doGrazing=bool;}
 
-    public boolean isDoPiracy(){
+    public void setAttackFlag(boolean bool) {
+        attackFlag = bool;
+    }
+
+    public void setDoGrazing(boolean bool) {
+        doGrazing = bool;
+    }
+
+    public boolean isDoPiracy() {
         return doPiracy;
     }
-    public boolean isDoGrazing(){return doGrazing;}
 
-    public void hibernate (int round) throws GameException {
-        if (round==-1) throw new GameException("You can't hibernate in last round");
-        else if (round!=0 && round==hibernationRound) throw new GameException("This animal is already in hibernation");//can hibernate in 0 round
-        else if (round-hibernationRound==1) throw new GameException("You can't hibernate 2 rounds in a row");
-        hibernationRound=round;
-        hungry =0;
+    public boolean isDoGrazing() {
+        return doGrazing;
+    }
+
+    public void hibernate(int round) throws GameException {
+        if (round == -1) throw new GameException("You can't hibernate in last round");
+        else if (round != 0 && round == hibernationRound)
+            throw new GameException("This animal is already in hibernation");//can hibernate in 0 round
+        else if (round - hibernationRound == 1) throw new GameException("You can't hibernate 2 rounds in a row");
+        hibernationRound = round;
+        hungry = 0;
     }
 
     public void eatFat() throws GameException {
-        if (currentFatSupply<1) throw new GameException("You have no fat supply");
-        if (hungry <1) throw new GameException("Animal is fed");
+        if (currentFatSupply < 1) throw new GameException("You have no fat supply");
+        if (hungry < 1) throw new GameException("Animal is fed");
         hungry--;
         currentFatSupply--;
     }
@@ -111,28 +121,28 @@ public class Animal {
 
     public void die() {
         for (int id : cooperateTo) {
-            Animal animal=owner.getAnimal(id);
+            Animal animal = owner.getAnimal(id);
             animal.cooperateTo.remove(Integer.valueOf(this.id));
             if (animal.cooperateTo.isEmpty()) animal.propertyList.remove("Cooperation");
             owner.usedCards++;
         }
 
         for (int id : communicateTo) {
-            Animal animal=owner.getAnimal(id);
+            Animal animal = owner.getAnimal(id);
             animal.communicateTo.remove(Integer.valueOf(this.id));
             if (animal.communicateTo.isEmpty()) animal.propertyList.remove("Communication");
             owner.usedCards++;
         }
 
         for (int id : symbiosis) {
-            Animal animal=owner.getAnimal(id);
+            Animal animal = owner.getAnimal(id);
             animal.symbiontFor.remove(Integer.valueOf(this.id));
             if (animal.symbiontFor.isEmpty() && animal.symbiosis.isEmpty()) animal.propertyList.remove("Symbiosis");
             owner.usedCards++;
         }
 
         for (int id : symbiontFor) {
-            Animal animal=owner.getAnimal(id);
+            Animal animal = owner.getAnimal(id);
             animal.symbiosis.remove(Integer.valueOf(this.id));
             if (animal.symbiontFor.isEmpty() && animal.symbiosis.isEmpty()) animal.propertyList.remove("Symbiosis");
             owner.usedCards++;
@@ -172,8 +182,12 @@ public class Animal {
     public void eatMeet(Player player, Game game) throws GameException {
 
         if (hungry == 0) {
-            if (currentFatSupply==totalFatSupply) throw new GameException("This animal is fed!");
-            else {currentFatSupply++; game.deleteFood();return;}
+            if (currentFatSupply == totalFatSupply) throw new GameException("This animal is fed!");
+            else {
+                currentFatSupply++;
+                game.deleteFood();
+                return;
+            }
         }
         if (!checkSymbiosis(player)) throw new GameException("You should feed the symbiont first");
 
@@ -276,10 +290,10 @@ public class Animal {
         return propertyList.contains(property);
     }
 
-    public void removeProperty(String property){
+    public void removeProperty(String property) {
         switch (property) {
             case "Parasite":
-                hungry-=2;
+                hungry -= 2;
                 break;
             case "Big":
                 hungry--;
