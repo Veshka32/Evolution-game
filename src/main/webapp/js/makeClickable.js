@@ -12,3 +12,9 @@ function forFeed() {
     document.getElementById("feedPanel").style.display = 'block'; //show panel
     document.getElementById("End move").style.display='inline-block'; //show button
 }
+
+function wait() {
+    document.getElementById("status").innerText = "Please, wait for victim answer...";
+    document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
+    document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
+}

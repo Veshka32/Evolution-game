@@ -9,7 +9,7 @@ var firstAnimalId = null;
 var secondAnimalId = null;
 var playedCardId;
 var tailLoss = false;
-var mimicry=false;
+var mimicry = false;
 var mimicryVictims;
 
 function eatFood() {
@@ -61,7 +61,7 @@ function onMessage(event) {
         setFood(game);
 
     }
-    else if (game.phase=="EVOLUTION")
+    else if (game.phase == "EVOLUTION")
         forEvolution(game.status);
 
     if (game.status == true) {
@@ -76,11 +76,8 @@ function onMessage(event) {
     if (game.hasOwnProperty("tailLoss")) {
         let message = game.tailLoss;
 
-        if (message.playerOnAttack === playerName) {
-            document.getElementById("status").innerText = "Please, wait for victim answer...";
-            document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
-            document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
-        }
+        if (message.playerOnAttack === playerName) wait();
+
         else if (message.playerUnderAttack === playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
             tailLoss = true;
@@ -92,19 +89,15 @@ function onMessage(event) {
         }
     }
 
-    if (game.hasOwnProperty("mimicry")){
-        let message=game.mimicry;
-        if (message.playerOnAttack===playerName){
-            document.getElementById("status").innerText = "Please, wait for victim answer...";
-            document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
-            document.getElementById("personal").style.pointerEvents = "none";//why does not inherit from wrapper?
-        }
-        else if(message.playerUnderAttack===playerName){
+    if (game.hasOwnProperty("mimicry")) {
+        let message = game.mimicry;
+        if (message.playerOnAttack === playerName) wait();
+        else if (message.playerUnderAttack === playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with mimicry property. Choose animal to redirect attack or click animal to die");
             mimicry = true;
-            document.getElementById("common").style.pointerEvents="none";
-            document.getElementById(playerName).style.pointerEvents='auto';
-            mimicryVictims=message.victims;
+            document.getElementById("common").style.pointerEvents = "none";
+            document.getElementById(playerName).style.pointerEvents = 'auto';
+            mimicryVictims = message.victims;
             document.getElementById("Make move").style.pointerEvents = "auto";
             document.getElementById("Clear").style.pointerEvents = 'auto';
         }
