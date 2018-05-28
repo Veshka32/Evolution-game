@@ -91,7 +91,7 @@ public class Animal {
         currentFatSupply--;
     }
 
-    public boolean attack(Animal victim) throws GameException {
+    public void attack(Animal victim) throws GameException {
         //exceptions
         if (!hasProperty("Predator")) throw new GameException("This animal is not a predator");
         if (attackFlag) throw new GameException("This predator has been used");
@@ -116,7 +116,6 @@ public class Animal {
         if (victim.hasProperty("Camouflage")) {
             if (!hasProperty("Sharp Vision")) throw new GameException("This animal is in camouflage");
         }
-        return true;
     }
 
     public void die() {

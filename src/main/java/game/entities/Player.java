@@ -27,8 +27,8 @@ public class Player {
         doEat = bool;
     }
 
-    public void resetGrazing(){
-        for (Animal animal:animals.values())
+    public void resetGrazing() {
+        for (Animal animal : animals.values())
             animal.setDoGrazing(false);
     }
 
@@ -163,13 +163,14 @@ public class Player {
         }
     }
 
-    public List<Integer> canRedirect(Animal predator,int victim) {
+    public List<Integer> canRedirect(Animal predator, int victim) {
         ArrayList<Integer> canAttack = new ArrayList<>();
 
         for (Animal an : animals.values()) {
-            if (an.getId()==victim || an.hasProperty("Mimicry")) continue;
+            if (an.getId() == victim || an.hasProperty("Mimicry")) continue;
             try {
-                if (predator.attack(an)) canAttack.add(an.getId());
+                predator.attack(an);
+                canAttack.add(an.getId());
             } catch (GameException e) {
             }
         }
