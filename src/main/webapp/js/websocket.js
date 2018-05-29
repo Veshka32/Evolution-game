@@ -1,6 +1,11 @@
 window.onload = init;
-var socket = new WebSocket("ws://localhost:8080/evo/socket");
+var tcp = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+var host = window.location.host;
+var path=window.location.pathname.substring(0,window.location.pathname.lastIndexOf(".")); //url without .html
+var socket = new WebSocket(tcp+host+path);
+
 socket.onmessage = onMessage;
+socket.onopen=onOpen;
 
 var playerName;
 var move;
@@ -11,6 +16,18 @@ var playedCardId;
 var tailLoss = false;
 var mimicry = false;
 var mimicryVictims;
+
+function init() {
+    alert(getCookie("player"));
+    //alert(tcp+host+path);
+
+    // document.getElementById("player").innerText = getCookie("player");
+    // player = getCookie("player");
+    // Object.freeze(player);
+}
+
+function onOpen(event) {
+}
 
 function eatFood() {
     move = "eatFood";
@@ -147,17 +164,11 @@ function restart() {
     socket.send(buildMessage());
 }
 
-function init() {
-    // document.getElementById("player").innerText = getCookie("player");
-    // player = getCookie("player");
-    // Object.freeze(player);
+
+function getCookie(player) {
+    match = document.cookie.match(new RegExp(player + '=([^;]+)'));
+    if (match) return match[1];
 }
-
-
-// function getCookie(player) {
-//     match = document.cookie.match(new RegExp(player + '=([^;]+)'));
-//     if (match) return match[1];
-// }
 
 
 

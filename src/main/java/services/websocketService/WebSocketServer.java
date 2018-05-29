@@ -11,7 +11,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 @ApplicationScoped
-@ServerEndpoint(value = "/socket", configurator = SocketConfigurator.class, decoders = {Decoder.class})
+@ServerEndpoint(value = "/views/socket", configurator = SocketConfigurator.class, decoders = {Decoder.class})
 public class WebSocketServer {
 
     @Inject

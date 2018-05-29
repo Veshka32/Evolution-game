@@ -47,7 +47,7 @@ By default, when an application calls DriverManager.getConnection(url, ...) and 
 a new (empty) database is created. To change it, edit url in Driver.Manager.getConnection() or in JDBC Connection Pool Properties in ServerAdmin cabinet;
 String url = "jdbc:h2:/data/sample;IFEXISTS=TRUE"; in this case,if the database does not already exist, an exception is thrown when trying to connect. The connection only succeeds when the database already exists.
 
-//- in Intellij: View - Tool Windows - Database - create new; url like jdbc:h2:C:/Users/stas/Documents/evo/h2 (if localhost)
+//- in Intellij: View - Tool Windows - Database - create new; url like jdbc:h2:C:/Users/stas/Documents/evo/h2 (if 172.16.172.71)
 
 
 var.stream().map(x -> x.method()).collect(Collectors.joining("/")));

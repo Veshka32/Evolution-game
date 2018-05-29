@@ -16,7 +16,7 @@
 
 Your session ID: <%=request.getSession().getId() %></br>
 
-<form action="http://localhost:8080/evo/socket.html">
+<form action="http://172.16.172.71:8080/evo/socket.html">
     <input type="submit" value="Start game" />
 </form>
 ${message}
