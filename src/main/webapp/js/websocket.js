@@ -160,5 +160,4 @@ function restart() {
 function init() {
     // playerName=getCookie("player");
     // Object.freeze(player);
-    alert(tcp+host+path);
 }

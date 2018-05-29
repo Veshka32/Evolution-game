@@ -39,6 +39,7 @@ public class WebSocketServer {
                 e.printStackTrace();
             }
         }
+        game.clearError();
     }
 
     @OnMessage

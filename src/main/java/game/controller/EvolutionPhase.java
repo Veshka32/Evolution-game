@@ -46,6 +46,8 @@ public class EvolutionPhase {
     }
 
     private void processSimpleProperty() throws GameException {
+        if (move.getAnimalId()==0) throw new GameException("You forgot pick an animal");
+
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
         String property=move.getProperty();

@@ -32,6 +32,10 @@ public class Game {
     Map<String, Player> players = new LinkedHashMap<>();
     private int food;
 
+    public void clearError(){
+        error=null;
+    }
+
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
         if (error!=null){
@@ -50,7 +54,6 @@ public class Game {
         if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
         else element.getAsJsonObject().addProperty("status", false);
-
 
         if (extraMessage != null)
             element.getAsJsonObject().add(extraMessage.getType(), new Gson().toJsonTree(extraMessage)); //add object
@@ -197,7 +200,7 @@ public class Game {
 
     public void addPlayer(String userName) {
         players.put(userName, new Player(userName));
-        log.append(userName).append(" joined game at ").append(new Date());
+        log.append(userName).append(" joined game at ").append(new Date()).append("\n");
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
             goToNextPhase(); //start game
         }
