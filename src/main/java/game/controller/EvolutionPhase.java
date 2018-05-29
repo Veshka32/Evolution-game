@@ -20,7 +20,9 @@ class EvolutionPhase {
                 game.makeAnimal(move);
                 break;
             case "DeleteProperty":
-                deleteProperty();
+                Animal animal=game.getAnimal(move.getAnimalId());
+                animal.removeProperty(move.getProperty());
+                animal.getOwner().deleteCard(move.getCardId());
                 break;
             case "PlayProperty":
                 if (isDouble(move.getProperty()))
@@ -31,12 +33,6 @@ class EvolutionPhase {
                 }
         }
         if (game.phase.equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
-    }
-
-    private void deleteProperty() {
-        Animal animal=game.getAnimal(move.getAnimalId());
-        animal.removeProperty(move.getProperty());
-        game.getPlayer(move.getPlayer()).deleteCard(move.getCardId());
     }
 
     private boolean isDouble(String property) {

@@ -293,19 +293,49 @@ public class Animal {
         switch (property) {
             case "Parasite":
                 hungry -= 2;
+                propertyList.remove(property);
                 break;
             case "Big":
                 hungry--;
+                propertyList.remove(property);
                 break;
             case "Fat":
                 totalFatSupply--;
                 if (currentFatSupply > totalFatSupply) currentFatSupply = totalFatSupply;
+                propertyList.remove(property);
                 break;
             case "Predator":
                 hungry--;
                 break;
+            case "Communication":
+                Animal partner = owner.getAnimal(communicateTo.get(0));
+                communicateTo.remove(Integer.valueOf(partner.id));
+                partner.communicateTo.remove(Integer.valueOf(this.id));
+                if (communicateTo.isEmpty()) propertyList.remove(property);
+                if (partner.communicateTo.isEmpty()) partner.propertyList.remove(property);
+                break;
+            case "Cooperation":
+                partner = owner.getAnimal(cooperateTo.get(0));
+                cooperateTo.remove(Integer.valueOf(partner.id));
+                partner.cooperateTo.remove(Integer.valueOf(this.id));
+                if (cooperateTo.isEmpty()) propertyList.remove(property);
+                if (partner.cooperateTo.isEmpty()) partner.propertyList.remove(property);
+                break;
+            case "Symbiosis":
+                if (!symbiosis.isEmpty()) {
+                    partner = owner.getAnimal(symbiosis.get(0));
+                    symbiosis.remove(Integer.valueOf(partner.id));
+                    partner.symbiontFor.remove(Integer.valueOf(this.id));
+                    if (partner.symbiosis.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
+                } else if (!symbiontFor.isEmpty()) {
+                    partner = owner.getAnimal(symbiontFor.get(0));
+                    symbiontFor.remove(Integer.valueOf(partner.id));
+                    partner.symbiosis.remove(Integer.valueOf(this.id));
+                    if (partner.symbiosis.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
+                }
+                if (symbiosis.isEmpty() && symbiontFor.isEmpty()) propertyList.remove(property);
+                break;
         }
-        propertyList.remove(property);
         owner.usedCards++;
     }
 }

@@ -199,4 +199,22 @@ class AnimalTest {
         },"You can't hibernate 2 rounds in a row");
         animal.hibernate(2);
     }
+
+    @Test
+    public void removeProperty() throws GameException {
+        Player owner=new Player("test");
+        String communication="Communication";
+        Animal first=new Animal(1,owner);
+        Animal second=new Animal(2,owner);
+        Animal third=new Animal(3,owner);
+        owner.addAnimal(first);
+        owner.addAnimal(second);
+        owner.addAnimal(third);
+        owner.connectAnimal(1,2,communication);
+        owner.connectAnimal(2,3,communication);
+        second.removeProperty(communication);
+        assert (first.propertyList.isEmpty());
+        assert (!second.propertyList.isEmpty());
+        assert (!third.propertyList.isEmpty());
+    }
 }
