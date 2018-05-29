@@ -40,6 +40,7 @@ public class EvolutionPhase {
         Player player = game.getPlayer(move.getPlayer());
         int id1=move.getAnimalId();
         int id2=move.getSecondAnimalId();
+        if (id1==0 || id2==0) throw new GameException("You must pick two animals to play property "+move.getProperty());
         player.connectAnimal(id1,id2,move.getProperty());
         player.deleteCard(move.getCardId());
 

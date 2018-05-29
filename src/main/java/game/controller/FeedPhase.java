@@ -173,6 +173,7 @@ public class FeedPhase {
         if (animal.isDoPiracy()) throw new GameException("This animal has already pirated!");
         if (animal.notHungry()) throw new GameException("The animal can't pirate when it's fed");
         Animal victim = game.getAnimal(move.getSecondAnimalId());
+        if (victim==null) throw new GameException("Pick the animal to pirate from");
         if (victim.notHungry()) throw new GameException("You can't pirate from fed animal");
         if (victim.calculateHungry() == 1)
             throw new GameException("There is nothing to pirate"); //if hungry, but total hungry==1;

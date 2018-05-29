@@ -1,28 +1,25 @@
 window.onload = init;
-var tcp = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-var host = window.location.host;
-var path=window.location.pathname.substring(0,window.location.pathname.lastIndexOf(".")); //url without .html
+const tcp = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+const host = window.location.host;
+const path=window.location.pathname.substring(0,window.location.pathname.lastIndexOf(".")); //url without .html
 //var path="/evo/socket";
-var socket = new WebSocket(tcp+host+path);
+const socket = new WebSocket(tcp+host+path);
 socket.onmessage = onMessage;
 
-var playerName;
-var move;
-var draggedProperty;
+var playerName,draggedProperty, playedCardId, mimicryVictims;
+var move=null;
 var firstAnimalId = null;
 var secondAnimalId = null;
-var playedCardId;
 var tailLoss = false;
 var mimicry = false;
-var mimicryVictims;
+var doEat=false;
 
 function eatFood() {
+    if (doEat) {
+        alert("You can't eat/attack twice during one move");
+        return;}
     move = "eatFood";
     document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
-}
-
-function attack() {
-    move = "attack"; //set firstAnimalId and secondAnimalId
 }
 
 function endMove() {

@@ -34,7 +34,6 @@ public class WebSocketServer {
                 String name=socketsHandler.getName(s);
                 String message = game.convertToJsonString(name);
                 if (message!=null) s.getBasicRemote().sendText(message); //null means error for one of the players
-                System.out.println(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }

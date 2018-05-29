@@ -5,10 +5,10 @@ function buildFood() {
     return img;
 }
 
-function buildFat(int) {
+function buildFat() {
     let img = document.createElement('IMG');
     img.setAttribute('src', '../images/fat.png');
-    img.setAttribute("class","active");
+    img.setAttribute("class", "active");
     return img;
 }
 
@@ -20,11 +20,7 @@ function buildPlayerBlock(player) {
     playerBlock.appendChild(playerName);
 
     if (player.name == this.playerName) {
-        if (player.doEat)
-            document.getElementById("feedPanel").style.pointerEvents = "none";
-        else
-            document.getElementById("feedPanel").style.pointerEvents = "auto";//disable food and attack buttons}
-
+        doEat = player.doEat;
         playerName.innerText = 'Your animals:';
         var personal = document.getElementById("personal");
         personal.innerHTML = "";
@@ -51,7 +47,7 @@ function buildPlayerBlock(player) {
 
 function buildAnimal(animal, flag) {
     let animDiv = document.createElement("div");
-    animDiv.setAttribute("class", "animal");
+    animDiv.setAttribute("class", "animal active");
     animDiv.setAttribute("id", animal.id);
     for (let key in animal) {
         if (key == "propertyList") {
@@ -61,12 +57,10 @@ function buildAnimal(animal, flag) {
 
                 if (flag) {
                     let property = animal.propertyList[m];
-                    span.className+=" active";
+                    span.className += " active";
                     buttonOnAnimal(span, property, animal.id);
                 } else
                     span.appendChild(document.createTextNode(animal.propertyList[m]));
-
-
                 animDiv.appendChild(span);
             }
         }
@@ -84,7 +78,7 @@ function buildAnimal(animal, flag) {
             animDiv.appendChild(span);
 
         }
-        else if (animal[key] !== null || animal[key] !== undefined) {
+        else if (animal[key] !== null && animal[key] !== undefined) {
             let span = document.createElement("span");
             span.setAttribute("class", "parameter");
             if (Array.isArray(animal[key])) {
@@ -105,10 +99,7 @@ function buildAnimal(animal, flag) {
                 document.getElementById("doing").innerText = "Redirect predator to animal #" + animal.id;
                 firstAnimalId = animal.id;
             }
-            else {
-                (alert("You can't redirect the predator to this animal"));
-                return;
-            }
+            else (alert("You can't redirect the predator to this animal"));
         }
 
         else if (firstAnimalId == null) {
@@ -122,20 +113,19 @@ function buildAnimal(animal, flag) {
             else if (document.getElementById("phase").innerText == "FEED") text = " attack animal #";
             document.getElementById("doing").innerText += text + secondAnimalId;
         }
-
     });
 
     return animDiv;
 }
 
-function buttonOnAnimal(span, name, id) {
+function buttonOnAnimal(span, property, id) {
     span.addEventListener("click", function (event) {
         event.stopPropagation();
         if (document.getElementById("phase").innerText == "FEED" || tailLoss) { //active only in feed phase
-            playAnimalProperty(name, id);
+            playAnimalProperty(property, id);
         }
     });
-    span.innerText = name;
+    span.innerText = property;
 }
 
 function playAnimalProperty(property, animalId) {
@@ -159,7 +149,6 @@ function playProperty(property, cardId) {
             move = "MakeAnimal";
             document.getElementById("doing").innerText = "Make animal from card # " + cardId;
         } else if (property === "DeleteProperty") {
-            alert("Click property on any animal to delete");
             tailLoss = true;
             move = "DeleteProperty";
         }
@@ -200,9 +189,29 @@ function buildCard(card) {
 }
 
 function buildMessage() {
+    if (document.getElementById("phase").innerText == "EVOLUTION") {
+        if (move == null) {
+            alert("You haven't made any move");
+            return;
+        }
+    }
+    else if (document.getElementById("phase").innerText == "FEED") {
+
+        if (move == null) {
+            if (secondAnimalId == null) {
+                alert("You haven't made any move");
+                return;
+            }
+            move = "attack";
+            if (doEat) {
+                alert("You can't eat/attack twice during one move");
+                return;
+            }
+        }
+    }
     return JSON.stringify({
         "player": playerName,
-        "cardId": playedCardId,
+        "cardId":playedCardId,
         "animalId": firstAnimalId,
         "secondAnimalId": secondAnimalId,
         "move": move,
