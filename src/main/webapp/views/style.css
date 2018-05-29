@@ -39,11 +39,11 @@
     font-size: 12px;
 }
 
-.animal:hover {
+.active:hover {
     box-shadow: 0 0 3px 2px green;
 }
 
-.animal:active {
+.active:active {
     box-shadow: 0 0 0 3px red;
 }
 

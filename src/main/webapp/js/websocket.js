@@ -1,4 +1,4 @@
-window.onload = init;
+//window.onload = init;
 const tcp = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 const host = window.location.host;
 const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf(".")); //url without .html
@@ -64,6 +64,7 @@ function onMessage(event) {
 
     if (game.phase == "FEED") {
         document.getElementById("End move").style.display='inline-block'; //show button
+        document.getElementById("feedPanel").style.display = 'block'; //show panel
         //forFeed();
         setFood(game);
 

@@ -71,7 +71,7 @@ function buildAnimal(animal, flag) {
                 animDiv.appendChild(span);
             }
         }
-        else if (key == "currentFatSupply") {
+        else if (key == "currentFatSupply" && animal[key]>0) {
             let span = document.createElement("span");
             span.setAttribute("class", "fat");
             for (let i = 0; i < animal[key]; i++) {
@@ -84,18 +84,20 @@ function buildAnimal(animal, flag) {
             });
             animDiv.appendChild(span);
 
-        }
-        else if (animal[key] !== null && animal[key] !== undefined) {
+        } else if (key == "hungry" || key == "id") {
             let span = document.createElement("span");
             span.setAttribute("class", "parameter");
-            if (Array.isArray(animal[key])) {
-                let arr = animal[key];
-                if (arr.length > 0)
-                    span.innerText = key + ": " + arr.toString();
-            } else {
-                span.innerText = key + ": " + animal[key];
-            }
+            span.innerText = key + ": " + animal[key];
             animDiv.appendChild(span);
+        }
+        else {
+            let span = document.createElement("span");
+            span.setAttribute("class", "parameter");
+            let arr = animal[key];
+            if (arr.length > 0) {
+                span.innerText = key + ": " + arr.toString();
+                animDiv.appendChild(span);
+            }
         }
     }
 
@@ -218,7 +220,7 @@ function buildMessage() {
     }
     return JSON.stringify({
         "player": playerName,
-        "cardId":playedCardId,
+        "cardId": playedCardId,
         "animalId": firstAnimalId,
         "secondAnimalId": secondAnimalId,
         "move": move,

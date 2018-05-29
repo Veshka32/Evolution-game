@@ -22,7 +22,7 @@ public class Animal {
     //go to json
     int id;
     List<String> propertyList = new ArrayList<>();
-    ArrayList<Integer> cooperateTo = new ArrayList<>(); //default 0
+    ArrayList<Integer> cooperateTo = new ArrayList<>();
     ArrayList<Integer> communicateTo = new ArrayList<>();
     ArrayList<Integer> symbiontFor = new ArrayList<>();
     ArrayList<Integer> symbiosisWith = new ArrayList<>();
