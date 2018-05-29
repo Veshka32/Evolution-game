@@ -2,6 +2,7 @@ window.onload = init;
 var tcp = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 var host = window.location.host;
 var path=window.location.pathname.substring(0,window.location.pathname.lastIndexOf(".")); //url without .html
+//var path="/evo/socket";
 var socket = new WebSocket(tcp+host+path);
 socket.onmessage = onMessage;
 
@@ -43,6 +44,7 @@ function endPhase() {
 function onMessage(event) {
     clearFields();
     var game = JSON.parse(event.data);
+    if (game.hasOwnProperty("error")) {alert(game.error);return;}
 
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
@@ -105,7 +107,6 @@ function onMessage(event) {
         }
     }
 
-    if (game.hasOwnProperty("error")) alert(game.error);
     if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
     if (game.hasOwnProperty("winners")) alert(game.winners + " win!");
 }
@@ -156,7 +157,8 @@ function restart() {
 // }
 //
 //
-// function init() {
-//     playerName=getCookie("player");
-//     Object.freeze(player);
-// }
+function init() {
+    // playerName=getCookie("player");
+    // Object.freeze(player);
+    alert(tcp+host+path);
+}

@@ -28,6 +28,19 @@ public class WebSocketServer {
         sendToAll(session);
     }
 
+    private void sendToAll(Session session) {
+        for (Session s : session.getOpenSessions()) {
+            try {
+                String name=socketsHandler.getName(s);
+                String message = game.convertToJsonString(name);
+                if (message!=null) s.getBasicRemote().sendText(message); //null means error for one of the players
+                System.out.println(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @OnMessage
     public void handleMessage(Move message, Session session) {
         game.makeMove(message);
@@ -47,16 +60,5 @@ public class WebSocketServer {
         //Logger.getLogger(WebSocketServer.class.getName()).log(Level.SEVERE, null, error);
     }
 
-    private void sendToAll(Session session) {
-        for (Session s : session.getOpenSessions()) {
-            try {
-                String name=socketsHandler.getName(s);
-                String message = game.convertToJsonString(name);
-                System.out.println(message);
-                s.getBasicRemote().sendText(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 }

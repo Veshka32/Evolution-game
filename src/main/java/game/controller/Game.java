@@ -2,6 +2,7 @@ package game.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import game.constants.Constants;
 import game.constants.Phase;
 import game.entities.*;
@@ -27,35 +28,62 @@ public class Game {
     transient ExtraMessage extraMessage;
 
     //go to json
-    private String moves;
     Phase phase = Phase.START; //package access to use in tests. Not good practice
     Map<String, Player> players = new LinkedHashMap<>();
     private int food;
+
+    public String convertToJsonString(String name) {
+        Gson gson = new Gson();
+        if (error!=null){
+            if (playersTurn.get(playerOnMove).equals(name)) {
+                JsonElement element = new JsonObject();
+                element.getAsJsonObject().addProperty("error",error);
+                return gson.toJson(element);
+            } else return null;
+        }
+
+        JsonElement element = gson.toJsonTree(this);
+        element.getAsJsonObject().addProperty("player", name); //add primitive
+        element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
+        element.getAsJsonObject().addProperty("log", log.toString());
+
+        if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
+            element.getAsJsonObject().addProperty("status", true);
+        else element.getAsJsonObject().addProperty("status", false);
+
+
+        if (extraMessage != null)
+            element.getAsJsonObject().add(extraMessage.getType(), new Gson().toJsonTree(extraMessage)); //add object
+
+        if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
+        if (round == -1) element.getAsJsonObject().addProperty("last", 0);
+
+        return gson.toJson(element);
+    }
 
     public void deleteFood() {
         food--;
     }
 
     public void playTailLoss(Animal predator, Animal victim) {
-        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(),"tailLoss");
+        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), "tailLoss");
     }
 
-    public void afterTailLoss(){
+    public void afterTailLoss() {
         String pl = extraMessage.getPlayerOnAttack();
         playerOnMove = playersTurn.indexOf(pl);
         extraMessage = null;
     }
 
-    public void playMimicry(Animal predator,Animal victim, List<Integer> list){
-        extraMessage = new MimicryMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(),"mimicry",list);
+    public void playMimicry(Animal predator, Animal victim, List<Integer> list) {
+        extraMessage = new MimicryMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), "mimicry", list);
     }
 
-    public void afterMimicry(){
+    public void afterMimicry() {
         String pl = extraMessage.getPlayerOnAttack();
         playerOnMove = playersTurn.indexOf(pl);
         extraMessage = null;
     }
-
 
     public void makeMove(Move move) {
         error = null;
@@ -167,31 +195,6 @@ public class Game {
         food = i;
     }
 
-    public String convertToJsonString(String name) {
-
-        Gson gson = new Gson();
-        JsonElement element = gson.toJsonTree(this);
-        element.getAsJsonObject().addProperty("player", name); //add primitive
-        element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
-        element.getAsJsonObject().addProperty("log", log.toString());
-        if (error != null && playersTurn.get(playerOnMove).equals(name)) {
-            element.getAsJsonObject().addProperty("error", error);
-            element.getAsJsonObject().addProperty("status", true);
-        } else {
-            if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
-                element.getAsJsonObject().addProperty("status", true);
-            else element.getAsJsonObject().addProperty("status", false);
-        }
-
-        if (extraMessage != null)
-            element.getAsJsonObject().add(extraMessage.getType(), new Gson().toJsonTree(extraMessage)); //add object
-
-        if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
-        if (round == -1) element.getAsJsonObject().addProperty("last", 0);
-
-        return gson.toJson(element);
-    }
-
     public void addPlayer(String userName) {
         players.put(userName, new Player(userName));
         log.append(userName).append(" joined game at ").append(new Date());
@@ -268,7 +271,6 @@ public class Game {
 
     public void deletePlayer(String userName) {
         players.remove(userName);
-        moves = userName + "left the game";
         phase = Phase.START;
     }
 }
