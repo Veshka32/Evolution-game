@@ -1,13 +1,14 @@
 function buildFood() {
     let img = document.createElement('IMG');
     img.setAttribute('src', '../images/food.png');
-    img.setAttribute('class', 'food');
+    img.setAttribute('class', 'food active');
     return img;
 }
 
 function buildFat(int) {
     let img = document.createElement('IMG');
     img.setAttribute('src', '../images/fat.png');
+    img.setAttribute("class","active");
     return img;
 }
 
@@ -60,9 +61,11 @@ function buildAnimal(animal, flag) {
 
                 if (flag) {
                     let property = animal.propertyList[m];
+                    span.className+=" active";
                     buttonOnAnimal(span, property, animal.id);
                 } else
                     span.appendChild(document.createTextNode(animal.propertyList[m]));
+
 
                 animDiv.appendChild(span);
             }

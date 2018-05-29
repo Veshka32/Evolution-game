@@ -89,7 +89,6 @@ public class Game {
     }
 
     public void makeMove(Move move) {
-        error = null;
         log.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
         if (move.getMove().equals("EndPhase")) {
             playerEndsPhase(move.getPlayer());
