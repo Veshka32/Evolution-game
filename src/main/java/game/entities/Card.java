@@ -35,5 +35,10 @@ public class Card {
     public int getId(){
         return id;
     }
+
+    public static boolean isDouble(String property) {
+        return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
+    }
+
 }
 

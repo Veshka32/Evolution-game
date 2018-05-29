@@ -123,7 +123,7 @@ public class Player {
                 break;
             case "Symbiosis":
                 if (animal.isInSymbiosis(id2) || animal.isSymbiontFor(id2))
-                    throw new GameException("Animal #" + id1 + " is already in symbiosis with animal #" + id2);
+                    throw new GameException("Animal #" + id1 + " is already in symbiosisWith with animal #" + id2);
                 else {
                     animal.setSymbiosysWith(id2);
                     animal2.setSymbiontFor(id1);

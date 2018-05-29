@@ -2,10 +2,11 @@ package game.controller;
 
 import game.constants.Phase;
 import game.entities.Animal;
+import game.entities.Card;
 import game.entities.Move;
 import game.entities.Player;
 
-class EvolutionPhase {
+public class EvolutionPhase {
     private Game game;
     private Move move;
 
@@ -25,7 +26,7 @@ class EvolutionPhase {
                 animal.getOwner().deleteCard(move.getCardId());
                 break;
             case "PlayProperty":
-                if (isDouble(move.getProperty()))
+                if (Card.isDouble(move.getProperty()))
                     processDoubleProperty();
 
                 else {
@@ -33,10 +34,6 @@ class EvolutionPhase {
                 }
         }
         if (game.phase.equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
-    }
-
-    private boolean isDouble(String property) {
-        return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
     }
 
     private void processDoubleProperty() throws GameException {

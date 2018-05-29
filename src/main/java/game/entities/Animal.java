@@ -2,6 +2,8 @@
 package game.entities;
 
 import game.constants.Constants;
+import game.controller.EvolutionPhase;
+import game.controller.FeedPhase;
 import game.controller.Game;
 import game.controller.GameException;
 
@@ -23,7 +25,7 @@ public class Animal {
     ArrayList<Integer> cooperateTo = new ArrayList<>(); //default 0
     ArrayList<Integer> communicateTo = new ArrayList<>();
     ArrayList<Integer> symbiontFor = new ArrayList<>();
-    ArrayList<Integer> symbiosis = new ArrayList<>();
+    ArrayList<Integer> symbiosisWith = new ArrayList<>();
     int hungry = Constants.MIN_HUNGRY.getValue();
     int currentFatSupply;
 
@@ -109,7 +111,7 @@ public class Animal {
             if (!hasProperty("Big")) throw new GameException("You can't eat such a big animal");
         }
 
-        if (!victim.symbiosis.isEmpty())
+        if (!victim.symbiosisWith.isEmpty())
             throw new GameException("You can't eat this animal while its symbiont is alive");
         if (victim.hasProperty("Burrowing") && victim.hungry == 0)
             throw new GameException("This animal is fed and in burrow");
@@ -133,17 +135,17 @@ public class Animal {
             owner.usedCards++;
         }
 
-        for (int id : symbiosis) {
+        for (int id : symbiosisWith) {
             Animal animal = owner.getAnimal(id);
             animal.symbiontFor.remove(Integer.valueOf(this.id));
-            if (animal.symbiontFor.isEmpty() && animal.symbiosis.isEmpty()) animal.propertyList.remove("Symbiosis");
+            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove("Symbiosis");
             owner.usedCards++;
         }
 
         for (int id : symbiontFor) {
             Animal animal = owner.getAnimal(id);
-            animal.symbiosis.remove(Integer.valueOf(this.id));
-            if (animal.symbiontFor.isEmpty() && animal.symbiosis.isEmpty()) animal.propertyList.remove("Symbiosis");
+            animal.symbiosisWith.remove(Integer.valueOf(this.id));
+            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove("Symbiosis");
             owner.usedCards++;
         }
     }
@@ -235,8 +237,8 @@ public class Animal {
     }
 
     public boolean checkSymbiosis(Player player) { //return false if not all of the symbionts are fed;
-        if (!symbiosis.isEmpty()) {
-            for (int id : symbiosis
+        if (!symbiosisWith.isEmpty()) {
+            for (int id : symbiosisWith
                     ) {
                 if (player.getAnimal(id).hungry != 0)
                     return false;
@@ -262,7 +264,7 @@ public class Animal {
     }
 
     public boolean isInSymbiosis(int id) {
-        return symbiosis.contains(id);
+        return symbiosisWith.contains(id);
     }
 
     public boolean isSymbiontFor(int id) {
@@ -278,7 +280,7 @@ public class Animal {
     }
 
     public void setSymbiosysWith(int id) {
-        symbiosis.add(id);
+        symbiosisWith.add(id);
     }
 
     public void setSymbiontFor(int id) {
@@ -322,20 +324,23 @@ public class Animal {
                 if (partner.cooperateTo.isEmpty()) partner.propertyList.remove(property);
                 break;
             case "Symbiosis":
-                if (!symbiosis.isEmpty()) {
-                    partner = owner.getAnimal(symbiosis.get(0));
-                    symbiosis.remove(Integer.valueOf(partner.id));
+                if (!symbiosisWith.isEmpty()) {
+                    partner = owner.getAnimal(symbiosisWith.get(0));
+                    symbiosisWith.remove(Integer.valueOf(partner.id));
                     partner.symbiontFor.remove(Integer.valueOf(this.id));
-                    if (partner.symbiosis.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
+                    if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
                 } else if (!symbiontFor.isEmpty()) {
                     partner = owner.getAnimal(symbiontFor.get(0));
                     symbiontFor.remove(Integer.valueOf(partner.id));
-                    partner.symbiosis.remove(Integer.valueOf(this.id));
-                    if (partner.symbiosis.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
+                    partner.symbiosisWith.remove(Integer.valueOf(this.id));
+                    if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
                 }
-                if (symbiosis.isEmpty() && symbiontFor.isEmpty()) propertyList.remove(property);
+                if (symbiosisWith.isEmpty() && symbiontFor.isEmpty()) propertyList.remove(property);
                 break;
         }
+
+        if (!Card.isDouble(property)) propertyList.remove(property);
         owner.usedCards++;
+
     }
 }

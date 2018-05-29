@@ -147,7 +147,7 @@ class AnimalTest {
         swim.addProperty("Swimming");
         pop.addAnimal(swim);
 
-        //animal in symbiosis with swim
+        //animal in symbiosisWith with swim
         Animal small=new Animal(3,pop);
         pop.addAnimal(small);
         pop.connectAnimal(3,2,"Symbiosis");
