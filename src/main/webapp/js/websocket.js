@@ -1,23 +1,24 @@
 window.onload = init;
 const tcp = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 const host = window.location.host;
-const path=window.location.pathname.substring(0,window.location.pathname.lastIndexOf(".")); //url without .html
+const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf(".")); //url without .html
 //var path="/evo/socket";
-const socket = new WebSocket(tcp+host+path);
+const socket = new WebSocket(tcp + host + path);
 socket.onmessage = onMessage;
 
-var playerName,draggedProperty, playedCardId, mimicryVictims;
-var move=null;
+var playerName, draggedProperty, playedCardId, mimicryVictims;
+var move = null;
 var firstAnimalId = null;
 var secondAnimalId = null;
 var tailLoss = false;
 var mimicry = false;
-var doEat=false;
+var doEat = false;
 
 function eatFood() {
     if (doEat) {
         alert("You can't eat/attack twice during one move");
-        return;}
+        return;
+    }
     move = "eatFood";
     document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
 }
@@ -41,7 +42,11 @@ function endPhase() {
 function onMessage(event) {
     clearFields();
     var game = JSON.parse(event.data);
-    if (game.hasOwnProperty("error")) {alert(game.error);return;}
+    if (game.hasOwnProperty("error")) {
+        alert(game.error);
+        document.getElementById("wrapper").style.pointerEvents = "auto";
+        return;
+    }
 
     playerName = game.player;
     document.getElementById("player").innerText = playerName;
@@ -58,7 +63,8 @@ function onMessage(event) {
     }
 
     if (game.phase == "FEED") {
-        forFeed();
+        document.getElementById("End move").style.display='inline-block'; //show button
+        //forFeed();
         setFood(game);
 
     }
@@ -119,13 +125,6 @@ function clearFields() {
     document.getElementById("wrapper").style.pointerEvents = "none";
 }
 
-function setFood(game) {
-    let food = document.getElementById("food");
-    while (food.firstChild)
-        food.removeChild(food.firstChild);
-    for (let i = 0; i < game.food; i++) food.appendChild(buildFood())
-}
-
 function clearMove() {
     move = null;
     draggedProperty = null;
@@ -146,6 +145,7 @@ function restart() {
     move = "Restart";
     socket.send(buildMessage());
 }
+
 //
 //
 // function getCookie(player) {
@@ -154,7 +154,7 @@ function restart() {
 // }
 //
 //
-function init() {
-    // playerName=getCookie("player");
-    // Object.freeze(player);
-}
+// function init() {
+//     // playerName=getCookie("player");
+//     // Object.freeze(player);
+// }

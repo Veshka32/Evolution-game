@@ -1,3 +1,10 @@
+function setFood(game) {
+    let food = document.getElementById("food");
+    while (food.firstChild)
+        food.removeChild(food.firstChild);
+    for (let i = 0; i < game.food; i++) food.appendChild(buildFood())
+}
+
 function buildFood() {
     let img = document.createElement('IMG');
     img.setAttribute('src', '../images/food.png');
