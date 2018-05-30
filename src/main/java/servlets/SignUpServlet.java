@@ -1,5 +1,7 @@
 package servlets;
 
+import game.controller.Game;
+import services.dataBaseService.GameDAO;
 import services.dataBaseService.UsersDAO;
 
 import javax.inject.Inject;

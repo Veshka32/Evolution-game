@@ -33,7 +33,7 @@ public class EvolutionPhase {
                     processSimpleProperty();
                 }
         }
-        if (game.phase.equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
+        if (game.getPhase().equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
     }
 
     private void processDoubleProperty() throws GameException {

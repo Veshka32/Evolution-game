@@ -3,11 +3,12 @@ package game.controller;
 import game.constants.Constants;
 import game.entities.Card;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CardGenerator {
+public class CardGenerator implements Serializable {
     List<Card> cardList;
 
     CardGenerator(){
@@ -38,7 +39,6 @@ public class CardGenerator {
             cardList.add(new Card(cardID++, "Swimming"));
             cardList.add(new Card(cardID++, "Swimming"));
         }
-
     }
 
     public List<Card> getCards(){

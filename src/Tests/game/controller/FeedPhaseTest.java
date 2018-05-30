@@ -26,7 +26,7 @@ class FeedPhaseTest {
     @Test
     public void eatFood() {
         Game game = new Game();
-        game.setGenerator(new TestCardGenerator());
+        game.setCardList(new TestCardGenerator().getCards());
         game.addPlayer(player1);
         game.addPlayer(player2);
 
@@ -37,7 +37,7 @@ class FeedPhaseTest {
         game.makeMove(new Move("test", cardIndex2--, 0, 0, "MakeAnimal", null, null));
         game.makeMove(new Move("pop", 0, 0, 0, "EndPhase", null, null));
         game.makeMove(new Move("test", 0, 0, 0, "EndPhase", null, null));
-        assert (game.phase.equals(Phase.FEED));
+        assert (game.getPhase().equals(Phase.FEED));
 
         // food=2;
         game.setFood(2);
@@ -46,9 +46,9 @@ class FeedPhaseTest {
         assert (game.getFood()==0);
 
         //food=8;
-        game.phase=Phase.FEED;
+        game.setPhase(Phase.FEED);
         game.setFood(Constants.MAX_FOOD.getValue());
-        for (Player pl : game.players.values()
+        for (Player pl : game.getPlayers().values()
                 ) {
             pl.resetFields();
         }
@@ -62,7 +62,7 @@ class FeedPhaseTest {
     @Test
     void tailLoss() throws GameException {
         Game game=new Game();
-        game.setGenerator(new TestCardGenerator());
+        game.setCardList(new TestCardGenerator().getCards());
         game.addPlayer(player1);
         game.addPlayer(player2);
         Player test=game.getPlayer(player1);
@@ -73,16 +73,16 @@ class FeedPhaseTest {
         predator.addProperty("Predator");
         test.addAnimal(tailLoss);
         pop.addAnimal(predator);
-        game.animalList.put(1,tailLoss);
-        game.animalList.put(2,predator);
-        game.phase=Phase.FEED;
+        game.getAnimalList().put(1,tailLoss);
+        game.getAnimalList().put(2,predator);
+        game.setPhase(Phase.FEED);
         game.makeMove(new Move("test",0,2,1,"attack",null,null));
-        assert(game.phase.equals(Phase.FEED));
-        assert (game.extraMessage.getPlayerOnAttack().equals("test"));
-        assert (game.extraMessage.getPredator()==2);
+        assert(game.getPhase().equals(Phase.FEED));
+        assert (game.getExtraMessage().getPlayerOnAttack().equals("test"));
+        assert (game.getExtraMessage().getPredator()==2);
         game.makeMove(new Move("pop",0,1,0,"DeleteProperty","Tail loss",null));
-        assert (game.phase.equals(Phase.FEED));
-        assert (game.extraMessage ==null);
+        assert (game.getPhase().equals(Phase.FEED));
+        assert (game.getExtraMessage() ==null);
         assert (!predator.notHungry());
         assert (pop.isDoEat());
         assert (!tailLoss.hasProperty("Tail loss"));

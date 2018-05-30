@@ -55,6 +55,7 @@
             <version>2.1.0</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.statefulj</groupId>
             <artifactId>statefulj-fsm</artifactId>

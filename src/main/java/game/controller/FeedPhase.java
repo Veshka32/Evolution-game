@@ -46,7 +46,7 @@ public class FeedPhase {
 
     public void processMimicry() {
         Animal victim = game.getAnimal(move.getAnimalId());
-        Animal predator = game.getAnimal(game.extraMessage.getPredator());
+        Animal predator = game.getAnimal(game.getExtraMessage().getPredator());
         if (victim.hasProperty("Tail loss")) {
             game.playTailLoss(predator, victim);
             return;
@@ -60,11 +60,11 @@ public class FeedPhase {
         Animal victim = game.getAnimal(move.getAnimalId());
         String property = move.getProperty();
         victim.removeProperty(property);
-        Animal predator = game.getAnimal(game.extraMessage.getPredator());
+        Animal predator = game.getAnimal(game.getExtraMessage().getPredator());
         if (canMimicry(victim, predator)) return;
         predator.setAttackFlag(true);
         predator.getOwner().resetFedFlag();
-        if (game.playersTurn.size() > 1) predator.getOwner().setDoEat(true);
+        if (game.getPlayersTurn().size() > 1) predator.getOwner().setDoEat(true);
         predator.eatFish(1);
         game.afterTailLoss();
     }
@@ -89,12 +89,12 @@ public class FeedPhase {
         if (victim.hasProperty("Running")) {
             boolean isSuccessful = new Random().nextBoolean();
             if (!isSuccessful) {
-                game.log.append("Animal #").append(victim.getId()).append(" run away from predator");
+                game.getLog().append("Animal #").append(victim.getId()).append(" run away from predator");
                 predator.setAttackFlag(true);
-                if (game.playersTurn.size() > 1) player.setDoEat(true);
+                if (game.getPlayersTurn().size() > 1) player.setDoEat(true);
                 return;
             } else
-                game.log.append("Predator #").append(predator.getId()).append(" run up animal #").append(victim.getId());
+                game.getLog().append("Predator #").append(predator.getId()).append(" run up animal #").append(victim.getId());
         }
 
         if (victim.hasProperty("Tail loss")) {
@@ -110,7 +110,7 @@ public class FeedPhase {
         if (victim.hasProperty("Poisonous")) predator.poison();
         predator.setAttackFlag(true);
         player.resetFedFlag();
-        if (game.playersTurn.size() > 1) player.setDoEat(true);
+        if (game.getPlayersTurn().size() > 1) player.setDoEat(true);
         predator.eatFish(2);
         victim.die();
         victim.getOwner().deleteAnimal(victim.getId());
@@ -138,7 +138,7 @@ public class FeedPhase {
         Animal animal = game.getAnimal(move.getAnimalId());
         switch (property) {
             case "Hibernation":
-                animal.hibernate(game.round);
+                animal.hibernate(game.getRound());
                 break;
             case "Piracy":
                 pirate();
@@ -157,7 +157,7 @@ public class FeedPhase {
         if (animal == null) throw new GameException("Feeding stranger animal is danger!");
         animal.eatMeet(player, game);
         player.resetFedFlag();
-        if (game.playersTurn.size() > 1) player.setDoEat(true);
+        if (game.getPlayersTurn().size() > 1) player.setDoEat(true);
     }
 
     public void graze() throws GameException {

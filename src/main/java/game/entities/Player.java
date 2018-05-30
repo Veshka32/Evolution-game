@@ -3,9 +3,10 @@ package game.entities;
 import game.constants.Constants;
 import game.controller.GameException;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Player {
+public class Player implements Serializable {
     private transient int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
     private transient int points;
     transient int usedCards;

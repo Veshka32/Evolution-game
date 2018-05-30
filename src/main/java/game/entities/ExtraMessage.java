@@ -1,6 +1,8 @@
 package game.entities;
 
-public class ExtraMessage {
+import java.io.Serializable;
+
+public class ExtraMessage implements Serializable {
     String playerOnAttack;
     int predator;
     String playerUnderAttack;

@@ -4,12 +4,14 @@ import game.constants.Properties;
 
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
+import java.io.Serializable;
 
-public class Card {
+public class Card implements Serializable {
     private String extraProperty;
     private String property;
     private Properties prop;
     private final int id;
+
 
     public Card(int id,String property,String extraProperty){
         this.id=id;

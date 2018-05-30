@@ -9,45 +9,58 @@ import game.entities.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
+import static javax.persistence.FetchType.EAGER;
+
+@Entity
 @Named
 @ApplicationScoped
-public class Game {
+public class Game implements Serializable {
 
-    private transient List<Card> cardList;
-    private transient int animalID = Constants.START_CARD_INDEX.getValue();
-    transient List<String> playersTurn = new LinkedList<>();
-    transient int round = 0;
-    transient int playerOnMove = round;
-    transient String error;
-    transient HashMap<Integer, Animal> animalList = new HashMap<>();
-    private transient CardGenerator generator = new CardGenerator();
-    private transient String winners;
-    transient StringBuilder log = new StringBuilder();
-    transient ExtraMessage extraMessage;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @ElementCollection(fetch = EAGER)
+    private List<Card> cardList;
+    private int animalID = Constants.START_CARD_INDEX.getValue();
+    @ElementCollection(fetch = EAGER)
+    private List<String> playersTurn = new LinkedList<>();
+    private int round = 0;
+    private int playerOnMove = round;
+    private String error;
+    @ElementCollection(fetch = EAGER)
+    private Map<Integer, Animal> animalList = new HashMap<>();
+    private String winners;
+    private StringBuilder log = new StringBuilder();
+    private ExtraMessage extraMessage;
 
     //go to json
-    Phase phase = Phase.START; //package access to use in tests. Not good practice
-    Map<String, Player> players = new LinkedHashMap<>();
+    private Phase phase = Phase.START; //package access to use in tests. Not good practice
+    @ElementCollection(fetch = EAGER)
+    private Map<String, Player> players = new LinkedHashMap<>();
     private int food;
 
-    public void clearError(){
-        error=null;
+    public void clearError() {
+        error = null;
     }
 
     public String convertToJsonString(String name) {
         Gson gson = new Gson();
-        if (error!=null){
+        JsonElement element = new JsonObject();
+        if (error != null) {
             if (playersTurn.get(playerOnMove).equals(name)) {
-                JsonElement element = new JsonObject();
-                element.getAsJsonObject().addProperty("error",error);
+                element.getAsJsonObject().addProperty("error", error);
                 return gson.toJson(element);
             } else return null;
         }
 
-        JsonElement element = gson.toJsonTree(this);
-        element.getAsJsonObject().addProperty("player", name); //add primitive
+        element.getAsJsonObject().add("phase", new Gson().toJsonTree(phase));//add object
+        element.getAsJsonObject().add("players", new Gson().toJsonTree(players));
+        element.getAsJsonObject().addProperty("food", food); //add primitive
+        element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
         element.getAsJsonObject().addProperty("log", log.toString());
 
@@ -56,7 +69,7 @@ public class Game {
         else element.getAsJsonObject().addProperty("status", false);
 
         if (extraMessage != null)
-            element.getAsJsonObject().add(extraMessage.getType(), new Gson().toJsonTree(extraMessage)); //add object
+            element.getAsJsonObject().add(extraMessage.getType(), new Gson().toJsonTree(extraMessage));
 
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
@@ -92,9 +105,6 @@ public class Game {
         log.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
         if (move.getMove().equals("EndPhase")) {
             playerEndsPhase(move.getPlayer());
-            return;
-        } else if (move.getMove().equals("Restart")) {
-            restart();
             return;
         }
         try {
@@ -206,22 +216,11 @@ public class Game {
     }
 
     private void start() {
-        cardList = generator.getCards();
+        cardList = new CardGenerator().getCards();
         playersTurn = new LinkedList<>(players.keySet());
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));
         playerOnMove = 0;
-    }
-
-    private void restart() {
-        cardList = generator.getCards();
-        playersTurn = new LinkedList<>(players.keySet());
-        for (String name : playersTurn) {
-            players.replace(name, new Player(name));
-            addCardsOnStart(players.get(name));
-        }
-        playerOnMove = 0;
-        phase = Phase.EVOLUTION;
     }
 
     private void addCardsOnStart(Player player) {
@@ -267,12 +266,112 @@ public class Game {
         return players.get(name);
     }
 
-    void setGenerator(CardGenerator generator) {
-        this.generator = generator;
-    }
-
     public void deletePlayer(String userName) {
         players.remove(userName);
         phase = Phase.START;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Card> getCardList() {
+        return cardList;
+    }
+
+    public void setCardList(List<Card> cardList) {
+        this.cardList = cardList;
+    }
+
+    public int getAnimalID() {
+        return animalID;
+    }
+
+    public void setAnimalID(int animalID) {
+        this.animalID = animalID;
+    }
+
+    public List<String> getPlayersTurn() {
+        return playersTurn;
+    }
+
+    public void setPlayersTurn(List<String> playersTurn) {
+        this.playersTurn = playersTurn;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
+    }
+
+    public int getPlayerOnMove() {
+        return playerOnMove;
+    }
+
+    public void setPlayerOnMove(int playerOnMove) {
+        this.playerOnMove = playerOnMove;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public Map<Integer, Animal> getAnimalList() {
+        return animalList;
+    }
+
+    public void setAnimalList(HashMap<Integer, Animal> animalList) {
+        this.animalList = animalList;
+    }
+
+    public String getWinners() {
+        return winners;
+    }
+
+    public void setWinners(String winners) {
+        this.winners = winners;
+    }
+
+    public StringBuilder getLog() {
+        return log;
+    }
+
+    public void setLog(StringBuilder log) {
+        this.log = log;
+    }
+
+    public ExtraMessage getExtraMessage() {
+        return extraMessage;
+    }
+
+    public void setExtraMessage(ExtraMessage extraMessage) {
+        this.extraMessage = extraMessage;
+    }
+
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Phase phase) {
+        this.phase = phase;
+    }
+
+    public Map<String, Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Map<String, Player> players) {
+        this.players = players;
     }
 }

@@ -7,9 +7,10 @@ import game.controller.FeedPhase;
 import game.controller.Game;
 import game.controller.GameException;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Animal {
+public class Animal implements Serializable {
     transient Player owner;
     transient boolean attackFlag = false;
     transient boolean fedFlag = false;
