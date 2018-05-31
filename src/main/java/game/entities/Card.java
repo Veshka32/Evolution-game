@@ -1,5 +1,7 @@
 package game.entities;
 
+import com.google.gson.annotations.Expose;
+
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
 import javax.persistence.Embeddable;
@@ -7,10 +9,14 @@ import java.io.Serializable;
 
 @Embeddable
 public class Card implements Serializable {
+    @Expose
     private String extraProperty;
+    @Expose
     private String property;
+    @Expose
     private int id;
 
+    public Card(){}
     public Card(int id,String property,String extraProperty){
         this.id=id;
         this.property=property;

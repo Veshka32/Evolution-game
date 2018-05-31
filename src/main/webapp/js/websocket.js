@@ -142,11 +142,6 @@ function leave() {
     location.assign("/evo/signIn")
 }
 
-function restart() {
-    move = "Restart";
-    socket.send(buildMessage());
-}
-
 //
 //
 // function getCookie(player) {
