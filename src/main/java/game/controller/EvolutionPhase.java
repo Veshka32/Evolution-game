@@ -21,9 +21,10 @@ public class EvolutionPhase {
                 game.makeAnimal(move);
                 break;
             case "DeleteProperty":
-                Animal animal=game.getAnimal(move.getAnimalId());
+                Player player=game.getPlayer(move.getPlayer());
+                Animal animal=player.getAnimal(move.getAnimalId());
                 animal.removeProperty(move.getProperty());
-                animal.getOwner().deleteCard(move.getCardId());
+                player.deleteCard(move.getCardId());
                 break;
             case "PlayProperty":
                 if (Card.isDouble(move.getProperty()))

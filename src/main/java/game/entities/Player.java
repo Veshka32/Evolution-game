@@ -1,5 +1,6 @@
 package game.entities;
 
+import com.google.gson.annotations.Expose;
 import game.constants.Constants;
 import game.controller.GameException;
 
@@ -9,12 +10,15 @@ import java.util.*;
 
 @Embeddable
 public class Player implements Serializable {
-    private transient int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
-    private transient int points;
-    transient int usedCards;
-    //go to json
+    private int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
+    private int points;
+    int usedCards;
+    //include json
+    @Expose
     private String name;
+    @Expose
     List<Card> cards = new ArrayList<>();
+    @Expose
     Map<Integer, Animal> animals = new HashMap<>();
     boolean doEat = false;
 

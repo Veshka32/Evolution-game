@@ -3,7 +3,7 @@ package game.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Embeddable
 public class ExtraMessage implements Serializable {
     String playerOnAttack;
     int predator;
@@ -11,9 +11,9 @@ public class ExtraMessage implements Serializable {
     int victim;
     String type;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private int id;
 
     public void setPlayerOnAttack(String playerOnAttack) {
         this.playerOnAttack = playerOnAttack;

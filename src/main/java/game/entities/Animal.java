@@ -1,6 +1,7 @@
 
 package game.entities;
 
+import com.google.gson.annotations.Expose;
 import game.constants.Constants;
 import game.controller.EvolutionPhase;
 import game.controller.FeedPhase;
@@ -13,23 +14,30 @@ import java.util.*;
 
 @Embeddable
 public class Animal implements Serializable {
-    transient Player owner;
-    transient boolean attackFlag = false;
-    transient boolean fedFlag = false;
-    transient boolean isPoisoned = false;
-    transient boolean doPiracy = false;
-    transient boolean doGrazing = false;
-    transient int hibernationRound;
-    transient int totalFatSupply;
+     Player owner;
+     boolean attackFlag = false;
+     boolean fedFlag = false;
+     boolean isPoisoned = false;
+     boolean doPiracy = false;
+     boolean doGrazing = false;
+     int hibernationRound;
+     int totalFatSupply;
 
-    //go to json
+    //include in json
     int id;
+    @Expose
     List<String> propertyList = new ArrayList<>();
+    @Expose
     List<Integer> cooperateTo = new ArrayList<>();
+    @Expose
     List<Integer> communicateTo = new ArrayList<>();
+    @Expose
     List<Integer> symbiontFor = new ArrayList<>();
+    @Expose
     List<Integer> symbiosisWith = new ArrayList<>();
+    @Expose
     int hungry = Constants.MIN_HUNGRY.getValue();
+    @Expose
     int currentFatSupply;
 
     public Animal(){}

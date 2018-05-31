@@ -1,6 +1,7 @@
 package game.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import game.constants.Constants;
@@ -35,10 +36,10 @@ public class Game implements Serializable {
     private Map<Integer, Animal> animalList = new HashMap<>();
     private String winners;
     private StringBuilder log = new StringBuilder();
-    @OneToOne
+    @Embedded
     private ExtraMessage extraMessage;
 
-    //go to json
+    //include in json
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
     @ElementCollection(fetch = EAGER)
@@ -50,7 +51,8 @@ public class Game implements Serializable {
     }
 
     public String convertToJsonString(String name) {
-        Gson gson = new Gson();
+        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson=new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
             if (playersTurn.get(playerOnMove).equals(name)) {
@@ -59,8 +61,8 @@ public class Game implements Serializable {
             } else return null;
         }
 
-        element.getAsJsonObject().add("phase", new Gson().toJsonTree(phase));//add object
-        element.getAsJsonObject().add("players", new Gson().toJsonTree(players));
+        element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
+        element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
         element.getAsJsonObject().addProperty("food", food); //add primitive
         element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
@@ -71,7 +73,7 @@ public class Game implements Serializable {
         else element.getAsJsonObject().addProperty("status", false);
 
         if (extraMessage != null)
-            element.getAsJsonObject().add(extraMessage.getType(), new Gson().toJsonTree(extraMessage));
+            element.getAsJsonObject().add(extraMessage.getType(), gson.toJsonTree(extraMessage));
 
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
