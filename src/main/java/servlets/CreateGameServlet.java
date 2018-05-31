@@ -1,6 +1,7 @@
 package servlets;
 
 import game.controller.Game;
+import game.controller.GameHandler;
 import game.entities.Users;
 import services.dataBaseService.GameDAO;
 import services.dataBaseService.UsersDAO;
@@ -17,35 +18,18 @@ import java.security.spec.InvalidKeySpecException;
 
 @WebServlet(urlPatterns = "/create")
 public class CreateGameServlet extends HttpServlet {
-
     @Inject
-    private UsersDAO usersDAO;
-
-    @Inject
-    private GameDAO gameDAO;
+    GameHandler gameHandler;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
         String name=(String) session.getAttribute("player");
-        Users user=usersDAO.getUser(name);
-        Game game=new Game();
-        game.addPlayer(name,user);
-        try {
-            gameDAO.save(game);
-        } catch (SystemException e) {
-            e.printStackTrace();
-        } catch (NotSupportedException e) {
-            e.printStackTrace();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        } catch (HeuristicRollbackException e) {
-            e.printStackTrace();
-        } catch (HeuristicMixedException e) {
-            e.printStackTrace();
-        } catch (RollbackException e) {
-            e.printStackTrace();
-        }
+        int gameId=gameHandler.createGame();
+        Game game=gameHandler.getGame(gameId);
+        game.addPlayer(name);
+        session.setAttribute("gameId",gameId);
+        resp.sendRedirect("views/socket.html");
     }
 
 }

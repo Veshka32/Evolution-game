@@ -21,9 +21,6 @@ import static javax.persistence.FetchType.EAGER;
 //@ApplicationScoped
 public class Game implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     @ElementCollection(fetch = EAGER)
     private List<Card> cardList;
     private int animalID;
@@ -42,6 +39,8 @@ public class Game implements Serializable {
     private List<Users> users=new ArrayList<>();
 
     //include in json
+    @Id
+    private int id;
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
     @ElementCollection(fetch = EAGER)
@@ -66,9 +65,10 @@ public class Game implements Serializable {
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
         element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
         element.getAsJsonObject().addProperty("food", food); //add primitive
+        element.getAsJsonObject().addProperty("id",id);
         element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
-        element.getAsJsonObject().addProperty("log", log.toString());
+        element.getAsJsonObject().addProperty("log", log);
 
         if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
@@ -213,17 +213,6 @@ public class Game implements Serializable {
 
     public void setFood(int i) {
         food = i;
-    }
-
-    public void addPlayer(String userName, Users user) {
-        users.add(user);
-        players.put(userName, new Player(userName));
-        StringBuilder sb=new StringBuilder(log);
-        sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
-        log=sb.toString();
-        if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
-            goToNextPhase(); //start game
-        }
     }
 
     public void addPlayer(String userName){

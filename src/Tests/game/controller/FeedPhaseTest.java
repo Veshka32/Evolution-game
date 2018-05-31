@@ -86,9 +86,6 @@ class FeedPhaseTest {
         assert (!predator.notHungry());
         assert (pop.isDoEat());
         assert (!tailLoss.hasProperty("Tail loss"));
-
-
-
     }
 
 

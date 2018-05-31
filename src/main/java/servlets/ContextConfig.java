@@ -1,6 +1,7 @@
 package servlets;
 
 import game.controller.Game;
+import game.controller.GameHandler;
 import services.dataBaseService.GameDAO;
 
 import javax.inject.Inject;
@@ -14,7 +15,7 @@ import javax.transaction.*;
 @WebListener
 public class ContextConfig implements ServletContextListener {
     @Inject
-    private Game game;
+    private GameHandler gameHandler;
 
 //    @Inject
 //    DBService dbService;
@@ -22,7 +23,7 @@ public class ContextConfig implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext servletContext = event.getServletContext();
-        servletContext.setAttribute("game", game);
+        servletContext.setAttribute("gameHandler", gameHandler);
         //dbService.createTable();
     }
 

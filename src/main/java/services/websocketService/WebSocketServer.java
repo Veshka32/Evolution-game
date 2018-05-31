@@ -1,5 +1,6 @@
 package services.websocketService;
 
+import game.controller.GameHandler;
 import game.entities.Move;
 import game.controller.Game;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
 public class WebSocketServer {
 
     @Inject
-    private Game game;
+    private GameHandler gameHandler;
 
     @Inject
     private SocketsHandler socketsHandler;
@@ -24,13 +25,17 @@ public class WebSocketServer {
     public void open(Session session, EndpointConfig config) {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         String player = (String) httpSession.getAttribute("player");
+        Integer gameId=(Integer) httpSession.getAttribute("gameId");
         socketsHandler.addSession(session, player);
-        sendToAll(session);
+        socketsHandler.addGame(session,gameId);
+        sendToAll(session,gameId);
     }
 
-    private void sendToAll(Session session) {
+    private void sendToAll(Session session,Integer gameId) {
+        Game game=gameHandler.getGame(gameId);
         for (Session s : session.getOpenSessions()) {
             try {
+                if ((socketsHandler.getGameId(s)).intValue()!=gameId.intValue()) continue;
                 String name=socketsHandler.getName(s);
                 String message = game.convertToJsonString(name);
                 if (message!=null) s.getBasicRemote().sendText(message); //null means error for one of the players
@@ -43,8 +48,9 @@ public class WebSocketServer {
 
     @OnMessage
     public void handleMessage(Move message, Session session) {
-        game.makeMove(message);
-        sendToAll(session);
+        int gameId=socketsHandler.getGameId(session);
+        gameHandler.getGame(gameId).makeMove(message);
+        sendToAll(session,gameId);
     }
 
     @OnClose

@@ -11,8 +11,6 @@ public class Card implements Serializable {
     private String property;
     private int id;
 
-
-    public Card(){}
     public Card(int id,String property,String extraProperty){
         this.id=id;
         this.property=property;

@@ -12,7 +12,8 @@ public class Move {
     int secondAnimalId;
     String log;
 
-    public Move(String player,int cardId,int animalId,int secondAnimalId,String move,String property,String log){
+
+    public Move(String player, int cardId, int animalId, int secondAnimalId, String move, String property, String log){
         this.move = move;
         this.cardId = cardId;
         this.animalId=animalId;
@@ -41,7 +42,6 @@ public class Move {
     public int getSecondAnimalId(){return secondAnimalId;}
 
     public String getProperty(){return property;}
-
 
     public String toString() {
         return new Gson().toJson(this);
