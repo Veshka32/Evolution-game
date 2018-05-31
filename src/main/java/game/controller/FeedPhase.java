@@ -89,12 +89,12 @@ public class FeedPhase {
         if (victim.hasProperty("Running")) {
             boolean isSuccessful = new Random().nextBoolean();
             if (!isSuccessful) {
-                game.getLog().append("Animal #").append(victim.getId()).append(" run away from predator");
+                game.addLogMessage("Animal #",String.valueOf(victim.getId())," run away from predator");
                 predator.setAttackFlag(true);
                 if (game.getPlayersTurn().size() > 1) player.setDoEat(true);
                 return;
             } else
-                game.getLog().append("Predator #").append(predator.getId()).append(" run up animal #").append(victim.getId());
+                game.addLogMessage("Predator #",String.valueOf(predator.getId())," run up animal #",String.valueOf(victim.getId()));
         }
 
         if (victim.hasProperty("Tail loss")) {

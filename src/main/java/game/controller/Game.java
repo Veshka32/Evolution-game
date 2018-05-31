@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Named
-@ApplicationScoped
+//@ApplicationScoped
 public class Game implements Serializable {
 
     @Id
@@ -35,9 +35,11 @@ public class Game implements Serializable {
     @ElementCollection(fetch = EAGER)
     private Map<Integer, Animal> animalList = new HashMap<>();
     private String winners;
-    private StringBuilder log = new StringBuilder();
+    private String log="";
     @Embedded
     private ExtraMessage extraMessage;
+    @ManyToMany
+    private List<Users> users=new ArrayList<>();
 
     //include in json
     @Enumerated(EnumType.STRING)
@@ -106,7 +108,9 @@ public class Game implements Serializable {
     }
 
     public void makeMove(Move move) {
-        log.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
+        StringBuilder sb=new StringBuilder(log);
+        sb.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
+        log=sb.toString();
         if (move.getMove().equals("EndPhase")) {
             playerEndsPhase(move.getPlayer());
             return;
@@ -211,9 +215,22 @@ public class Game implements Serializable {
         food = i;
     }
 
-    public void addPlayer(String userName) {
+    public void addPlayer(String userName, Users user) {
+        users.add(user);
         players.put(userName, new Player(userName));
-        log.append(userName).append(" joined game at ").append(new Date()).append("\n");
+        StringBuilder sb=new StringBuilder(log);
+        sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
+        log=sb.toString();
+        if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
+            goToNextPhase(); //start game
+        }
+    }
+
+    public void addPlayer(String userName){
+        players.put(userName, new Player(userName));
+        StringBuilder sb=new StringBuilder(log);
+        sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
+        log=sb.toString();
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
             goToNextPhase(); //start game
         }
@@ -249,6 +266,15 @@ public class Game implements Serializable {
             if (player.feedScavenger())
                 break;
         }
+    }
+
+    void addLogMessage(String...s){
+        StringBuilder sb=new StringBuilder(log);
+        for (String str:s
+             ) {
+            sb.append(s);
+        }
+        log=sb.toString();
     }
 
     void makeAnimal(Move move) {
@@ -348,11 +374,11 @@ public class Game implements Serializable {
         this.winners = winners;
     }
 
-    public StringBuilder getLog() {
+    public String getLog() {
         return log;
     }
 
-    public void setLog(StringBuilder log) {
+    public void setLog(String log) {
         this.log = log;
     }
 

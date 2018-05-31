@@ -1,7 +1,11 @@
 package game.entities;
 
+import game.controller.Game;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -22,6 +26,9 @@ public class Users implements Serializable {
     @Column(length = 8)
     private byte[] salt;
 
+    @ManyToMany
+    private List<Game> games=new ArrayList<>();
+
     public Users(){}
 
     public Users(String login, byte[] password, byte[] salt){
@@ -32,6 +39,10 @@ public class Users implements Serializable {
 
     public Users(String login){
         this.login=login;
+    }
+
+    public void addGame(Game game){
+        games.add(game);
     }
 
     public String getLogin(){

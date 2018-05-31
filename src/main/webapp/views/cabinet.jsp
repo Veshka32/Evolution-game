@@ -13,6 +13,10 @@ ${message}<br>
     <input type="submit" value="Join game"/>
 </form><br/>
 
+<form action="create">
+    <input type="submit" value="Create game"/>
+</form>
+
 <form action="signOut">
     <input type="submit" value="Sign Out"/>
 </form>
