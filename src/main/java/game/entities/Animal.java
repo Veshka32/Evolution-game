@@ -7,9 +7,11 @@ import game.controller.FeedPhase;
 import game.controller.Game;
 import game.controller.GameException;
 
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.*;
 
+@Embeddable
 public class Animal implements Serializable {
     transient Player owner;
     transient boolean attackFlag = false;
@@ -23,13 +25,14 @@ public class Animal implements Serializable {
     //go to json
     int id;
     List<String> propertyList = new ArrayList<>();
-    ArrayList<Integer> cooperateTo = new ArrayList<>();
-    ArrayList<Integer> communicateTo = new ArrayList<>();
-    ArrayList<Integer> symbiontFor = new ArrayList<>();
-    ArrayList<Integer> symbiosisWith = new ArrayList<>();
+    List<Integer> cooperateTo = new ArrayList<>();
+    List<Integer> communicateTo = new ArrayList<>();
+    List<Integer> symbiontFor = new ArrayList<>();
+    List<Integer> symbiosisWith = new ArrayList<>();
     int hungry = Constants.MIN_HUNGRY.getValue();
     int currentFatSupply;
 
+    public Animal(){}
     public Animal(int id, Player player) {
         this.id = id;
         owner = player;
@@ -175,6 +178,106 @@ public class Animal implements Serializable {
         if (property.equals("Parasite")) {
             hungry += 2;
         }
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+
+    public boolean isAttackFlag() {
+        return attackFlag;
+    }
+
+    public boolean isFedFlag() {
+        return fedFlag;
+    }
+
+    public void setFedFlag(boolean fedFlag) {
+        this.fedFlag = fedFlag;
+    }
+
+    public boolean isPoisoned() {
+        return isPoisoned;
+    }
+
+    public void setPoisoned(boolean poisoned) {
+        isPoisoned = poisoned;
+    }
+
+    public int getHibernationRound() {
+        return hibernationRound;
+    }
+
+    public void setHibernationRound(int hibernationRound) {
+        this.hibernationRound = hibernationRound;
+    }
+
+    public int getTotalFatSupply() {
+        return totalFatSupply;
+    }
+
+    public void setTotalFatSupply(int totalFatSupply) {
+        this.totalFatSupply = totalFatSupply;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<String> getPropertyList() {
+        return propertyList;
+    }
+
+    public void setPropertyList(List<String> propertyList) {
+        this.propertyList = propertyList;
+    }
+
+    public List<Integer> getCooperateTo() {
+        return cooperateTo;
+    }
+
+    public void setCooperateTo(ArrayList<Integer> cooperateTo) {
+        this.cooperateTo = cooperateTo;
+    }
+
+    public List<Integer> getCommunicateTo() {
+        return communicateTo;
+    }
+
+    public void setCommunicateTo(ArrayList<Integer> communicateTo) {
+        this.communicateTo = communicateTo;
+    }
+
+    public List<Integer> getSymbiontFor() {
+        return symbiontFor;
+    }
+
+    public void setSymbiontFor(ArrayList<Integer> symbiontFor) {
+        this.symbiontFor = symbiontFor;
+    }
+
+    public List<Integer> getSymbiosisWith() {
+        return symbiosisWith;
+    }
+
+    public void setSymbiosisWith(ArrayList<Integer> symbiosisWith) {
+        this.symbiosisWith = symbiosisWith;
+    }
+
+    public int getHungry() {
+        return hungry;
+    }
+
+    public void setHungry(int hungry) {
+        this.hungry = hungry;
+    }
+
+    public int getCurrentFatSupply() {
+        return currentFatSupply;
+    }
+
+    public void setCurrentFatSupply(int currentFatSupply) {
+        this.currentFatSupply = currentFatSupply;
     }
 
     public Player getOwner() {

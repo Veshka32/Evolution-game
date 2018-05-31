@@ -25,7 +25,7 @@ public class Game implements Serializable {
     private int id;
     @ElementCollection(fetch = EAGER)
     private List<Card> cardList;
-    private int animalID = Constants.START_CARD_INDEX.getValue();
+    private int animalID;
     @ElementCollection(fetch = EAGER)
     private List<String> playersTurn = new LinkedList<>();
     private int round = 0;
@@ -35,9 +35,11 @@ public class Game implements Serializable {
     private Map<Integer, Animal> animalList = new HashMap<>();
     private String winners;
     private StringBuilder log = new StringBuilder();
+    @OneToOne
     private ExtraMessage extraMessage;
 
     //go to json
+    @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
     @ElementCollection(fetch = EAGER)
     private Map<String, Player> players = new LinkedHashMap<>();
@@ -216,6 +218,7 @@ public class Game implements Serializable {
     }
 
     private void start() {
+        animalID = Constants.START_CARD_INDEX.getValue();
         cardList = new CardGenerator().getCards();
         playersTurn = new LinkedList<>(players.keySet());
         for (String name : playersTurn)

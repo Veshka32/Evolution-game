@@ -29,8 +29,8 @@ public class GameDAO {
         transaction.begin();
         em.persist(game);
         em.flush();
+        transaction.commit();
         return game.getId();
-        //transaction.commit();
     }
 
     public Game load(int id) throws NoResultException{

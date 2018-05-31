@@ -3,18 +3,22 @@ package game.entities;
 import game.constants.Constants;
 import game.controller.GameException;
 
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.*;
 
+@Embeddable
 public class Player implements Serializable {
     private transient int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
     private transient int points;
     transient int usedCards;
     //go to json
-    private final String name;
+    private String name;
     List<Card> cards = new ArrayList<>();
     Map<Integer, Animal> animals = new HashMap<>();
     boolean doEat = false;
+
+    public Player(){}
 
     public Player(String login) {
         this.name = login;
@@ -196,5 +200,37 @@ public class Player implements Serializable {
 
     public boolean hasAnimals() {
         return !animals.isEmpty();
+    }
+
+    public int getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(int cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setUsedCards(int usedCards) {
+        this.usedCards = usedCards;
+    }
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
+    }
+
+    public Map<Integer, Animal> getAnimals() {
+        return animals;
+    }
+
+    public void setAnimals(Map<Integer, Animal> animals) {
+        this.animals = animals;
     }
 }

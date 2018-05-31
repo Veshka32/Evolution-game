@@ -13,7 +13,6 @@ public class Users implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
     @Column(unique = true,nullable = false,updatable = false)
     private String login;
 
