@@ -20,11 +20,11 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            Game game=new Game();
-            game.addPlayer("test");
-            game.addPlayer("pop");
+        Game game = new Game();
+        game.addPlayer("test");
+        game.addPlayer("pop");
 
-        int id= 0;
+        int id = 0;
         try {
             id = gameDAO.save(game);
         } catch (SystemException e) {
@@ -40,11 +40,11 @@ public class TestServlet extends HttpServlet {
         } catch (RollbackException e) {
             e.printStackTrace();
         }
-        Game savedGame=gameDAO.load(id);
-        System.out.println (game.getId()==savedGame.getId());
-        System.out.println (savedGame.getPlayer("test")!=null);
-        System.out.println (savedGame.getPlayer("pop")!=null);
+        Game savedGame = gameDAO.load(id);
+        resp.getWriter().println(game.getId() == savedGame.getId());
+        resp.getWriter().println(savedGame.getPlayer("test") != null);
+        resp.getWriter().println(savedGame.getPlayer("pop") != null);
 
-        }
+    }
 
 }
