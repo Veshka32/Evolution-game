@@ -1,68 +1,30 @@
 package game.controller;
 
-import game.constants.Constants;
+import game.constants.CardHolder;
 import game.constants.Phase;
 import game.entities.Animal;
-import game.entities.Card;
 import game.entities.Move;
 import game.entities.Player;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.List;
-
+@RunWith(MockitoJUnitRunner.class)
 class FeedPhaseTest {
+
+    @Spy
+    private CardHolder cardHolder=new CardHolder();
+
+    @InjectMocks
+    Game game;
+
     String player1 = "pop";
     String player2 = "test";
-    int cardIndex = 84;
-    int cardIndex2 = cardIndex - Constants.START_NUMBER_OF_CARDS.getValue();
 
-    public class TestCardGenerator extends CardGenerator {
-        @Override
-        public List<Card> getCards() {
-            return cardList; //no shuffle
-        }
-    }
-
-    @Test
-    public void eatFood() {
-        Game game = new Game();
-        game.setCardList(new TestCardGenerator().getCards());
-        game.addPlayer(player1);
-        game.addPlayer(player2);
-
-        //players make moves
-        game.makeMove(new Move("pop", cardIndex--, 0, 0, "MakeAnimal", null, null));
-        game.makeMove(new Move("test", cardIndex2--, 0, 0, "MakeAnimal", null, null));
-        game.makeMove(new Move("pop", cardIndex--, 0, 0, "MakeAnimal", null, null));
-        game.makeMove(new Move("test", cardIndex2--, 0, 0, "MakeAnimal", null, null));
-        game.makeMove(new Move("pop", 0, 0, 0, "EndPhase", null, null));
-        game.makeMove(new Move("test", 0, 0, 0, "EndPhase", null, null));
-        assert (game.getPhase().equals(Phase.FEED));
-
-        // food=2;
-        game.setFood(2);
-        game.makeMove(new Move("pop",0,1,0,"eatFood",null,null));
-        game.makeMove(new Move("test",0,2,0,"eatFood",null,null));
-        assert (game.getFood()==0);
-
-        //food=8;
-        game.setPhase(Phase.FEED);
-        game.setFood(Constants.MAX_FOOD.getValue());
-        for (Player pl : game.getPlayers().values()
-                ) {
-            pl.resetFields();
-        }
-        game.makeMove(new Move("pop",0,1,0,"eatFood",null,null));
-        game.makeMove(new Move("test",0,2,0,"eatFood",null,null));
-        game.makeMove(new Move("pop",0,0,0,"EndPhase",null,null));
-        game.makeMove(new Move("test",0,0,0,"EndPhase",null,null));
-        assert (game.getFood()==6);
-
-    }
     @Test
     void tailLoss() throws GameException {
-        Game game=new Game();
-        game.setCardList(new TestCardGenerator().getCards());
         game.addPlayer(player1);
         game.addPlayer(player2);
         Player test=game.getPlayer(player1);

@@ -1,7 +1,7 @@
 package game.entities;
 
 import game.controller.GameException;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

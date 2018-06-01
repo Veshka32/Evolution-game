@@ -1,9 +1,11 @@
 package game.entities;
 
 import com.google.gson.annotations.Expose;
+import game.constants.CardHolder;
 import game.constants.Constants;
 import game.controller.GameException;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.*;
@@ -17,8 +19,10 @@ public class Player implements Serializable {
     @Expose
     private String name;
     @Expose
+    @ElementCollection
     List<Card> cards = new ArrayList<>();
     @Expose
+    @ElementCollection
     Map<Integer, Animal> animals = new HashMap<>();
     boolean doEat = false;
 
@@ -30,6 +34,9 @@ public class Player implements Serializable {
 
     public String getName() {
         return name;
+    }
+    public void setName(String name){
+        this.name=name;
     }
 
     public void setDoEat(boolean bool) {
@@ -51,22 +58,19 @@ public class Player implements Serializable {
     }
 
     public void deleteCard(int id) {
-        for (int i = 0; i < cards.size(); i++) {
-            if (cards.get(i).getId() == id) {
-                cards.remove(i);
-                break;
-            }
-        }
+        cards.remove(CardHolder.getCard(id));
+//        for (int i = 0; i < cards.size(); i++) {
+//            if (cards.get(i).getId() == id) {
+//                cards.remove(i);
+//                break;
+//            }
+//        }
     }
 
     public void setCardNumber() {
         if (!hasAnimals() && !hasCards())
             cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
         else cardNumber = animals.size() + Constants.NUMBER_OF_EXTRA_CARD.getValue();
-    }
-
-    public boolean needCards() {
-        return cardNumber > 0;
     }
 
     public int getPoints() {

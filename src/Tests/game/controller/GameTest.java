@@ -1,17 +1,10 @@
 package game.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import game.constants.CardHolder;
 import game.entities.Animal;
 import game.entities.Player;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
     @Test
@@ -22,7 +15,15 @@ class GameTest {
         pl.addAnimal(new Animal(1,pl));
         pl.addAnimal(new Animal(2,pl));
         String gamejson=game.convertToJsonString("test");
-        System.out.println(gamejson);
+    }
+
+    @Test
+    void testCardHolder(){
+        Game first=new Game();
+        first.setCardList(new CardHolder().getCards());
+        Game second=new Game();
+        second.setCardList(new CardHolder().getCards());
+        assert (first.getCardList().containsAll(second.getCardList()));
     }
 
 }

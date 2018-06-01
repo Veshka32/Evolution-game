@@ -42,14 +42,6 @@ public class Card implements Serializable {
         return property;
     }
 
-    public void setProperty(String property) {
-        this.property = property;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getId(){
         return id;
     }
@@ -57,14 +49,6 @@ public class Card implements Serializable {
     public String getExtraProperty() {
 
         return extraProperty;
-    }
-
-    public void setExtraProperty(String extraProperty) {
-        this.extraProperty = extraProperty;
-    }
-
-    public static boolean isDouble(String property) {
-        return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
     }
 
 }

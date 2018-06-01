@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import game.constants.CardHolder;
 import game.constants.Constants;
 import game.constants.Phase;
 import game.entities.*;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,6 +22,8 @@ import static javax.persistence.FetchType.EAGER;
 @Named
 //@ApplicationScoped
 public class Game implements Serializable {
+    @Inject
+    transient CardHolder cardHolder;
 
     @ElementCollection(fetch = EAGER)
     private List<Card> cardList;
@@ -194,7 +198,7 @@ public class Game implements Serializable {
         while (!cardList.isEmpty()) {
             int flag = players.size();
             for (Player player : players.values()) {
-                if (!player.needCards()) flag--;
+                if (player.getCardNumber()==0) flag--;
                 else
                     player.addCard(cardList.remove(cardList.size() - 1));
                 if (cardList.isEmpty()) break;
@@ -227,7 +231,8 @@ public class Game implements Serializable {
 
     private void start() {
         animalID = Constants.START_CARD_INDEX.getValue();
-        cardList = new CardGenerator().getCards();
+        //cardList = new CardGenerator().getCards();
+        cardList=cardHolder.getCards();
         playersTurn = new LinkedList<>(players.keySet());
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));

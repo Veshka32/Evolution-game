@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GameHandler {
+
     private int currentId=1;
     private Map<Integer,Game> games=new HashMap<>();
 

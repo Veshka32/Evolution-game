@@ -1,5 +1,6 @@
 package game.controller;
 
+import game.constants.CardHolder;
 import game.constants.Phase;
 import game.entities.Animal;
 import game.entities.Card;
@@ -27,7 +28,7 @@ public class EvolutionPhase {
                 player.deleteCard(move.getCardId());
                 break;
             case "PlayProperty":
-                if (Card.isDouble(move.getProperty()))
+                if (CardHolder.isDouble(move.getProperty()))
                     processDoubleProperty();
 
                 else {

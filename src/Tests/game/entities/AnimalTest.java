@@ -3,7 +3,7 @@ package game.entities;
 import game.constants.Constants;
 import game.controller.Game;
 import game.controller.GameException;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
