@@ -16,7 +16,6 @@ public class CardGenerator implements Serializable {
         int duplicate=Constants.NUMBER_OF_DUPLICATE_CARDS.getValue();
         cardList = new ArrayList<>(Constants.TOTAL_NUMBER_OF_CARDS.getValue());
         for (int i = 0; i < duplicate; i++) {
-
             cardList.add(new Card(cardID++, "Symbiosis"));
             cardList.add(new Card(cardID++, "Piracy"));
             cardList.add(new Card(cardID++, "Grazing"));

@@ -34,6 +34,5 @@ public class GameHandler {
         for (Game g:games.values())
             if (!g.onProgress()) notFullGames.add(g.getId());
         return notFullGames.toString();
-        //return games.keySet().stream().map(n->String.valueOf(n)).collect(Collectors.joining(","));
     }
 }

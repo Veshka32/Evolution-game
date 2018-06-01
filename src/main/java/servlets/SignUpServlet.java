@@ -63,6 +63,4 @@ public class SignUpServlet extends HttpServlet {
         req.setAttribute("signUpError", "Sorry, this login is already in use.");
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
-
 }
-//<% response.setIntHeader("Refresh", 5); %>
