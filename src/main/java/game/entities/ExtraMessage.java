@@ -5,11 +5,11 @@ import java.io.Serializable;
 
 @Embeddable
 public class ExtraMessage implements Serializable {
-    String playerOnAttack;
-    int predator;
-    String playerUnderAttack;
-    int victim;
-    String type;
+    private String playerOnAttack;
+    private int predator;
+    private String playerUnderAttack;
+    private int victim;
+    private String type;
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)

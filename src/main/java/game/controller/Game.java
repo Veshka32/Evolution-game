@@ -33,21 +33,22 @@ public class Game implements Serializable {
     private int round = 0;
     private int playerOnMove = round;
     private String error;
-    @ElementCollection(fetch = EAGER)
+    @OneToMany
     private Map<Integer, Animal> animalList = new HashMap<>();
     private String winners;
     private String log="";
     @Embedded
     private ExtraMessage extraMessage;
-    //@ManyToMany
-    //private List<Users> users=new ArrayList<>();
+
+    @ManyToMany(mappedBy = "games")
+    private Set<Users> users=new HashSet<>();
 
     //include in json
     @Id
     private int id;
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
-    @ElementCollection(fetch = EAGER)
+    @OneToMany
     private Map<String, Player> players = new LinkedHashMap<>();
     private int food;
 

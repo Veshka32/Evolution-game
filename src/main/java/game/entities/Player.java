@@ -5,16 +5,20 @@ import game.constants.CardHolder;
 import game.constants.Constants;
 import game.controller.GameException;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-@Embeddable
+@Entity
 public class Player implements Serializable {
-    private int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
-    private int points;
-    int usedCards;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    transient private int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
+    transient private int points;
+
+    private int usedCards;
     //include json
     @Expose
     private String name;
@@ -22,7 +26,7 @@ public class Player implements Serializable {
     @ElementCollection
     List<Card> cards = new ArrayList<>();
     @Expose
-    @ElementCollection
+    @OneToMany
     Map<Integer, Animal> animals = new HashMap<>();
     boolean doEat = false;
 
@@ -239,5 +243,9 @@ public class Player implements Serializable {
 
     public void setAnimals(Map<Integer, Animal> animals) {
         this.animals = animals;
+    }
+
+    public void increaseUsedCards(){
+        usedCards++;
     }
 }

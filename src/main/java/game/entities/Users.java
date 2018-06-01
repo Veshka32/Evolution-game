@@ -5,7 +5,9 @@ import game.controller.Game;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -27,7 +29,11 @@ public class Users implements Serializable {
     private byte[] salt;
 
     @ManyToMany
-    private List<Game> games=new ArrayList<>();
+    @JoinTable(name="USERS_GAME",
+            joinColumns =@JoinColumn(name="USERS_ID",referencedColumnName = "ID"),
+            inverseJoinColumns =@JoinColumn(name="GAMES_ID",referencedColumnName = "ID")
+    )
+    private Set<Game> games=new HashSet<>();
 
     public Users(){}
 

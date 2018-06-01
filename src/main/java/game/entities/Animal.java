@@ -6,40 +6,53 @@ import game.constants.CardHolder;
 import game.controller.Game;
 import game.controller.GameException;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-@Embeddable
+@Entity
 public class Animal implements Serializable {
-    private final int MIN_HUNGRY=1;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long trueId;
+
+    private final int MIN_HUNGRY = 1;
+    @ManyToOne
     Player owner;
-     boolean attackFlag = false;
-     boolean fedFlag = false;
-     boolean isPoisoned = false;
-     boolean doPiracy = false;
-     boolean doGrazing = false;
-     int hibernationRound;
-     int totalFatSupply;
+    boolean attackFlag = false;
+    boolean fedFlag = false;
+    boolean isPoisoned = false;
+    boolean doPiracy = false;
+    boolean doGrazing = false;
+    int hibernationRound;
+    int totalFatSupply;
 
     //include in json
     int id;
     @Expose
+    @ElementCollection
     List<String> propertyList = new ArrayList<>();
     @Expose
+    @ElementCollection
     List<Integer> cooperateTo = new ArrayList<>();
     @Expose
+    @ElementCollection
     List<Integer> communicateTo = new ArrayList<>();
     @Expose
+    @ElementCollection
     List<Integer> symbiontFor = new ArrayList<>();
     @Expose
+    @ElementCollection
     List<Integer> symbiosisWith = new ArrayList<>();
     @Expose
     int hungry = MIN_HUNGRY;
     @Expose
     int currentFatSupply;
 
-    public Animal(){}
+    public Animal() {
+    }
+
     public Animal(int id, Player player) {
         this.id = id;
         owner = player;
@@ -136,28 +149,28 @@ public class Animal implements Serializable {
             Animal animal = owner.getAnimal(id);
             animal.cooperateTo.remove(Integer.valueOf(this.id));
             if (animal.cooperateTo.isEmpty()) animal.propertyList.remove("Cooperation");
-            owner.usedCards++;
+            owner.increaseUsedCards();
         }
 
         for (int id : communicateTo) {
             Animal animal = owner.getAnimal(id);
             animal.communicateTo.remove(Integer.valueOf(this.id));
             if (animal.communicateTo.isEmpty()) animal.propertyList.remove("Communication");
-            owner.usedCards++;
+            owner.increaseUsedCards();
         }
 
         for (int id : symbiosisWith) {
             Animal animal = owner.getAnimal(id);
             animal.symbiontFor.remove(Integer.valueOf(this.id));
             if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove("Symbiosis");
-            owner.usedCards++;
+            owner.increaseUsedCards();
         }
 
         for (int id : symbiontFor) {
             Animal animal = owner.getAnimal(id);
             animal.symbiosisWith.remove(Integer.valueOf(this.id));
             if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove("Symbiosis");
-            owner.usedCards++;
+            owner.increaseUsedCards();
         }
     }
 
@@ -439,19 +452,21 @@ public class Animal implements Serializable {
                     partner = owner.getAnimal(symbiosisWith.get(0));
                     symbiosisWith.remove(Integer.valueOf(partner.id));
                     partner.symbiontFor.remove(Integer.valueOf(this.id));
-                    if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
+                    if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty())
+                        partner.propertyList.remove(property);
                 } else if (!symbiontFor.isEmpty()) {
                     partner = owner.getAnimal(symbiontFor.get(0));
                     symbiontFor.remove(Integer.valueOf(partner.id));
                     partner.symbiosisWith.remove(Integer.valueOf(this.id));
-                    if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty()) partner.propertyList.remove(property);
+                    if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty())
+                        partner.propertyList.remove(property);
                 }
                 if (symbiosisWith.isEmpty() && symbiontFor.isEmpty()) propertyList.remove(property);
                 break;
         }
 
         if (!CardHolder.isDouble(property)) propertyList.remove(property);
-        owner.usedCards++;
+        owner.increaseUsedCards();
 
     }
 }
