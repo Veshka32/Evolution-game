@@ -5,14 +5,18 @@ import com.google.gson.annotations.Expose;
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
 import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 
-@Embeddable
+@Entity
 public class Card implements Serializable {
     @Expose
     private String extraProperty;
     @Expose
     private String property;
+
+    @Id
     @Expose
     private int id;
 

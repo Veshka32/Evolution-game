@@ -6,7 +6,8 @@ public enum Constants {
     NUMBER_OF_PLAYER(2),
     NUMBER_OF_EXTRA_CARD(1),
     MIN_FOOD(2),
-    MAX_FOOD(8);
+    MAX_FOOD(8),
+    TOTAL_CARD_NUMBER(84);
 
     private final int id;
 

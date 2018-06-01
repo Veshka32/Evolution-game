@@ -25,7 +25,7 @@ public class Game implements Serializable {
     @Inject
     transient CardHolder cardHolder;
 
-    @ElementCollection(fetch = EAGER)
+    @OneToMany
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)

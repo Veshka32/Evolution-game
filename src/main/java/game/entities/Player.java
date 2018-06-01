@@ -23,7 +23,7 @@ public class Player implements Serializable {
     @Expose
     private String name;
     @Expose
-    @ElementCollection
+    @OneToMany
     List<Card> cards = new ArrayList<>();
     @Expose
     @OneToMany
