@@ -25,9 +25,7 @@ public class CreateGameServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
         String name=(String) session.getAttribute("player");
-        int gameId=gameHandler.createGame();
-        Game game=gameHandler.getGame(gameId);
-        game.addPlayer(name);
+        int gameId=gameHandler.createGame(name);
         session.setAttribute("gameId",gameId);
         resp.sendRedirect("views/socket.html");
     }

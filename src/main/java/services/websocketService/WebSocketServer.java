@@ -58,7 +58,6 @@ public class WebSocketServer {
 //        game.deletePlayer(socketsHandler.getName(session));
 //        sendToAll(session);
         socketsHandler.removeSession(session);
-
     }
 
     @OnError

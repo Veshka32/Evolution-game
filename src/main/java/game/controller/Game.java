@@ -35,8 +35,8 @@ public class Game implements Serializable {
     private String log="";
     @Embedded
     private ExtraMessage extraMessage;
-    @ManyToMany
-    private List<Users> users=new ArrayList<>();
+    //@ManyToMany
+    //private List<Users> users=new ArrayList<>();
 
     //include in json
     @Id
@@ -284,6 +284,10 @@ public class Game implements Serializable {
 
     public Player getPlayer(String name) {
         return players.get(name);
+    }
+
+    public boolean containsPlayer(String name){
+        return players.containsKey(name);
     }
 
     public void deletePlayer(String userName) {

@@ -39,12 +39,17 @@ public class GameStartServlet extends HttpServlet {
         HttpSession session = req.getSession();
         String name=(String) session.getAttribute("player");
         Integer gameId=Integer.valueOf(req.getParameter("gameId"));
-        Game game=gameHandler.getGame(gameId);
-        if (game==null) {
+
+        if (!gameHandler.isValidId(gameId)) {
             req.setAttribute("message", "Wrong game id");
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
-        } else{
-            game.addPlayer(name);
+        //user already in game
+        } else if(gameHandler.isCurrentGame(name,gameId)){
+            session.setAttribute("gameId",gameId);
+            resp.sendRedirect("views/socket.html");
+        //new player
+        }else{
+            gameHandler.getGame(gameId).addPlayer(name);
             session.setAttribute("gameId",gameId);
             resp.sendRedirect("views/socket.html");
         }
