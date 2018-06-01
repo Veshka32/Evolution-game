@@ -12,7 +12,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-class FeedPhaseTest {
+public class FeedPhaseTest {
 
     @Spy
     private CardHolder cardHolder=new CardHolder();
@@ -24,7 +24,7 @@ class FeedPhaseTest {
     String player2 = "test";
 
     @Test
-    void tailLoss() throws GameException {
+    public void tailLoss() throws GameException {
         game.addPlayer(player1);
         game.addPlayer(player2);
         Player test=game.getPlayer(player1);
@@ -49,6 +49,4 @@ class FeedPhaseTest {
         assert (pop.isDoEat());
         assert (!tailLoss.hasProperty("Tail loss"));
     }
-
-
 }

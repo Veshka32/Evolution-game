@@ -3,9 +3,6 @@ package game.entities;
 
 import com.google.gson.annotations.Expose;
 import game.constants.CardHolder;
-import game.constants.Constants;
-import game.controller.EvolutionPhase;
-import game.controller.FeedPhase;
 import game.controller.Game;
 import game.controller.GameException;
 
@@ -15,7 +12,8 @@ import java.util.*;
 
 @Embeddable
 public class Animal implements Serializable {
-     Player owner;
+    private final int MIN_HUNGRY=1;
+    Player owner;
      boolean attackFlag = false;
      boolean fedFlag = false;
      boolean isPoisoned = false;
@@ -37,7 +35,7 @@ public class Animal implements Serializable {
     @Expose
     List<Integer> symbiosisWith = new ArrayList<>();
     @Expose
-    int hungry = Constants.MIN_HUNGRY.getValue();
+    int hungry = MIN_HUNGRY;
     @Expose
     int currentFatSupply;
 
@@ -48,14 +46,14 @@ public class Animal implements Serializable {
     }
 
     public void setHungry() {
-        hungry = Constants.MIN_HUNGRY.getValue();
+        hungry = MIN_HUNGRY;
         if (hasProperty("Predator")) hungry++;
         if (hasProperty("Big")) hungry++;
         if (hasProperty("Parasite")) hungry += 2;
     }
 
     public int calculateHungry() {
-        int result = Constants.MIN_HUNGRY.getValue();
+        int result = MIN_HUNGRY;
         if (hasProperty("Predator")) result++;
         if (hasProperty("Big")) result++;
         if (hasProperty("Parasite")) result += 2;

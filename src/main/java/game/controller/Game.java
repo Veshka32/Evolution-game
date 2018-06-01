@@ -240,7 +240,7 @@ public class Game implements Serializable {
     }
 
     private void addCardsOnStart(Player player) {
-        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++) {
+        for (int i = 0; i < cardHolder.cardDeckSize(); i++) {
             player.addCard(cardList.remove(cardList.size() - 1));
         }
     }
@@ -266,7 +266,7 @@ public class Game implements Serializable {
         StringBuilder sb=new StringBuilder(log);
         for (String str:s
              ) {
-            sb.append(s);
+            sb.append(str);
         }
         log=sb.toString();
     }
@@ -283,21 +283,12 @@ public class Game implements Serializable {
         return animalList.get(i);
     }
 
-    public String getAllPlayers() {
-        return new ArrayList<>(players.keySet()).toString();
-    }
-
     public Player getPlayer(String name) {
         return players.get(name);
     }
 
     public boolean containsPlayer(String name){
         return players.containsKey(name);
-    }
-
-    public void deletePlayer(String userName) {
-        players.remove(userName);
-        phase = Phase.START;
     }
 
     public int getId() {

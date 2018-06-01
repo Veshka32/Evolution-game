@@ -58,13 +58,12 @@ public class Player implements Serializable {
     }
 
     public void deleteCard(int id) {
-        cards.remove(CardHolder.getCard(id));
-//        for (int i = 0; i < cards.size(); i++) {
-//            if (cards.get(i).getId() == id) {
-//                cards.remove(i);
-//                break;
-//            }
-//        }
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getId() == id) {
+                cards.remove(i);
+                break;
+            }
+        }
     }
 
     public void setCardNumber() {

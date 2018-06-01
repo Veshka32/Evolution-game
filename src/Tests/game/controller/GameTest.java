@@ -4,11 +4,22 @@ import game.constants.CardHolder;
 import game.entities.Animal;
 import game.entities.Player;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
+public class GameTest {
 
-class GameTest {
+    @Spy
+    CardHolder cardHolder;
+
+    @InjectMocks
+    Game first,second;
+
     @Test
-    void gsonExpose(){
+    public void gsonExpose(){
         Game game=new Game();
         game.addPlayer("test");
         Player pl=game.getPlayer("test");
@@ -18,11 +29,9 @@ class GameTest {
     }
 
     @Test
-    void testCardHolder(){
-        Game first=new Game();
-        first.setCardList(new CardHolder().getCards());
-        Game second=new Game();
-        second.setCardList(new CardHolder().getCards());
+    public void testCardHolder(){
+        first.setCardList(cardHolder.getCards());
+        second.setCardList(cardHolder.getCards());
         assert (first.getCardList().containsAll(second.getCardList()));
     }
 
