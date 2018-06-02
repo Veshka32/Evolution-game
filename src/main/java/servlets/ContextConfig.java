@@ -1,8 +1,6 @@
 package servlets;
 
-import game.controller.Game;
 import game.controller.GameHandler;
-import services.dataBaseService.GameDAO;
 
 import javax.inject.Inject;
 import javax.naming.NamingException;

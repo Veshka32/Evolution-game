@@ -27,13 +27,13 @@ public class Users implements Serializable {
 
     @Column(length = 8)
     private byte[] salt;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name="USERS_GAME",
-            joinColumns =@JoinColumn(name="USERS_ID",referencedColumnName = "ID"),
-            inverseJoinColumns =@JoinColumn(name="GAMES_ID",referencedColumnName = "ID")
-    )
-    private Set<Game> games=new HashSet<>();
+//
+//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @JoinTable(name="USERS_GAME",
+//            joinColumns =@JoinColumn(name="USERS_ID",referencedColumnName = "ID"),
+//            inverseJoinColumns =@JoinColumn(name="GAMES_ID",referencedColumnName = "ID")
+//    )
+//    private Set<Game> games=new HashSet<>();
 
     public Users(){}
 
@@ -47,9 +47,9 @@ public class Users implements Serializable {
         this.login=login;
     }
 
-    public void addGame(Game game){
-        games.add(game);
-    }
+//    public void addGame(Game game){
+//        games.add(game);
+//    }
 
     public String getLogin(){
         return login;

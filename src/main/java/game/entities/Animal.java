@@ -29,6 +29,7 @@ public class Animal implements Serializable {
     int totalFatSupply;
 
     //include in json
+    @Expose
     int id;
     @Expose
     @ElementCollection

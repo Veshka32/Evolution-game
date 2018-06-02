@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/start")
-public class GameStartServlet extends HttpServlet {
+public class JoinGameServlet extends HttpServlet {
     @Inject
     private GameHandler gameHandler;
     //private Game game;
@@ -49,7 +49,7 @@ public class GameStartServlet extends HttpServlet {
             resp.sendRedirect("views/socket.html");
         //new player
         }else{
-            gameHandler.getGame(gameId).addPlayer(name);
+            gameHandler.joinPlayer(name,gameId);
             session.setAttribute("gameId",gameId);
             resp.sendRedirect("views/socket.html");
         }

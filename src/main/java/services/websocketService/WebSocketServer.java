@@ -3,10 +3,13 @@ package services.websocketService;
 import game.controller.GameHandler;
 import game.entities.Move;
 import game.controller.Game;
+import services.dataBaseService.GameDAO;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
+import javax.transaction.*;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -47,16 +50,15 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void handleMessage(Move message, Session session) {
+    public void handleMessage(Move message, Session session) throws HeuristicMixedException, RollbackException, SystemException, NamingException, HeuristicRollbackException, NotSupportedException {
         int gameId=socketsHandler.getGameId(session);
         gameHandler.getGame(gameId).makeMove(message);
+        gameHandler.update(gameId);
         sendToAll(session,gameId);
     }
 
     @OnClose
-    public void close(Session session) {
-//        game.deletePlayer(socketsHandler.getName(session));
-//        sendToAll(session);
+    public void close(Session session) throws HeuristicMixedException, RollbackException, SystemException, NamingException, HeuristicRollbackException, NotSupportedException {
         socketsHandler.removeSession(session);
     }
 

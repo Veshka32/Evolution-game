@@ -13,6 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.*;
 
@@ -39,8 +40,8 @@ public class Game implements Serializable {
     @Embedded
     private ExtraMessage extraMessage;
 
-    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Users> users=new HashSet<>();
+//    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    private Set<Users> users=new HashSet<>();
 
     //include in json
     @Id

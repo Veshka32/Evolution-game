@@ -7,7 +7,8 @@
 </h1><br>
 
 Your current game: <span><%=session.getAttribute("gameId")%></span><br/>
-Games you can join: <span><%=((GameHandler)application.getAttribute("gameHandler")).getAvailableGames() %></span><br/>
+Games you participate:<span><%=((GameHandler)application.getAttribute("gameHandler")).getUserGames((String)session.getAttribute("player"))%></span>
+Games you can join: <span><%=((GameHandler)application.getAttribute("gameHandler")).getNewGames() %></span><br/>
 
 ${message}<br>
 <form method="post" action="start">

@@ -24,6 +24,7 @@ public class SocketsHandler {
     }
 
     public void addGame(Session session,Integer gameId){gamesId.put(session,gameId);}
+
     public Integer getGameId(Session session){
         return gamesId.get(session);
     }
