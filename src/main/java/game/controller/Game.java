@@ -22,10 +22,9 @@ import static javax.persistence.FetchType.EAGER;
 @Named
 //@ApplicationScoped
 public class Game implements Serializable {
-    @Inject
-    transient CardHolder cardHolder;
+    private transient CardHolder cardHolder;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL) //cards shared among games
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)
@@ -33,14 +32,14 @@ public class Game implements Serializable {
     private int round = 0;
     private int playerOnMove = round;
     private String error;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true) //no game - no animals
     private Map<Integer, Animal> animalList = new HashMap<>();
     private String winners;
     private String log="";
     @Embedded
     private ExtraMessage extraMessage;
 
-    @ManyToMany(mappedBy = "games")
+    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Users> users=new HashSet<>();
 
     //include in json
@@ -48,9 +47,16 @@ public class Game implements Serializable {
     private int id;
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true) //no game - no players
     private Map<String, Player> players = new LinkedHashMap<>();
     private int food;
+
+    public Game(){}
+
+    @Inject
+    public Game(CardHolder cardHolder){
+        this.cardHolder=cardHolder;
+    }
 
     public void clearError() {
         error = null;
@@ -241,7 +247,7 @@ public class Game implements Serializable {
     }
 
     private void addCardsOnStart(Player player) {
-        for (int i = 0; i < cardHolder.cardDeckSize(); i++) {
+        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++) {
             player.addCard(cardList.remove(cardList.size() - 1));
         }
     }

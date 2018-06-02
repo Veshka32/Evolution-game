@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@ApplicationScoped
 public class CardHolder {
     private int startId = Constants.START_CARD_INDEX.getValue();
     private List<Card> cards = new ArrayList<>(Constants.TOTAL_CARD_NUMBER.getValue());

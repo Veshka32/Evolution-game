@@ -11,22 +11,23 @@ import java.util.*;
 
 @Entity
 public class Player implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
     transient private int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
     transient private int points;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     private int usedCards;
     //include json
     @Expose
     private String name;
     @Expose
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL) //cards shared among games and players
     List<Card> cards = new ArrayList<>();
     @Expose
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,mappedBy = "owner") //no player - no animals
     Map<Integer, Animal> animals = new HashMap<>();
     boolean doEat = false;
 
@@ -192,6 +193,9 @@ public class Player implements Serializable {
         }
         return canAttack;
     }
+    public void increaseUsedCards(){
+        usedCards++;
+    }
 
     public Animal getAnimal(int id) {
         return animals.get(id);
@@ -243,9 +247,5 @@ public class Player implements Serializable {
 
     public void setAnimals(Map<Integer, Animal> animals) {
         this.animals = animals;
-    }
-
-    public void increaseUsedCards(){
-        usedCards++;
     }
 }

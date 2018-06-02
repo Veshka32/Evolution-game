@@ -1,6 +1,7 @@
 package servlets;
 
 import game.controller.Game;
+import game.controller.GameHandler;
 import services.dataBaseService.GameDAO;
 
 import javax.inject.Inject;
@@ -17,16 +18,17 @@ import java.io.IOException;
 public class TestServlet extends HttpServlet {
     @Inject
     GameDAO gameDAO;
+    @Inject
+    GameHandler gameHandler;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Game game = new Game();
-        game.addPlayer("test");
-        game.addPlayer("pop");
+        int gameId=gameHandler.createGame("pop");
+        gameHandler.joinPlayer("test",gameId);
 
-        int id = 0;
+        int id=0;
         try {
-            id = gameDAO.save(game);
+            id = gameDAO.save(gameHandler.getGame(gameId));
         } catch (SystemException e) {
             e.printStackTrace();
         } catch (NotSupportedException e) {
@@ -40,8 +42,9 @@ public class TestServlet extends HttpServlet {
         } catch (RollbackException e) {
             e.printStackTrace();
         }
+
         Game savedGame = gameDAO.load(id);
-        resp.getWriter().println(game.getId() == savedGame.getId());
+        resp.getWriter().println(gameId == savedGame.getId());
         resp.getWriter().println(savedGame.getPlayer("test") != null);
         resp.getWriter().println(savedGame.getPlayer("pop") != null);
 

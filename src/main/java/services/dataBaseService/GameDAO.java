@@ -20,11 +20,7 @@ public class GameDAO {
     @PersistenceContext
     private EntityManager em; //because of JTA resource-type
 
-    public GameDAO() {
-    }
-
     public int save(Game game) throws SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-
         UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         transaction.begin();
         em.persist(game);

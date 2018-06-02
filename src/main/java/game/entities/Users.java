@@ -28,7 +28,7 @@ public class Users implements Serializable {
     @Column(length = 8)
     private byte[] salt;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="USERS_GAME",
             joinColumns =@JoinColumn(name="USERS_ID",referencedColumnName = "ID"),
             inverseJoinColumns =@JoinColumn(name="GAMES_ID",referencedColumnName = "ID")

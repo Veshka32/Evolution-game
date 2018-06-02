@@ -66,6 +66,4 @@ public class UsersDAO {
         Users user = tq.getSingleResult();
         return user;
     }
-
-
 }
