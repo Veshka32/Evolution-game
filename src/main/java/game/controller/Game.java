@@ -21,10 +21,11 @@ import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Named
-//@ApplicationScoped
 public class Game implements Serializable {
     private transient CardHolder cardHolder;
 
+    //    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    private Set<Users> users=new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL) //cards shared among games
     private List<Card> cardList;
     private int animalID;
@@ -33,31 +34,29 @@ public class Game implements Serializable {
     private int round = 0;
     private int playerOnMove = round;
     private String error;
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true) //no game - no animals
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no animals
     private Map<Integer, Animal> animalList = new HashMap<>();
     private String winners;
-    private String log="";
+    private String log = "";
     @Embedded
     private ExtraMessage extraMessage;
 
-//    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    private Set<Users> users=new HashSet<>();
-
     //include in json
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true) //no game - no players
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no players
     private Map<String, Player> players = new LinkedHashMap<>();
     private int food;
 
-    public Game(){}
+    public Game() {
+    }
 
     @Inject
-    public Game(CardHolder cardHolder){
-        this.cardHolder=cardHolder;
+    public Game(CardHolder cardHolder) {
+        this.cardHolder = cardHolder;
     }
 
     public void clearError() {
@@ -66,7 +65,7 @@ public class Game implements Serializable {
 
     public String convertToJsonString(String name) {
         Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        Gson gson=new Gson();
+        Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
             if (playersTurn.get(playerOnMove).equals(name)) {
@@ -78,7 +77,7 @@ public class Game implements Serializable {
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
         element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
         element.getAsJsonObject().addProperty("food", food); //add primitive
-        element.getAsJsonObject().addProperty("id",id);
+        element.getAsJsonObject().addProperty("id", id);
         element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
         element.getAsJsonObject().addProperty("log", log);
@@ -121,12 +120,15 @@ public class Game implements Serializable {
     }
 
     public void makeMove(Move move) {
-        StringBuilder sb=new StringBuilder(log);
+        StringBuilder sb = new StringBuilder(log);
         sb.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
-        log=sb.toString();
-        if (move.getMove().equals("EndPhase")) {
-            playerEndsPhase(move.getPlayer());
-            return;
+        log = sb.toString();
+        switch (move.getMove()){
+            case "EndPhase":
+                playerEndsPhase(move.getPlayer());
+                return;
+            case "Leave game": //only log updates
+                return;
         }
         try {
             switch (phase) {
@@ -207,7 +209,7 @@ public class Game implements Serializable {
         while (!cardList.isEmpty()) {
             int flag = players.size();
             for (Player player : players.values()) {
-                if (player.getCardNumber()==0) flag--;
+                if (player.getCardNumber() == 0) flag--;
                 else
                     player.addCard(cardList.remove(cardList.size() - 1));
                 if (cardList.isEmpty()) break;
@@ -228,11 +230,11 @@ public class Game implements Serializable {
         food = i;
     }
 
-    void addPlayer(String userName){
+    void addPlayer(String userName) {
         players.put(userName, new Player(userName));
-        StringBuilder sb=new StringBuilder(log);
+        StringBuilder sb = new StringBuilder(log);
         sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
-        log=sb.toString();
+        log = sb.toString();
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
             goToNextPhase(); //start game
         }
@@ -241,7 +243,7 @@ public class Game implements Serializable {
     private void start() {
         animalID = Constants.START_CARD_INDEX.getValue();
         //cardList = new CardGenerator().getCards();
-        cardList=cardHolder.getCards();
+        cardList = cardHolder.getCards();
         playersTurn = new LinkedList<>(players.keySet());
         for (String name : playersTurn)
             addCardsOnStart(players.get(name));
@@ -271,13 +273,13 @@ public class Game implements Serializable {
         }
     }
 
-    void addLogMessage(String...s){
-        StringBuilder sb=new StringBuilder(log);
-        for (String str:s
-             ) {
+    void addLogMessage(String... s) {
+        StringBuilder sb = new StringBuilder(log);
+        for (String str : s
+                ) {
             sb.append(str);
         }
-        log=sb.toString();
+        log = sb.toString();
     }
 
     void makeAnimal(Move move) {
@@ -296,8 +298,28 @@ public class Game implements Serializable {
         return players.get(name);
     }
 
-    boolean containsPlayer(String name){
+    boolean containsPlayer(String name) {
         return players.containsKey(name);
+    }
+
+    List<String> getPlayersTurn() {
+        return playersTurn;
+    }
+
+    int getPlayerOnMove() {
+        return playerOnMove;
+    }
+
+    Phase getPhase() {
+        return phase;
+    }
+
+    void setPhase(Phase phase) {
+        this.phase = phase;
+    }
+
+    void setCardList(List<Card> cardList) {
+        this.cardList = cardList;
     }
 
     public int getId() {
@@ -312,8 +334,16 @@ public class Game implements Serializable {
         return cardList;
     }
 
-    void setCardList(List<Card> cardList) {
-        this.cardList = cardList;
+    int getRound() {
+        return round;
+    }
+
+    Map<Integer, Animal> getAnimalList() {
+        return animalList;
+    }
+
+    ExtraMessage getExtraMessage() {
+        return extraMessage;
     }
 
     public int getAnimalID() {
@@ -324,24 +354,12 @@ public class Game implements Serializable {
         this.animalID = animalID;
     }
 
-    List<String> getPlayersTurn() {
-        return playersTurn;
-    }
-
     public void setPlayersTurn(List<String> playersTurn) {
         this.playersTurn = playersTurn;
     }
 
-    int getRound() {
-        return round;
-    }
-
     public void setRound(int round) {
         this.round = round;
-    }
-
-    int getPlayerOnMove() {
-        return playerOnMove;
     }
 
     public void setPlayerOnMove(int playerOnMove) {
@@ -354,10 +372,6 @@ public class Game implements Serializable {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    Map<Integer, Animal> getAnimalList() {
-        return animalList;
     }
 
     public void setAnimalList(HashMap<Integer, Animal> animalList) {
@@ -380,20 +394,8 @@ public class Game implements Serializable {
         this.log = log;
     }
 
-    ExtraMessage getExtraMessage() {
-        return extraMessage;
-    }
-
     public void setExtraMessage(ExtraMessage extraMessage) {
         this.extraMessage = extraMessage;
-    }
-
-    Phase getPhase() {
-        return phase;
-    }
-
-    void setPhase(Phase phase) {
-        this.phase = phase;
     }
 
     public Map<String, Player> getPlayers() {

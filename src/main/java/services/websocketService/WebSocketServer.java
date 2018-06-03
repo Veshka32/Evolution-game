@@ -58,7 +58,9 @@ public class WebSocketServer {
     }
 
     @OnClose
-    public void close(Session session) throws HeuristicMixedException, RollbackException, SystemException, NamingException, HeuristicRollbackException, NotSupportedException {
+    public void close(Session session,EndpointConfig config) {
+        HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+        httpSession.setAttribute("gameId","no game");
         socketsHandler.removeSession(session);
     }
 
