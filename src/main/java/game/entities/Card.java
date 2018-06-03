@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Entity
 public class Card implements Serializable {
     @Expose
-    private String extraProperty;
+    private String extraProperty; //use in Game.json
     @Expose
     private String property;
 
@@ -21,6 +21,7 @@ public class Card implements Serializable {
     private int id;
 
     public Card(){}
+
     public Card(int id,String property,String extraProperty){
         this.id=id;
         this.property=property;
@@ -49,11 +50,5 @@ public class Card implements Serializable {
     public int getId(){
         return id;
     }
-
-    public String getExtraProperty() {
-
-        return extraProperty;
-    }
-
 }
 

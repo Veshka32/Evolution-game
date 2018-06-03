@@ -139,9 +139,11 @@ function clearMove() {
 
 function leave() {
     move = "Leave game";
+    document.getElementById("doing").innerText="leave game";
     socket.send(buildMessage());
     location.assign("/evo/signIn")
 }
+
 
 //
 //
