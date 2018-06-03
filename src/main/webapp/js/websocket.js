@@ -41,6 +41,7 @@ function endPhase() {
 
 function onMessage(event) {
     clearFields();
+    if (event.data=="Leave game") location.assign("/evo/signIn");
     var game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")) {
         alert(game.error);
@@ -141,7 +142,6 @@ function leave() {
     move = "Leave game";
     document.getElementById("doing").innerText="leave game";
     socket.send(buildMessage());
-    location.assign("/evo/signIn")
 }
 
 

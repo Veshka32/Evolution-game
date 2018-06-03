@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CardHolder {
+public
+class CardHolder {
     private int startId = Constants.START_CARD_INDEX.getValue();
     private List<Card> cards = new ArrayList<>(Constants.TOTAL_CARD_NUMBER.getValue());
 
@@ -45,9 +46,5 @@ public class CardHolder {
 
     public static boolean isDouble(String property) {
         return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
-    }
-
-    public int cardDeckSize() {
-        return cards.size();
     }
 }

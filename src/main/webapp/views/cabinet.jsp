@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="game.controller.GameHandler" %>
-<%@ page import="java.lang.Integer" %>
+<%@ page import="java.lang.String" %>
 
 <html>
 <body>
@@ -8,8 +8,9 @@
 </h1><br>
 
 <% GameHandler gh=(GameHandler)application.getAttribute("gameHandler");
-String id=String.valueOf(session.getAttribute("gameId"));
-if (id==null) id="no game";%>
+ String id;
+ if (session.getAttribute("gameId")==null ) id="no game";
+ else id=String.valueOf(session.getAttribute("gameId"));%>
 
 Your current game: <span><%=id%></span><br/>
 Games you participate:<span><%=gh.getUserGames((String)session.getAttribute("player"))%></span><br/>

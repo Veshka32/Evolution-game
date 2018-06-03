@@ -29,8 +29,7 @@ public class WebSocketServer {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         String player = (String) httpSession.getAttribute("player");
         Integer gameId=(Integer) httpSession.getAttribute("gameId");
-        socketsHandler.addSession(session, player);
-        socketsHandler.addGame(session,gameId);
+        socketsHandler.addSession(session, player,httpSession,gameId);
         sendToAll(session,gameId);
     }
 
@@ -52,15 +51,22 @@ public class WebSocketServer {
     @OnMessage
     public void handleMessage(Move message, Session session) throws HeuristicMixedException, RollbackException, SystemException, NamingException, HeuristicRollbackException, NotSupportedException {
         int gameId=socketsHandler.getGameId(session);
+        if (message.getMove().equals("Leave game")){
+            HttpSession http=socketsHandler.getHttpSession(session);
+            http.removeAttribute("gameId");
+            try {
+                session.getBasicRemote().sendText(message.getMove());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         gameHandler.getGame(gameId).makeMove(message);
         gameHandler.update(gameId);
         sendToAll(session,gameId);
     }
 
     @OnClose
-    public void close(Session session,EndpointConfig config) {
-        HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-        httpSession.setAttribute("gameId","no game");
+    public void close(Session session) {
         socketsHandler.removeSession(session);
     }
 
