@@ -25,11 +25,11 @@ public class Player implements Serializable {
     private String name;
     @Expose
     @OneToMany(cascade = CascadeType.ALL) //cards shared among games and players
-    List<Card> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
     @Expose
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,mappedBy = "owner") //no player - no animals
-    Map<Integer, Animal> animals = new HashMap<>();
-    boolean doEat = false;
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval=true) //no player - no animals
+    private Map<Integer, Animal> animals = new HashMap<>();
+    private boolean doEat = false;
 
     public Player(){}
 
@@ -189,11 +189,12 @@ public class Player implements Serializable {
                 predator.attack(an);
                 canAttack.add(an.getId());
             } catch (GameException e) {
+                //if catch ex, canAttack won't be increase
             }
         }
         return canAttack;
     }
-    public void increaseUsedCards(){
+    void increaseUsedCards(){
         usedCards++;
     }
 
@@ -209,11 +210,11 @@ public class Player implements Serializable {
         return usedCards;
     }
 
-    public boolean hasCards() {
+    private boolean hasCards() {
         return !cards.isEmpty();
     }
 
-    public boolean hasAnimals() {
+    private boolean hasAnimals() {
         return !animals.isEmpty();
     }
 

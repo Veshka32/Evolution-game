@@ -41,7 +41,7 @@ public class UsersDAO {
     }
 
     public boolean addUser(String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        if (!isLoginValid(login)) return false;
+        if (!isLoginFree(login)) return false;
 
         byte[] salt = PasswordEncryptionService.generateSalt();
         Users user = new Users(login, PasswordEncryptionService.getEncryptedPassword(password, salt), salt);
@@ -53,7 +53,7 @@ public class UsersDAO {
         return true;
     }
 
-    private boolean isLoginValid(String login) {
+    private boolean isLoginFree(String login) {
         TypedQuery<Long> tq = em.createQuery("SELECT c.id FROM Users c where c.login=?1", Long.class);
         tq.setParameter(1, login);
         List<Long> sameLogin = tq.getResultList();

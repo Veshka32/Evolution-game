@@ -45,6 +45,7 @@ public class Game implements Serializable {
 
     //include in json
     @Id
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int id;
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
@@ -99,21 +100,21 @@ public class Game implements Serializable {
         food--;
     }
 
-    public void playTailLoss(Animal predator, Animal victim) {
+    void playTailLoss(Animal predator, Animal victim) {
         extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), "tailLoss");
     }
 
-    public void afterTailLoss() {
+    void afterTailLoss() {
         String pl = extraMessage.getPlayerOnAttack();
         playerOnMove = playersTurn.indexOf(pl);
         extraMessage = null;
     }
 
-    public void playMimicry(Animal predator, Animal victim, List<Integer> list) {
+    void playMimicry(Animal predator, Animal victim, List<Integer> list) {
         extraMessage = new MimicryMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), "mimicry", list);
     }
 
-    public void afterMimicry() {
+    void afterMimicry() {
         String pl = extraMessage.getPlayerOnAttack();
         playerOnMove = playersTurn.indexOf(pl);
         extraMessage = null;
@@ -187,7 +188,7 @@ public class Game implements Serializable {
         playerOnMove = round % players.size(); //circular array; each round starts next player
     }
 
-    public void endGame() {
+    private void endGame() {
         phase = Phase.END;
         List<Player> sorted = new ArrayList<>(players.values());
         sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
@@ -201,7 +202,7 @@ public class Game implements Serializable {
         winners = joiner.toString();
     }
 
-    public void addCards() {
+    private void addCards() {
 
         while (!cardList.isEmpty()) {
             int flag = players.size();
@@ -215,7 +216,7 @@ public class Game implements Serializable {
         }
     }
 
-    public boolean onProgress() {
+    boolean onProgress() {
         return !phase.equals(Phase.START);
     }
 
@@ -227,7 +228,7 @@ public class Game implements Serializable {
         food = i;
     }
 
-    public void addPlayer(String userName){
+    void addPlayer(String userName){
         players.put(userName, new Player(userName));
         StringBuilder sb=new StringBuilder(log);
         sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
@@ -253,8 +254,8 @@ public class Game implements Serializable {
         }
     }
 
-    public void feedScavenger(String name) {
-        List<String> scavengerOwners = new ArrayList<String>(players.keySet());
+    void feedScavenger(String name) {
+        List<String> scavengerOwners = new ArrayList<>(players.keySet());
         int start = 0;
         for (int i = 0; i < scavengerOwners.size(); i++) {
             if (scavengerOwners.get(i).equals(name)) {
@@ -291,11 +292,11 @@ public class Game implements Serializable {
         return animalList.get(i);
     }
 
-    public Player getPlayer(String name) {
+    Player getPlayer(String name) {
         return players.get(name);
     }
 
-    public boolean containsPlayer(String name){
+    boolean containsPlayer(String name){
         return players.containsKey(name);
     }
 
@@ -307,11 +308,11 @@ public class Game implements Serializable {
         this.id = id;
     }
 
-    public List<Card> getCardList() {
+    List<Card> getCardList() {
         return cardList;
     }
 
-    public void setCardList(List<Card> cardList) {
+    void setCardList(List<Card> cardList) {
         this.cardList = cardList;
     }
 
@@ -323,7 +324,7 @@ public class Game implements Serializable {
         this.animalID = animalID;
     }
 
-    public List<String> getPlayersTurn() {
+    List<String> getPlayersTurn() {
         return playersTurn;
     }
 
@@ -331,7 +332,7 @@ public class Game implements Serializable {
         this.playersTurn = playersTurn;
     }
 
-    public int getRound() {
+    int getRound() {
         return round;
     }
 
@@ -339,7 +340,7 @@ public class Game implements Serializable {
         this.round = round;
     }
 
-    public int getPlayerOnMove() {
+    int getPlayerOnMove() {
         return playerOnMove;
     }
 
@@ -355,7 +356,7 @@ public class Game implements Serializable {
         this.error = error;
     }
 
-    public Map<Integer, Animal> getAnimalList() {
+    Map<Integer, Animal> getAnimalList() {
         return animalList;
     }
 
@@ -379,7 +380,7 @@ public class Game implements Serializable {
         this.log = log;
     }
 
-    public ExtraMessage getExtraMessage() {
+    ExtraMessage getExtraMessage() {
         return extraMessage;
     }
 
@@ -387,11 +388,11 @@ public class Game implements Serializable {
         this.extraMessage = extraMessage;
     }
 
-    public Phase getPhase() {
+    Phase getPhase() {
         return phase;
     }
 
-    public void setPhase(Phase phase) {
+    void setPhase(Phase phase) {
         this.phase = phase;
     }
 
