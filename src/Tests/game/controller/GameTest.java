@@ -9,6 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 @RunWith(MockitoJUnitRunner.class)
 public class GameTest {
 
@@ -33,6 +37,16 @@ public class GameTest {
         first.setCardList(cardHolder.getCards());
         second.setCardList(cardHolder.getCards());
         assert (first.getCardList().containsAll(second.getCardList()));
+    }
+
+    @Test
+    public void linkedMap(){
+        Map<String,Player> map=new LinkedHashMap<>();
+        map.put("test",new Player("test"));
+        map.put("pop",new Player("pop"));
+        map.forEach((k,v)->System.out.println(k));
+        LinkedList<String> list=new LinkedList<>(map.keySet());
+        list.forEach(v->System.out.println(v));
     }
 
 }

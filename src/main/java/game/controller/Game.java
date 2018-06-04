@@ -29,7 +29,7 @@ public class Game implements Serializable {
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)
-    private List<String> playersTurn = new LinkedList<>();
+    private List<String> playersTurn = new ArrayList<>();
     private int round = 0;
     private int playerOnMove = round;
     private String error;
@@ -47,7 +47,7 @@ public class Game implements Serializable {
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no players
-    private Map<String, Player> players = new LinkedHashMap<>();
+    private Map<String, Player> players = new HashMap<>();
     private int food;
 
     public Game() {
@@ -55,11 +55,15 @@ public class Game implements Serializable {
 
     private void start() {
         animalID = Constants.START_CARD_INDEX.getValue();
-        //cardList=new CardHolder().getCards();
-        playersTurn = new LinkedList<>(players.keySet());
-        for (String name : playersTurn)
-            addCardsOnStart(players.get(name));
+        resetPlayersTurn();
+        players.forEach((k, v) -> addCardsOnStart(v));
         playerOnMove = 0;
+    }
+
+    private void resetPlayersTurn() {
+        playersTurn = new ArrayList<>(players.keySet());
+        playersTurn.sort((s, t1) -> Integer.compare(players.get(s).getId(), players.get(t1).getId()));
+
     }
 
 
@@ -127,7 +131,7 @@ public class Game implements Serializable {
         StringBuilder sb = new StringBuilder(log);
         sb.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
         log = sb.toString();
-        switch (move.getMove()){
+        switch (move.getMove()) {
             case "EndPhase":
                 playerEndsPhase(move.getPlayer());
                 return;
@@ -190,7 +194,7 @@ public class Game implements Serializable {
                 if (cardList.isEmpty()) round = -1;//last round
                 break;
         }
-        playersTurn = new LinkedList<>(players.keySet());
+        resetPlayersTurn();
         playerOnMove = round % players.size(); //circular array; each round starts next player
     }
 
@@ -245,9 +249,9 @@ public class Game implements Serializable {
     }
 
     private void addCardsOnStart(Player player) {
-        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++) {
+        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++)
             player.addCard(cardList.remove(cardList.size() - 1));
-        }
+
     }
 
     void feedScavenger(String name) {
@@ -269,10 +273,9 @@ public class Game implements Serializable {
 
     void addLogMessage(String... s) {
         StringBuilder sb = new StringBuilder(log);
-        for (String str : s
-                ) {
+        for (String str : s)
             sb.append(str);
-        }
+
         log = sb.toString();
     }
 

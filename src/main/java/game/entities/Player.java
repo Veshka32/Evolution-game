@@ -17,7 +17,7 @@ public class Player implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     private int usedCards;
     //include json
@@ -49,8 +49,7 @@ public class Player implements Serializable {
     }
 
     public void resetGrazing() {
-        for (Animal animal : animals.values())
-            animal.setDoGrazing(false);
+        animals.forEach((k,v)->v.setDoGrazing(false));
     }
 
     public boolean isDoEat() {
@@ -78,9 +77,7 @@ public class Player implements Serializable {
     }
 
     public int getPoints() {
-        for (Animal animal : animals.values()) {
-            points += animal.hungry; //how to calculate double cards?
-        }
+        animals.forEach((k,v)->points+=v.hungry); //how to calculate double cards?
         return points;
     }
 
@@ -164,8 +161,7 @@ public class Player implements Serializable {
     }
 
     public void resetFedFlag() {
-        for (Animal an : animals.values())
-            an.fedFlag = false;
+        animals.forEach((k,v)->v.fedFlag=false);
     }
 
     public void resetFields() {
@@ -248,5 +244,9 @@ public class Player implements Serializable {
 
     public void setAnimals(Map<Integer, Animal> animals) {
         this.animals = animals;
+    }
+
+    public int getId() {
+        return id;
     }
 }
