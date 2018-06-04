@@ -24,7 +24,7 @@ public class Player implements Serializable {
     @Expose
     private String name;
     @Expose
-    @OneToMany(cascade = CascadeType.ALL) //cards shared among games and players
+    @OneToMany (cascade = CascadeType.MERGE)
     private List<Card> cards = new ArrayList<>();
     @Expose
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval=true) //no player - no animals

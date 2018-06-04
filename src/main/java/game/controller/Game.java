@@ -9,6 +9,8 @@ import game.constants.Constants;
 import game.constants.Phase;
 import game.entities.*;
 
+import javax.annotation.ManagedBean;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,13 +22,10 @@ import java.util.*;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
-@Named
 public class Game implements Serializable {
-    private transient CardHolder cardHolder;
-
     //    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    private Set<Users> users=new HashSet<>();
-    @OneToMany(cascade = CascadeType.ALL) //cards shared among games
+    @OneToMany(cascade = CascadeType.MERGE) //no cascade since card is immutable and already exists in DB
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)
@@ -54,10 +53,15 @@ public class Game implements Serializable {
     public Game() {
     }
 
-    @Inject
-    public Game(CardHolder cardHolder) {
-        this.cardHolder = cardHolder;
+    private void start() {
+        animalID = Constants.START_CARD_INDEX.getValue();
+        //cardList=new CardHolder().getCards();
+        playersTurn = new LinkedList<>(players.keySet());
+        for (String name : playersTurn)
+            addCardsOnStart(players.get(name));
+        playerOnMove = 0;
     }
+
 
     public void clearError() {
         error = null;
@@ -238,16 +242,6 @@ public class Game implements Serializable {
         if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
             goToNextPhase(); //start game
         }
-    }
-
-    private void start() {
-        animalID = Constants.START_CARD_INDEX.getValue();
-        //cardList = new CardGenerator().getCards();
-        cardList = cardHolder.getCards();
-        playersTurn = new LinkedList<>(players.keySet());
-        for (String name : playersTurn)
-            addCardsOnStart(players.get(name));
-        playerOnMove = 0;
     }
 
     private void addCardsOnStart(Player player) {

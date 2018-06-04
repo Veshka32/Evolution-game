@@ -19,13 +19,13 @@ public class GameDAO {
     @PersistenceContext
     private EntityManager em; //because of JTA resource-type
 
-    public int create(Game game) throws SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public Game create(Game game) throws SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         transaction.begin();
-        em.persist(game);
-        em.flush();
+        game=em.merge(game);
+        //em.flush();
         transaction.commit();
-        return game.getId();
+        return game;
     }
 
     public List<Game> getAllGames(){

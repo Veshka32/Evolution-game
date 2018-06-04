@@ -1,13 +1,16 @@
 package game.entities;
 
 import com.google.gson.annotations.Expose;
+import game.controller.Game;
 
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class Card implements Serializable {

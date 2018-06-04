@@ -13,11 +13,12 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GameHandler {
-    @Inject
-    private CardHolder cardHolder;
 
     @Inject
     private GameDAO gameDAO;
+
+    @Inject
+    private CardHolder cardHolder;
 
     private Map<Integer,Game> games;
 
@@ -28,11 +29,12 @@ public class GameHandler {
     }
 
     public int createGame(String name) throws HeuristicMixedException, RollbackException, SystemException, NamingException, HeuristicRollbackException, NotSupportedException {
-        Game game=new Game(cardHolder);
+        Game game=new Game();
+        game.setCardList(cardHolder.getCards());
         game.addPlayer(name);
-        int id=gameDAO.create(game);
-        games.put(id,game);
-        return id;
+        game=gameDAO.create(game);
+        games.put(game.getId(),game);
+        return game.getId();
     }
 
     public void update(int gameId) throws HeuristicMixedException, NotSupportedException, SystemException, NamingException, HeuristicRollbackException, RollbackException {

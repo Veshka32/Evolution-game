@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public
-class CardHolder {
-    private int startId = Constants.START_CARD_INDEX.getValue();
+@ApplicationScoped
+public class CardHolder {
     private List<Card> cards = new ArrayList<>(Constants.TOTAL_CARD_NUMBER.getValue());
 
     public CardHolder() {
+        int startId = Constants.START_CARD_INDEX.getValue();
         for (int i = 0; i < 4; i++) {
             cards.add(new Card(startId++, "Symbiosis"));
             cards.add(new Card(startId++, "Piracy"));
