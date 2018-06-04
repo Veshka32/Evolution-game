@@ -30,7 +30,6 @@ public class EvolutionPhase {
             case "PlayProperty":
                 if (CardHolder.isDouble(move.getProperty()))
                     processDoubleProperty();
-
                 else {
                     processSimpleProperty();
                 }

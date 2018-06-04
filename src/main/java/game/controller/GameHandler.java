@@ -41,8 +41,9 @@ public class GameHandler {
         gameDAO.update(games.get(gameId));
     }
 
-    public void joinPlayer(String name, int gameId){
+    public void joinPlayer(String name, int gameId) throws HeuristicMixedException, NotSupportedException, SystemException, NamingException, HeuristicRollbackException, RollbackException {
         games.get(gameId).addPlayer(name);
+        gameDAO.update(games.get(gameId));
     }
 
     public Game getGame(Integer i){
@@ -60,14 +61,14 @@ public class GameHandler {
     public String getUserGames(String name){
         List<Integer> result=new ArrayList<>();
         for (Game g:games.values())
-            if (g.onProgress() && g.containsPlayer(name)) result.add(g.getId());
+            if (g.containsPlayer(name)) result.add(g.getId());
         return result.toString();
     }
 
-    public String getNewGames(){
+    public String getNewGames(String name){
         List<Integer> notFullGames=new ArrayList<>();
         for (Game g:games.values())
-            if (!g.onProgress()) notFullGames.add(g.getId());
+            if (!(g.onProgress() || g.containsPlayer(name))) notFullGames.add(g.getId()); //games that not full and not user's game
         return notFullGames.toString();
     }
 }

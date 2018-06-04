@@ -4,9 +4,11 @@ import game.controller.Game;
 import game.controller.GameHandler;
 
 import javax.inject.Inject;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import javax.transaction.*;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/start")
@@ -49,7 +51,21 @@ public class JoinGameServlet extends HttpServlet {
             resp.sendRedirect("views/socket.html");
         //new player
         }else{
-            gameHandler.joinPlayer(name,gameId);
+            try {
+                gameHandler.joinPlayer(name,gameId);
+            } catch (HeuristicMixedException e) {
+                e.printStackTrace();
+            } catch (NotSupportedException e) {
+                e.printStackTrace();
+            } catch (SystemException e) {
+                e.printStackTrace();
+            } catch (NamingException e) {
+                e.printStackTrace();
+            } catch (HeuristicRollbackException e) {
+                e.printStackTrace();
+            } catch (RollbackException e) {
+                e.printStackTrace();
+            }
             session.setAttribute("gameId",gameId);
             resp.sendRedirect("views/socket.html");
         }

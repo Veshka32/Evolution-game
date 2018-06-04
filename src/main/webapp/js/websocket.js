@@ -67,12 +67,14 @@ function onMessage(event) {
     if (game.phase == "FEED") {
         document.getElementById("End move").style.display='inline-block'; //show button
         document.getElementById("feedPanel").style.display = 'block'; //show panel
-        //forFeed();
         setFood(game);
 
     }
-    else if (game.phase == "EVOLUTION")
-        forEvolution(game.status);
+    else if (game.phase == "EVOLUTION"){
+        document.getElementById("movePanel").style.display = 'block'; //evolution phase
+        document.getElementById("feedPanel").style.display = 'none'; //hide panel
+        document.getElementById("End move").style.display='none'; //hide button
+    }
 
     if (game.status == true) {
         document.getElementById("status").innerText = "It's your turn!";
@@ -118,17 +120,32 @@ function onMessage(event) {
 }
 
 function makeMove() {
+    if (document.getElementById("phase").innerText == "EVOLUTION") {
+        if (move == null) {
+            alert("You haven't made any move");
+            return;
+        }
+    }
+    else if (document.getElementById("phase").innerText == "FEED") {
+
+        if (move == null) {
+            if (secondAnimalId == null) {
+                alert("You haven't made any move");
+                return;
+            }
+            move = "attack";
+            if (doEat) {
+                alert("You can't eat/attack twice during one move");
+                return;
+            }
+        }
+    }
     let json = buildMessage();
     clearFields();//clear fields after message is built!
     socket.send(json);
 }
 
 function clearFields() {
-    clearMove();
-    document.getElementById("wrapper").style.pointerEvents = "none";
-}
-
-function clearMove() {
     move = null;
     draggedProperty = null;
     firstAnimalId = null;
@@ -136,6 +153,7 @@ function clearMove() {
     playedCardId = null;
     tailLoss = false;
     document.getElementById("doing").innerText = "";
+    document.getElementById("wrapper").style.pointerEvents = "none";
 }
 
 function leave() {

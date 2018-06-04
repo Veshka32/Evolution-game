@@ -9,12 +9,13 @@
 
 <% GameHandler gh=(GameHandler)application.getAttribute("gameHandler");
  String id;
+ String name=(String)session.getAttribute("player");
  if (session.getAttribute("gameId")==null ) id="no game";
  else id=String.valueOf(session.getAttribute("gameId"));%>
 
 Your current game: <span><%=id%></span><br/>
-Games you participate:<span><%=gh.getUserGames((String)session.getAttribute("player"))%></span><br/>
-Games you can join: <span><%=gh.getNewGames() %></span><br/>
+Games you participate:<span><%=gh.getUserGames(name)%></span><br/>
+Games you can join: <span><%=gh.getNewGames(name) %></span><br/>
 
 ${message}<br>
 <form method="post" action="start">

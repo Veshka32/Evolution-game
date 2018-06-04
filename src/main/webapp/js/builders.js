@@ -198,26 +198,6 @@ function buildCard(card) {
 }
 
 function buildMessage() {
-    if (document.getElementById("phase").innerText == "EVOLUTION") {
-        if (move == null) {
-            alert("You haven't made any move");
-            return;
-        }
-    }
-    else if (document.getElementById("phase").innerText == "FEED") {
-
-        if (move == null) {
-            if (secondAnimalId == null) {
-                alert("You haven't made any move");
-                return;
-            }
-            move = "attack";
-            if (doEat) {
-                alert("You can't eat/attack twice during one move");
-                return;
-            }
-        }
-    }
     return JSON.stringify({
         "player": playerName,
         "cardId": playedCardId,
