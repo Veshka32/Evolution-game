@@ -1,6 +1,5 @@
 package game.controller;
 
-import game.constants.CardHolder;
 import game.constants.Phase;
 import game.entities.Animal;
 import game.entities.Move;

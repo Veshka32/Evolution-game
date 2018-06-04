@@ -1,17 +1,15 @@
 package game.controller;
 
-import game.constants.CardHolder;
 import game.constants.Phase;
 import game.entities.Animal;
-import game.entities.Card;
 import game.entities.Move;
 import game.entities.Player;
 
-public class EvolutionPhase {
+class EvolutionPhase {
     private Game game;
     private Move move;
 
-    public EvolutionPhase(Game game,Move move){
+    EvolutionPhase(Game game,Move move){
         this.game=game; this.move=move;
     }
 

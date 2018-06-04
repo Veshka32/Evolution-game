@@ -4,18 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import game.constants.CardHolder;
 import game.constants.Constants;
 import game.constants.Phase;
 import game.entities.*;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.*;
 
@@ -29,13 +22,13 @@ public class Game implements Serializable {
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)
-    @OrderColumn(name="order_index")
+    @OrderColumn(name = "order_index")
     private List<String> playersTurn = new ArrayList<>();
     private int round = 0;
     private int playerOnMove = round;
     private String error;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no animals
-    private Map<Integer, Animal> animalList = new HashMap<>();
+    //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no animals
+//    private Map<Integer, Animal> animalList = new HashMap<>();
     private String winners;
     private String log = "";
     @Embedded
@@ -64,10 +57,9 @@ public class Game implements Serializable {
 //        }
     }
 
-    public boolean isFull(){
+    boolean isFull() {
         return players.size() == Constants.NUMBER_OF_PLAYER.getValue();
     }
-
 
     void start() {
         animalID = Constants.START_CARD_INDEX.getValue();
@@ -144,9 +136,7 @@ public class Game implements Serializable {
     }
 
     public void makeMove(Move move) {
-        StringBuilder sb = new StringBuilder(log);
-        sb.append("\n").append(move.getPlayer()).append(" ").append(move.getLog()).append(" at ").append(new Date());
-        log = sb.toString();
+        log = log + "\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
         switch (move.getMove()) {
             case "EndPhase":
                 playerEndsPhase(move.getPlayer());
@@ -290,11 +280,16 @@ public class Game implements Serializable {
         Animal animal = new Animal(animalID++, player);
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
-        animalList.put(animal.getId(), animal);
+        //animalList.put(animal.getId(), animal);
     }
 
     Animal getAnimal(int i) {
-        return animalList.get(i);
+        for (Player player : players.values()
+                ) {
+            if (player.getAnimals().containsKey(i))
+                return player.getAnimals().get(i);
+        }
+        return null;
     }
 
     Player getPlayer(String name) {
@@ -341,10 +336,6 @@ public class Game implements Serializable {
         return round;
     }
 
-    Map<Integer, Animal> getAnimalList() {
-        return animalList;
-    }
-
     ExtraMessage getExtraMessage() {
         return extraMessage;
     }
@@ -375,10 +366,6 @@ public class Game implements Serializable {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public void setAnimalList(HashMap<Integer, Animal> animalList) {
-        this.animalList = animalList;
     }
 
     public String getWinners() {

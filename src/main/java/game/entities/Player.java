@@ -1,7 +1,6 @@
 package game.entities;
 
 import com.google.gson.annotations.Expose;
-import game.constants.CardHolder;
 import game.constants.Constants;
 import game.controller.GameException;
 

@@ -1,5 +1,6 @@
 package game.constants;
 
+import game.controller.CardHolder;
 import game.entities.Card;
 import org.junit.Test;
 

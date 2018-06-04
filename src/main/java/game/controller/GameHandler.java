@@ -1,6 +1,5 @@
 package game.controller;
 
-import game.constants.CardHolder;
 import services.dataBaseService.GameDAO;
 
 import javax.annotation.PostConstruct;

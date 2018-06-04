@@ -1,5 +1,6 @@
-package game.constants;
+package game.controller;
 
+import game.constants.Constants;
 import game.entities.Card;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -2,7 +2,7 @@
 package game.entities;
 
 import com.google.gson.annotations.Expose;
-import game.constants.CardHolder;
+import game.controller.CardHolder;
 import game.controller.Game;
 import game.controller.GameException;
 

@@ -1,17 +1,13 @@
 package game.controller;
 
-import game.constants.CardHolder;
 import game.constants.Phase;
 import game.entities.Move;
-import game.entities.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import javax.inject.Inject;
 
 
 @RunWith(MockitoJUnitRunner.class)
