@@ -19,14 +19,14 @@ public class GameDAO {
     @PersistenceContext
     private EntityManager em; //because of JTA resource-type
 
-    public Game create(Game game) throws SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
-        transaction.begin();
-        game=em.merge(game);
-        //em.flush();
-        transaction.commit();
-        return game;
-    }
+//    public Game create(Game game) throws SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+//        UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+//        transaction.begin();
+//        game=em.merge(game);
+//        //em.flush();
+//        transaction.commit();
+//        return game;
+//    }
 
     public List<Game> getAllGames(){
         Query query = em.createQuery("SELECT c FROM Game c");
@@ -34,11 +34,12 @@ public class GameDAO {
         return all;
     }
 
-    public void update(Game game) throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException, NamingException {
+    public Game update(Game game) throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException, NamingException {
         UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         transaction.begin();
-        em.merge(game);
+        game=em.merge(game);
         transaction.commit();
+        return game;
     }
 //    public Game load(int id) throws NoResultException{
 //        //Game game=em.find(Game.class,id);

@@ -25,10 +25,11 @@ import static javax.persistence.FetchType.EAGER;
 public class Game implements Serializable {
     //    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    private Set<Users> users=new HashSet<>();
-    @OneToMany(cascade = CascadeType.MERGE) //no cascade since card is immutable and already exists in DB
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)
+    @OrderColumn(name="order_index")
     private List<String> playersTurn = new ArrayList<>();
     private int round = 0;
     private int playerOnMove = round;
@@ -53,7 +54,22 @@ public class Game implements Serializable {
     public Game() {
     }
 
-    private void start() {
+    void addPlayer(String userName) {
+        players.put(userName, new Player(userName));
+        StringBuilder sb = new StringBuilder(log);
+        sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
+        log = sb.toString();
+//        if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
+//            goToNextPhase(); //start game
+//        }
+    }
+
+    public boolean isFull(){
+        return players.size() == Constants.NUMBER_OF_PLAYER.getValue();
+    }
+
+
+    void start() {
         animalID = Constants.START_CARD_INDEX.getValue();
         resetPlayersTurn();
         players.forEach((k, v) -> addCardsOnStart(v));
@@ -236,16 +252,6 @@ public class Game implements Serializable {
 
     public void setFood(int i) {
         food = i;
-    }
-
-    void addPlayer(String userName) {
-        players.put(userName, new Player(userName));
-        StringBuilder sb = new StringBuilder(log);
-        sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
-        log = sb.toString();
-        if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
-            goToNextPhase(); //start game
-        }
     }
 
     private void addCardsOnStart(Player player) {

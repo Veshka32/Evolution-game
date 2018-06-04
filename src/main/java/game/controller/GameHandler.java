@@ -32,7 +32,7 @@ public class GameHandler {
         Game game=new Game();
         game.setCardList(cardHolder.getCards());
         game.addPlayer(name);
-        game=gameDAO.create(game);
+        game=gameDAO.update(game);
         games.put(game.getId(),game);
         return game.getId();
     }
@@ -42,8 +42,10 @@ public class GameHandler {
     }
 
     public void joinPlayer(String name, int gameId) throws HeuristicMixedException, NotSupportedException, SystemException, NamingException, HeuristicRollbackException, RollbackException {
-        games.get(gameId).addPlayer(name);
-        gameDAO.update(games.get(gameId));
+        Game game=games.get(gameId);
+        game.addPlayer(name);
+        game=gameDAO.update(games.get(gameId)); //generate id for new player
+        if (game.isFull()) {game.start();gameDAO.update(game);}
     }
 
     public Game getGame(Integer i){
