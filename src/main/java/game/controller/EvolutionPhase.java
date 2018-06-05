@@ -2,7 +2,6 @@ package game.controller;
 
 import game.constants.Phase;
 import game.entities.Animal;
-import game.entities.Move;
 import game.entities.Player;
 
 class EvolutionPhase {

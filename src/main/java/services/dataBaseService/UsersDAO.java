@@ -2,6 +2,9 @@ package services.dataBaseService;
 
 import game.entities.Users;
 
+import javax.ejb.Stateful;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -14,14 +17,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
-@RequestScoped //????
+@Stateless
 public class UsersDAO {
 
     @PersistenceContext
     private EntityManager em; //because of JTA resource-type
-
-    public UsersDAO() {
-    }
 
     public boolean isPasswordValid(String login, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
@@ -40,16 +40,11 @@ public class UsersDAO {
         }
     }
 
-    public boolean addUser(String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public boolean addUser(String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
         if (!isLoginFree(login)) return false;
-
         byte[] salt = PasswordEncryptionService.generateSalt();
         Users user = new Users(login, PasswordEncryptionService.getEncryptedPassword(password, salt), salt);
-
-        UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
-        transaction.begin();
         em.persist(user);
-        transaction.commit();
         return true;
     }
 

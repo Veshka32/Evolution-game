@@ -17,13 +17,13 @@ public class Player implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private int usedCards;
+
     //include json
     @Expose
     private String name;
     @Expose
-    @OneToMany (cascade = CascadeType.MERGE)
+    @OneToMany
     private List<Card> cards = new ArrayList<>();
     @Expose
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval=true) //no player - no animals

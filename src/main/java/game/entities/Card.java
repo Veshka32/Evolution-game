@@ -5,22 +5,23 @@ import game.controller.Game;
 
 import javax.json.JsonObjectBuilder;
 import javax.json.spi.JsonProvider;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 public class Card implements Serializable {
     @Expose
-    private String extraProperty; //use in Game.json
-    @Expose
+    @Column(updatable = false,nullable = false)
     private String property;
+
+    @Expose
+    @Column(updatable = false)
+    private String extraProperty; //use in Game.json
 
     @Id
     @Expose
+    @Column(updatable = false)
     private int id;
 
     public Card(){}

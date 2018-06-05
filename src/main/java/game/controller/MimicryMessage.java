@@ -1,10 +1,10 @@
-package game.entities;
+package game.controller;
 
 import javax.persistence.Embeddable;
 import java.util.List;
 
 @Embeddable
-public class MimicryMessage extends ExtraMessage {
+class MimicryMessage extends ExtraMessage {
     List <Integer> victims;
 
     public MimicryMessage(){}

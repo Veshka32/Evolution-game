@@ -1,9 +1,8 @@
 package services.websocketService;
 
 import game.controller.GameHandler;
-import game.entities.Move;
+import game.controller.Move;
 import game.controller.Game;
-import services.dataBaseService.GameDAO;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

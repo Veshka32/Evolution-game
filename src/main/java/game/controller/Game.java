@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.EAGER;
 public class Game implements Serializable {
     //    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    private Set<Users> users=new HashSet<>();
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)

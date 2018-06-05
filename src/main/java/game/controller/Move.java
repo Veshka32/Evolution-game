@@ -1,4 +1,4 @@
-package game.entities;
+package game.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

@@ -1,7 +1,6 @@
 package game.controller;
 
 import game.constants.Phase;
-import game.entities.Move;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

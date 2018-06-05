@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
+@Stateless
 public class GameDAO {
     @PersistenceContext
     private EntityManager em; //because of JTA resource-type
@@ -34,11 +35,8 @@ public class GameDAO {
         return all;
     }
 
-    public Game update(Game game) throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException, NamingException {
-        UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
-        transaction.begin();
+    public Game update(Game game){
         game=em.merge(game);
-        transaction.commit();
         return game;
     }
 //    public Game load(int id) throws NoResultException{

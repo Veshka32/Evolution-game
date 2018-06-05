@@ -48,7 +48,7 @@ public class SignUpServlet extends HttpServlet {
                 sendLoginError(req, resp);
             }
         }
-        catch (InvalidKeySpecException | NoSuchAlgorithmException | SystemException | NamingException | NotSupportedException | HeuristicRollbackException | HeuristicMixedException | RollbackException e) {
+        catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             sendError(req, resp);
             e.printStackTrace();
         }

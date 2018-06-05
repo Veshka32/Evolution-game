@@ -2,7 +2,6 @@ package game.controller;
 
 import game.constants.Phase;
 import game.entities.Animal;
-import game.entities.Move;
 import game.entities.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,8 +33,6 @@ public class FeedPhaseTest {
         predator.addProperty("Predator");
         test.addAnimal(tailLoss);
         pop.addAnimal(predator);
-        game.getAnimalList().put(1,tailLoss);
-        game.getAnimalList().put(2,predator);
         game.setPhase(Phase.FEED);
         game.makeMove(new Move("test",0,2,1,"attack",null,null));
         assert(game.getPhase().equals(Phase.FEED));

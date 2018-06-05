@@ -1,7 +1,6 @@
 package game.controller;
 
 import game.entities.Animal;
-import game.entities.Move;
 import game.entities.Player;
 
 import java.util.List;

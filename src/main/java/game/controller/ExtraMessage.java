@@ -1,10 +1,10 @@
-package game.entities;
+package game.controller;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Embeddable
-public class ExtraMessage implements Serializable {
+class ExtraMessage implements Serializable {
     private String playerOnAttack;
     private int predator;
     private String playerUnderAttack;
