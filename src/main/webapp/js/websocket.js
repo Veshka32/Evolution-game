@@ -45,7 +45,6 @@ function leave() {
 
 function onMessage(event) {
     clearFields();
-    if (event.data=="Leave game")
     var game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")) {
         alert(game.error);

@@ -29,10 +29,11 @@ public class WebSocketServer {
         String player = (String) httpSession.getAttribute("player");
         Integer gameId = (Integer) httpSession.getAttribute("gameId");
         socketsHandler.addSession(session, player, httpSession, gameId);
-        sendToAll(session, gameId);
+        sendToAll(session);
     }
 
-    private void sendToAll(Session session, Integer gameId) {
+    private void sendToAll(Session session) {
+        Integer gameId=socketsHandler.getGameId(session);
         Game game = gameManager.getGame(gameId);
         for (Session s : session.getOpenSessions()) {
             try {
@@ -57,14 +58,14 @@ public class WebSocketServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sendToAll(session, gameId);
+        sendToAll(session);
     }
 
     @OnClose
     public void close(Session session) {
-        String name=socketsHandler.getName(session);
-        Move message=new Move(name,0,0,0,"Leave game",null,name+" leave game");
+        Move message=new Move(socketsHandler.getName(session),0,0,0,"Leave game",null," leave game");
         gameManager.getGame(socketsHandler.getGameId(session)).makeMove(message);
+        sendToAll(session);
         socketsHandler.removeSession(session);
     }
 
