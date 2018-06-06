@@ -25,7 +25,7 @@ class EvolutionPhase {
                 player.deleteCard(move.getCardId());
                 break;
             case "PlayProperty":
-                if (CardHolder.isDouble(move.getProperty()))
+                if (Deck.isPropertyDouble(move.getProperty()))
                     processDoubleProperty();
                 else {
                     processSimpleProperty();

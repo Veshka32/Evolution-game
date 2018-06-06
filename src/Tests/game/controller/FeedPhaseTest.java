@@ -13,7 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class FeedPhaseTest {
 
     @Spy
-    private CardHolder cardHolder=new CardHolder();
+    private Deck deck =new Deck();
 
     @InjectMocks
     Game game;

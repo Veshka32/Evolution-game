@@ -1,6 +1,6 @@
 package services.websocketService;
 
-import game.controller.GameHandler;
+import game.controller.GameManager;
 import game.controller.Move;
 import game.controller.Game;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class WebSocketServer {
 
     @Inject
-    private GameHandler gameHandler;
+    private GameManager gameManager;
 
     @Inject
     private SocketsHandler socketsHandler;
@@ -27,19 +27,19 @@ public class WebSocketServer {
     public void open(Session session, EndpointConfig config) {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         String player = (String) httpSession.getAttribute("player");
-        Integer gameId=(Integer) httpSession.getAttribute("gameId");
-        socketsHandler.addSession(session, player,httpSession,gameId);
-        sendToAll(session,gameId);
+        Integer gameId = (Integer) httpSession.getAttribute("gameId");
+        socketsHandler.addSession(session, player, httpSession, gameId);
+        sendToAll(session, gameId);
     }
 
-    private void sendToAll(Session session,Integer gameId) {
-        Game game=gameHandler.getGame(gameId);
+    private void sendToAll(Session session, Integer gameId) {
+        Game game = gameManager.getGame(gameId);
         for (Session s : session.getOpenSessions()) {
             try {
-                if ((socketsHandler.getGameId(s)).intValue()!=gameId.intValue()) continue;
-                String name=socketsHandler.getName(s);
+                if ((socketsHandler.getGameId(s)).intValue() != gameId.intValue()) continue;
+                String name = socketsHandler.getName(s);
                 String message = game.convertToJsonString(name);
-                if (message!=null) s.getBasicRemote().sendText(message); //null means error for one of the players
+                if (message != null) s.getBasicRemote().sendText(message); //null means error for one of the players
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -48,10 +48,10 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void handleMessage(Move message, Session session) throws HeuristicMixedException, RollbackException, SystemException, NamingException, HeuristicRollbackException, NotSupportedException {
-        int gameId=socketsHandler.getGameId(session);
-        if (message.getMove().equals("Leave game")){
-            HttpSession http=socketsHandler.getHttpSession(session);
+    public void handleMessage(Move message, Session session) {
+        Integer gameId = socketsHandler.getGameId(session);
+        if (message.getMove().equals("Leave game")) {
+            HttpSession http = socketsHandler.getHttpSession(session);
             http.removeAttribute("gameId");
             try {
                 session.getBasicRemote().sendText(message.getMove());
@@ -59,9 +59,13 @@ public class WebSocketServer {
                 e.printStackTrace();
             }
         }
-        gameHandler.getGame(gameId).makeMove(message);
-        gameHandler.update(gameId);
-        sendToAll(session,gameId);
+        gameManager.getGame(gameId).makeMove(message);
+        try {
+            gameManager.update(gameId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendToAll(session, gameId);
     }
 
     @OnClose

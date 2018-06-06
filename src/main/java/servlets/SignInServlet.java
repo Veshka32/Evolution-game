@@ -35,20 +35,12 @@ public class SignInServlet extends HttpServlet {
                 session.setAttribute("player", login);
                 req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
             } else {
-                sendLoginError(req, resp);
+                req.setAttribute("signInError", "Sorry,invalid login or password");
+                req.getRequestDispatcher("/index.jsp").forward(req, resp);
             }
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            sendSystemError(req, resp);
+        } catch (Exception e) {
+            req.setAttribute("signInError", "System error, try again");
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
         }
-    }
-
-    private void sendSystemError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("signUpError", "System error, try again");
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
-    }
-
-    private void sendLoginError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("signInError", "Sorry,invalid login or password");
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 }

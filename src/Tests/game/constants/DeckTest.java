@@ -1,16 +1,16 @@
 package game.constants;
 
-import game.controller.CardHolder;
+import game.controller.Deck;
 import game.entities.Card;
 import org.junit.Test;
 
 import java.util.List;
 
 
-public class CardHolderTest {
+public class DeckTest {
     @Test
     public void cardHolder(){
-        CardHolder holder=new CardHolder();
+        Deck holder=new Deck();
         List<Card> test=holder.getCards();
         assert (test.size()==84);
         List<Card> pop=holder.getCards();

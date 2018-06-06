@@ -15,9 +15,6 @@ Sign In<br/>
     password: <input type="password" name="password">
     <button type="submit">Sign In</button>
 </form>
-<form method="get" action="test">
-    <button type="submit">Test GameDAO</button>
-</form>
 
 </body>
 </html>

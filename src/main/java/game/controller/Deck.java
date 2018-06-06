@@ -9,10 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 @ApplicationScoped
-public class CardHolder {
+public class Deck {
     private List<Card> cards = new ArrayList<>(Constants.TOTAL_CARD_NUMBER.getValue());
 
-    public CardHolder() {
+    public Deck() {
         int startId = Constants.START_CARD_INDEX.getValue();
         for (int i = 0; i < 4; i++) {
             cards.add(new Card(startId++, "Symbiosis"));
@@ -45,7 +45,7 @@ public class CardHolder {
         return all;
     }
 
-    public static boolean isDouble(String property) {
+    public static boolean isPropertyDouble(String property) {
         return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
     }
 }

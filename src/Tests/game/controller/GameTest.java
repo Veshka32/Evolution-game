@@ -16,7 +16,7 @@ import java.util.Map;
 public class GameTest {
 
     @Spy
-    CardHolder cardHolder;
+    Deck deck;
 
     @InjectMocks
     Game first,second;
@@ -33,8 +33,8 @@ public class GameTest {
 
     @Test
     public void testCardHolder(){
-        first.setCardList(cardHolder.getCards());
-        second.setCardList(cardHolder.getCards());
+        first.setCardList(deck.getCards());
+        second.setCardList(deck.getCards());
         assert (first.getCardList().containsAll(second.getCardList()));
     }
 

@@ -11,13 +11,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class GameHandler {
+public class GameManager {
 
     @Inject
     private GameDAO gameDAO;
 
     @Inject
-    private CardHolder cardHolder;
+    private Deck deck;
 
     private Map<Integer,Game> games;
 
@@ -27,20 +27,20 @@ public class GameHandler {
         games=allGames.stream().collect(Collectors.toMap(Game::getId,item->item));
     }
 
-    public int createGame(String name) throws HeuristicMixedException, RollbackException, SystemException, NamingException, HeuristicRollbackException, NotSupportedException {
+    public int createGame(String name) {
         Game game=new Game();
-        game.setCardList(cardHolder.getCards());
+        game.setCardList(deck.getCards());
         game.addPlayer(name);
         game=gameDAO.update(game);
         games.put(game.getId(),game);
         return game.getId();
     }
 
-    public void update(int gameId) throws HeuristicMixedException, NotSupportedException, SystemException, NamingException, HeuristicRollbackException, RollbackException {
+    public void update(int gameId) {
         gameDAO.update(games.get(gameId));
     }
 
-    public void joinPlayer(String name, int gameId) throws HeuristicMixedException, NotSupportedException, SystemException, NamingException, HeuristicRollbackException, RollbackException {
+    public void joinPlayer(String name, int gameId) {
         Game game=games.get(gameId);
         game.addPlayer(name);
         game=gameDAO.update(games.get(gameId)); //generate id for new player

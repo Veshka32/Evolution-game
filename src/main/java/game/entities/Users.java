@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table
 //@Table(name="Users") //by default, table name=Classname
 public class Users implements Serializable {
 

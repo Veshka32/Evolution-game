@@ -2,7 +2,7 @@
 package game.entities;
 
 import com.google.gson.annotations.Expose;
-import game.controller.CardHolder;
+import game.controller.Deck;
 import game.controller.Game;
 import game.controller.GameException;
 
@@ -466,7 +466,7 @@ public class Animal implements Serializable {
                 break;
         }
 
-        if (!CardHolder.isDouble(property)) propertyList.remove(property);
+        if (!Deck.isPropertyDouble(property)) propertyList.remove(property);
         owner.increaseUsedCards();
 
     }

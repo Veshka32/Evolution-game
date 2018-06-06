@@ -66,6 +66,7 @@ public class Game implements Serializable {
         resetPlayersTurn();
         players.forEach((k, v) -> addCardsOnStart(v));
         playerOnMove = 0;
+        phase = Phase.EVOLUTION;
     }
 
     private void resetPlayersTurn() {
@@ -175,10 +176,6 @@ public class Game implements Serializable {
 
     private void goToNextPhase() {
         switch (phase) {
-            case START:
-                phase = Phase.EVOLUTION;
-                start();
-                break;
             case EVOLUTION:
                 food = new Random().nextInt(Constants.MAX_FOOD.getValue() - 1) + Constants.MIN_FOOD.getValue();
                 phase = Phase.FEED;
