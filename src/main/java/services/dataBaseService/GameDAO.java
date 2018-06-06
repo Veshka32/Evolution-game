@@ -32,4 +32,9 @@ public class GameDAO {
         game=em.merge(game);
         return game;
     }
+
+    public void remove(int gameId){
+        Game game=em.find(Game.class,gameId);
+        em.remove(game);
+    }
 }

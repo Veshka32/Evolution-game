@@ -40,7 +40,7 @@ public class Game implements Serializable {
     private int id;
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START; //package access to use in tests. Not good practice
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no players
+    @OneToMany(cascade = CascadeType.ALL) //no game - no players //orphanremoval=true
     private Map<String, Player> players = new HashMap<>();
     private int food;
 
@@ -213,6 +213,10 @@ public class Game implements Serializable {
             joiner.add(sorted.get(i).getName()); //append another winners if points and usedCard are not less;
         }
         winners = joiner.toString();
+    }
+
+    public boolean isEnd(){
+        return phase.equals(Phase.END);
     }
 
     private void addCards() {

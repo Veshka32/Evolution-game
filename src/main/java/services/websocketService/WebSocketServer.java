@@ -45,6 +45,7 @@ public class WebSocketServer {
             }
         }
         game.clearError();
+        if (game.isEnd()) gameManager.remove(gameId);
     }
 
     @OnMessage

@@ -40,6 +40,13 @@ public class GameManager {
         gameDAO.update(games.get(gameId));
     }
 
+    public void remove(int gameId){
+        games.remove(gameId);
+        try {
+            gameDAO.remove(gameId);
+        } catch (Exception e){e.printStackTrace();}
+    }
+
     public void joinPlayer(String name, int gameId) {
         Game game=games.get(gameId);
         game.addPlayer(name);
