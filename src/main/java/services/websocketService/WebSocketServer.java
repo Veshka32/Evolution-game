@@ -51,15 +51,6 @@ public class WebSocketServer {
     @OnMessage
     public void handleMessage(Move message, Session session) {
         Integer gameId = socketsHandler.getGameId(session);
-        if (message.getMove().equals("Leave game")) {
-            HttpSession http = socketsHandler.getHttpSession(session);
-            http.removeAttribute("gameId");
-            try {
-                session.getBasicRemote().sendText(message.getMove());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         gameManager.getGame(gameId).makeMove(message);
         try {
             gameManager.update(gameId);
@@ -71,6 +62,9 @@ public class WebSocketServer {
 
     @OnClose
     public void close(Session session) {
+        String name=socketsHandler.getName(session);
+        Move message=new Move(name,0,0,0,"Leave game",null,name+" leave game");
+        gameManager.getGame(socketsHandler.getGameId(session)).makeMove(message);
         socketsHandler.removeSession(session);
     }
 

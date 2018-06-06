@@ -39,9 +39,13 @@ function endPhase() {
     socket.send(json);
 }
 
+function leave() {
+    location.assign("/evo/signIn");
+}
+
 function onMessage(event) {
     clearFields();
-    if (event.data=="Leave game") location.assign("/evo/signIn");
+    if (event.data=="Leave game")
     var game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")) {
         alert(game.error);
@@ -157,12 +161,6 @@ function clearFields() {
     tailLoss = false;
     document.getElementById("doing").innerText = "";
     document.getElementById("wrapper").style.pointerEvents = "none";
-}
-
-function leave() {
-    move = "Leave game";
-    document.getElementById("doing").innerText="leave game";
-    socket.send(buildMessage());
 }
 
 

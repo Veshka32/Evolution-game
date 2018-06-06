@@ -15,10 +15,12 @@
     You are: <span id="player"></span><br/>
     Active players: <span id="players"></span><br/>
 
-    Game ID:<span id="gameId"></span>   Phase: <span id="phase"></span><span id="last" style="display: none">Last round</span><br>
+    Game ID:<span id="gameId"></span> Phase: <span id="phase"></span><span id="last"
+                                                                           style="display: none">Last round</span><br>
     <b>Your status: </b><span id="status"></span><br>
     <div id="feedPanel">
-        <span >food: </span><div id="food" onclick="eatFood()"></div>
+        <span>food: </span>
+        <div id="food" onclick="eatFood()"></div>
     </div>
     <div id="movePanel">
         <div class="doing"><span>Your move: </span><span id="doing"></span></div>
@@ -35,11 +37,13 @@
     <div id="personal"></div>
     <hr>
 </div>
-<div id="log">Game log:<br/></div><br/>
-<div>
-    <button id="leave" onclick="leave()">Leave game</button>
-    <button id="endGame" onclick="end()">End game</button>
-</div>
+<div id="log">Game log:<br/></div>
+<br/>
+
+<form action="leave">
+    <input type="submit" value="Leave game"/>
+</form>
+
 </body>
 
 </html>
