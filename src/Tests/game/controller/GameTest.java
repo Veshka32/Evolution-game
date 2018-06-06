@@ -65,7 +65,7 @@ public class GameTest {
         List<Player> sorted=new ArrayList<>(players.values());
         sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
         String winners=sorted.stream().map(x->x.finalPoints()).collect(Collectors.joining("\n"));
-        System.out.println(winners);
+        assert (sorted.get(0)==three);
 
     }
 

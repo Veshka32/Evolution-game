@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.EAGER;
 public class Game implements Serializable {
 
     private transient String winners;
-    private int numberOfPlayers;
+    private int numberOfPlayers=2;
     @OneToMany
     private List<Card> cardList;
     private int animalID;
@@ -173,7 +173,7 @@ public class Game implements Serializable {
         playerOnMove = (playerOnMove + 1) % playersTurn.size(); // circular array;
     }
 
-    private void goToNextPhase() {
+    void goToNextPhase() {
         switch (phase) {
             case EVOLUTION:
                 food = ThreadLocalRandom.current().nextInt(Constants.FOOD.minFoodFor(numberOfPlayers), Constants.FOOD.maxFoodFor(numberOfPlayers) + 1);

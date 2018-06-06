@@ -24,8 +24,10 @@ public class EvolutionPhaseTest {
 
     @Test
     public void endPhase1() {
+        game.setCardList(deck.getCards());
         game.addPlayer(player1);
         game.addPlayer(player2);
+        game.start();
 
         //player test ends phase
         game.makeMove(new Move("test", 0, 0, 0, "EndPhase", null, null));
