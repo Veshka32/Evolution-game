@@ -11,14 +11,16 @@ import game.entities.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
 public class Game implements Serializable {
-    //    @ManyToMany(mappedBy = "games",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    private Set<Users> users=new HashSet<>();
+
+    private transient String winners;
+    private int numberOfPlayers;
     @OneToMany
     private List<Card> cardList;
     private int animalID;
@@ -28,9 +30,6 @@ public class Game implements Serializable {
     private int round = 0;
     private int playerOnMove = round;
     private String error;
-    //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no animals
-//    private Map<Integer, Animal> animalList = new HashMap<>();
-    private transient String winners;
     private String log = "";
     @Embedded
     private ExtraMessage extraMessage;
@@ -48,18 +47,17 @@ public class Game implements Serializable {
     public Game() {
     }
 
+    void setNumberOfPlayers(int n){
+        numberOfPlayers =n;
+    }
+
     void addPlayer(String userName) {
         players.put(userName, new Player(userName));
-        StringBuilder sb = new StringBuilder(log);
-        sb.append(userName).append(" joined game at ").append(new Date()).append("\n");
-        log = sb.toString();
-//        if (players.size() == Constants.NUMBER_OF_PLAYER.getValue()) {
-//            goToNextPhase(); //start game
-//        }
+        log = log + userName + " joined game at " + new Date() + "\n";
     }
 
     boolean isFull() {
-        return players.size() == Constants.NUMBER_OF_PLAYER.getValue();
+        return players.size() == numberOfPlayers;
     }
 
     void start() {
@@ -72,7 +70,7 @@ public class Game implements Serializable {
 
     private void resetPlayersTurn() {
         playersTurn = new ArrayList<>(players.keySet());
-        playersTurn.sort((s, t1) -> Integer.compare(players.get(s).getId(), players.get(t1).getId()));
+        playersTurn.sort(Comparator.comparingInt(s -> players.get(s).getId()));
 
     }
 
@@ -178,7 +176,7 @@ public class Game implements Serializable {
     private void goToNextPhase() {
         switch (phase) {
             case EVOLUTION:
-                food = new Random().nextInt(Constants.MAX_FOOD.getValue() - 1) + Constants.MIN_FOOD.getValue();
+                food = ThreadLocalRandom.current().nextInt(Constants.FOOD.minFoodFor(numberOfPlayers), Constants.FOOD.maxFoodFor(numberOfPlayers) + 1);
                 phase = Phase.FEED;
                 break;
             case FEED:
@@ -206,7 +204,7 @@ public class Game implements Serializable {
         phase = Phase.END;
         List<Player> sorted=new ArrayList<>(players.values());
         sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
-        winners=sorted.stream().map(x->x.finalPoints()).collect(Collectors.joining("\n"));
+        winners=sorted.stream().map(Player::finalPoints).collect(Collectors.joining("\n"));
     }
 
     public boolean isEnd(){

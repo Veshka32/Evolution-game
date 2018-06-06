@@ -27,8 +27,9 @@ public class GameManager {
         games=allGames.stream().collect(Collectors.toMap(Game::getId,item->item));
     }
 
-    public int createGame(String name) {
+    public int createGame(String name,Integer number) {
         Game game=new Game();
+        game.setNumberOfPlayers(number);
         game.setCardList(deck.getCards());
         game.addPlayer(name);
         game=gameDAO.update(game);

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ page import="game.controller.GameManager" %>
 <%@ page import="java.lang.String" %>
 
@@ -23,9 +23,13 @@ ${message}<br>
 </form>
 
 ${createError}<br/>
-<form action="create">
+<form method="post" action="create">
+    <input type="radio" name="number" value="2" checked> 2<br>
+    <input type="radio" name="number" value="3"> 3<br>
+    <input type="radio" name="number" value="4"> 4<br>
     <input type="submit" value="Create new game"/>
 </form>
+
 
 <form action="signOut">
     <input type="submit" value="Sign Out"/>

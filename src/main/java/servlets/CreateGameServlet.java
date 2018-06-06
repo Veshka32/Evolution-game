@@ -13,7 +13,7 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/create")
 public class CreateGameServlet extends HttpServlet {
     @Inject
-    GameManager gameManager;
+    private GameManager gameManager;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -21,7 +21,7 @@ public class CreateGameServlet extends HttpServlet {
         String name=(String) session.getAttribute("player");
         int gameId;
         try {
-            gameId = gameManager.createGame(name);
+            gameId = gameManager.createGame(name,2);
             session.setAttribute("gameId",gameId);
             resp.sendRedirect("views/socket.html");
         } catch (Exception e){
@@ -29,5 +29,22 @@ public class CreateGameServlet extends HttpServlet {
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        HttpSession session = req.getSession();
+        String name=(String) session.getAttribute("player");
+        Integer number=Integer.valueOf(req.getParameter("number"));
+        int gameId;
+        try {
+            gameId = gameManager.createGame(name,number);
+            session.setAttribute("gameId",gameId);
+            resp.sendRedirect("views/socket.html");
+        } catch (Exception e){
+            req.setAttribute("createError","System error, try again.");
+            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
+        }
+    }
+
 
 }
