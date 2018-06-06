@@ -11,6 +11,7 @@ import game.entities.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -29,7 +30,7 @@ public class Game implements Serializable {
     private String error;
     //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //no game - no animals
 //    private Map<Integer, Animal> animalList = new HashMap<>();
-    private String winners;
+    private transient String winners;
     private String log = "";
     @Embedded
     private ExtraMessage extraMessage;
@@ -203,16 +204,9 @@ public class Game implements Serializable {
 
     private void endGame() {
         phase = Phase.END;
-        List<Player> sorted = new ArrayList<>(players.values());
+        List<Player> sorted=new ArrayList<>(players.values());
         sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
-        StringJoiner joiner = new StringJoiner(",");
-        joiner.add(sorted.get(0).getName());
-        for (int i = 1; i < sorted.size(); i++) {
-            if (sorted.get(i).getPoints() < sorted.get(i - 1).getPoints()) break;
-            if (sorted.get(i).getUsedCards() < sorted.get(i - 1).getUsedCards()) break;
-            joiner.add(sorted.get(i).getName()); //append another winners if points and usedCard are not less;
-        }
-        winners = joiner.toString();
+        winners=sorted.stream().map(x->x.finalPoints()).collect(Collectors.joining("\n"));
     }
 
     public boolean isEnd(){

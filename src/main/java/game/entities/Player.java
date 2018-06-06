@@ -80,6 +80,10 @@ public class Player implements Serializable {
         return points;
     }
 
+    public String finalPoints(){
+        return name+": "+points+" points, "+usedCards+" cards used.";
+    }
+
     public void addAnimal(Animal animal) {
         animals.put(animal.getId(), animal);
     }

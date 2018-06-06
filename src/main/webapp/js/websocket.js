@@ -120,7 +120,7 @@ function onMessage(event) {
 
     if (game.hasOwnProperty("last")) document.getElementById("last").style.display = "block";
     if (game.hasOwnProperty("winners")) {
-        alert(game.winners + " win!"); //show panel
+        alert(game.winners); //show panel
         location.assign("/evo/signIn");
     }
 }
