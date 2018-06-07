@@ -28,17 +28,17 @@ public class GameManager {
     }
 
     public int createGame(String name, Integer number) {
-        Game game = new Game();
+        Game game=gameDAO.create();
         game.setNumberOfPlayers(number);
         game.setCardList(deck.getCards());
         game.addPlayer(name);
-        game = gameDAO.update(game);
         games.put(game.getId(), game);
         return game.getId();
     }
 
     public void update(int gameId) {
-        gameDAO.update(games.get(gameId));
+        gameDAO.commit();
+        //gameDAO.update(games.get(gameId));
     }
 
     public void remove(int gameId) {
@@ -53,10 +53,8 @@ public class GameManager {
     public void joinPlayer(String name, int gameId) {
         Game game = games.get(gameId);
         game.addPlayer(name);
-        game = gameDAO.update(game); //generate id for new player for proper player order
         if (game.isFull()) {
             game.start();
-            games.put(gameId,(gameDAO.update(game)));
         }
     }
 

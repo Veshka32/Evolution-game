@@ -21,7 +21,7 @@ public class Game implements Serializable {
 
     private transient String winners;
     private int numberOfPlayers=2;
-    @OneToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cardList;
     private int animalID;
     @ElementCollection(fetch = EAGER)
