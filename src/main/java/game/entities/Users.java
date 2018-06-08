@@ -26,6 +26,9 @@ public class Users implements Serializable {
 
     @Column(length = 8)
     private byte[] salt;
+
+    @ManyToMany
+    private Set<Game> games=new HashSet<>();
 //
 //    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    @JoinTable(name="USERS_GAME",
@@ -53,6 +56,9 @@ public class Users implements Serializable {
     public String getLogin(){
         return login;
     }
+
+    public void joinGame(Game game){games.add(game);}
+    public void leaveGame(Game game){games.remove(game);}
 
     public void setLogin(String login){
         this.login=login;

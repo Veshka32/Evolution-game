@@ -3,11 +3,9 @@ package servlets;
 import game.controller.GameManager;
 
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.transaction.*;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/start")
@@ -46,7 +44,7 @@ public class JoinGameServlet extends HttpServlet {
                 req.setAttribute("message", "Wrong game id");
                 req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
 
-            } else if (gameManager.isCurrentGame(name, gameId)) {  //user already in game
+            } else if (gameManager.doParticipate(name, gameId)) {  //user already in game
                 session.setAttribute("gameId", gameId);
                 resp.sendRedirect("views/socket.html");
 

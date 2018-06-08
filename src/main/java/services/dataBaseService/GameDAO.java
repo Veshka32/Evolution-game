@@ -2,15 +2,19 @@ package services.dataBaseService;
 
 import game.controller.Game;
 
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import java.util.List;
 
-@Stateless
+@Stateful
 public class GameDAO {
-    @PersistenceContext
+    @PersistenceContext(type=PersistenceContextType.EXTENDED)
     private EntityManager em; //because of JTA resource-type
 
 //    public Game create(Game game) throws SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
@@ -36,5 +40,19 @@ public class GameDAO {
     public void remove(int gameId){
         Game game=em.find(Game.class,gameId);
         em.remove(game);
+    }
+
+    public Game create(){
+        Game game=new Game();
+        em.persist(game);
+        return game;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void commit() {
+        // changes will be committed here because
+        // there is an active transaction and
+        // pending changes exist in managed entities
+        // (Employee with ID=4 name was changed)
     }
 }

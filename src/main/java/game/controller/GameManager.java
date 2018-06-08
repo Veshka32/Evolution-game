@@ -30,7 +30,7 @@ public class GameManager {
     public int createGame(String name, Integer number) {
         Game game=gameDAO.create();
         game.setNumberOfPlayers(number);
-        game.setCardList(deck.getCards());
+        //game.setCardList(deck.getCards());
         game.addPlayer(name);
         games.put(game.getId(), game);
         return game.getId();
@@ -54,6 +54,7 @@ public class GameManager {
         Game game = games.get(gameId);
         game.addPlayer(name);
         if (game.isFull()) {
+            game.setCardList(deck.getCards());
             game.start();
         }
     }
@@ -62,7 +63,7 @@ public class GameManager {
         return games.get(i);
     }
 
-    public boolean isCurrentGame(String name, int i) {
+    public boolean doParticipate(String name, int i) {
         return (games.get(i).containsPlayer(name));
     }
 

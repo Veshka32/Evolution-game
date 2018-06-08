@@ -8,6 +8,7 @@ import javax.json.spi.JsonProvider;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Card implements Serializable {
@@ -36,6 +37,18 @@ public class Card implements Serializable {
         this.id=id;
         this.property=property;
     }
+
+//    @Override
+//    public boolean equals(Object o){
+//        if (!(o instanceof Card)) return false;
+//        Card card=(Card)o;
+//        return card.id==this.id;
+//    }
+//
+//    @Override
+//    public int hashCode(){
+//        return Objects.hash(id,property,extraProperty);
+//    }
 
 //    public String convertToJsonString() {
 //        JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();

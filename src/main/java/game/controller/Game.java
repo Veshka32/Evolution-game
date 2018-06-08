@@ -20,17 +20,24 @@ import static javax.persistence.FetchType.EAGER;
 public class Game implements Serializable {
 
     private transient String winners;
+    private transient String lastLogMessage;
+
     private int numberOfPlayers=2;
+
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cardList;
+
     private int animalID;
+
     @ElementCollection(fetch = EAGER)
     @OrderColumn(name = "order_index")
     private List<String> playersTurn = new ArrayList<>();
+
     private int round = 0;
     private int playerOnMove = round;
     private String error;
-    private String log = "";
+    private StringBuilder log = new StringBuilder();
+
     @Embedded
     private ExtraMessage extraMessage;
 
@@ -38,10 +45,13 @@ public class Game implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Enumerated(EnumType.STRING)
-    private Phase phase = Phase.START; //package access to use in tests. Not good practice
+    private Phase phase = Phase.START;
+
     @OneToMany(cascade = CascadeType.ALL) //no game - no players //orphanremoval=true
     private Map<String, Player> players = new HashMap<>();
+
     private int food;
 
     public Game() {
@@ -53,7 +63,8 @@ public class Game implements Serializable {
 
     void addPlayer(String userName) {
         players.put(userName, new Player(userName));
-        log = log + userName + " joined game at " + new Date() + "\n";
+        lastLogMessage=userName + " joined game at " + new Date() + "\n";
+        log.append(lastLogMessage);
     }
 
     boolean isFull() {
@@ -71,9 +82,7 @@ public class Game implements Serializable {
     private void resetPlayersTurn() {
         playersTurn = new ArrayList<>(players.keySet());
         playersTurn.sort(Comparator.comparingInt(s -> players.get(s).getId()));
-
     }
-
 
     public void clearError() {
         error = null;
@@ -96,7 +105,7 @@ public class Game implements Serializable {
         element.getAsJsonObject().addProperty("id", id);
         element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
-        element.getAsJsonObject().addProperty("log", log);
+        element.getAsJsonObject().addProperty("log", lastLogMessage);
 
         if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
@@ -136,7 +145,8 @@ public class Game implements Serializable {
     }
 
     public void makeMove(Move move) {
-        log = log + "\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
+        lastLogMessage="\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
+        log.append(lastLogMessage);
         switch (move.getMove()) {
             case "EndPhase":
                 playerEndsPhase(move.getPlayer());
@@ -265,7 +275,8 @@ public class Game implements Serializable {
         for (String str : s)
             sb.append(str);
 
-        log = sb.toString();
+        lastLogMessage = sb.toString();
+        log.append(lastLogMessage);
     }
 
     void makeAnimal(Move move) {
@@ -367,14 +378,6 @@ public class Game implements Serializable {
 
     public void setWinners(String winners) {
         this.winners = winners;
-    }
-
-    public String getLog() {
-        return log;
-    }
-
-    public void setLog(String log) {
-        this.log = log;
     }
 
     public void setExtraMessage(ExtraMessage extraMessage) {

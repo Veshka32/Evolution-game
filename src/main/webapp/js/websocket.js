@@ -56,7 +56,7 @@ function onMessage(event) {
     document.getElementById("player").innerText = playerName;
     document.getElementById("gameId").innerText=game.id;
     document.getElementById("phase").innerText = game.phase;
-    document.getElementById("log").innerText = game.log;
+    document.getElementById("log").innerText += game.log;
     document.getElementById("players").innerText = game.playersList;
 
     var common = document.getElementById("common");

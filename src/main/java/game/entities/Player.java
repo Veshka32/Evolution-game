@@ -23,10 +23,10 @@ public class Player implements Serializable {
     @Expose
     private String name;
     @Expose
-    @OneToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cards = new ArrayList<>();
     @Expose
-    @OneToMany(cascade = CascadeType.ALL) //no player - no animals //orphanRemoval=true
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "owner") //no player - no animals //orphanRemoval=true
     private Map<Integer, Animal> animals = new HashMap<>();
     private boolean doEat = false;
 
