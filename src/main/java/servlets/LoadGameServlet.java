@@ -24,7 +24,7 @@ public class LoadGameServlet extends HttpServlet {
 
         try {
             if (!gameManager.loadGame(gameId,login)) {
-                req.setAttribute("message", "Wrong game id");
+                req.setAttribute("loadError", "Wrong game id");
                 req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
 
             } else {
@@ -32,7 +32,7 @@ public class LoadGameServlet extends HttpServlet {
                 resp.sendRedirect("views/socket.html");
             }
         } catch (Exception e) {
-            req.setAttribute("message", "System error, try again.");
+            req.setAttribute("loadError", "System error, try again.");
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         }
 

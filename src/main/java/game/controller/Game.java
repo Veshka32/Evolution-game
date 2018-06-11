@@ -396,6 +396,6 @@ public class Game implements Serializable {
 
     @Override
     public String toString(){
-        return "game id: "+id+", players: "+players.values().stream().map(Player::getName).collect(Collectors.joining(","));
+        return "#"+id+", players: "+players.values().stream().map(Player::getName).collect(Collectors.joining(", "));
     }
 }

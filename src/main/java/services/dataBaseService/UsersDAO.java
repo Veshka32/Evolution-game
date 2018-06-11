@@ -1,5 +1,6 @@
 package services.dataBaseService;
 
+import game.controller.Game;
 import game.entities.Users;
 
 import javax.ejb.Stateless;
@@ -52,7 +53,12 @@ public class UsersDAO {
     public Users get(String login){
         TypedQuery<Users> tq = em.createQuery("SELECT c FROM Users c where c.login=?1", Users.class);
         tq.setParameter(1, login);
-        Users user = tq.getSingleResult();
-        return user;
+        return tq.getSingleResult();
+    }
+
+    public List<Game> getSavedGames(String login){
+        TypedQuery<Game> tq=em.createQuery("select c from Game c join c.players p where p.name=?1",Game.class);
+        tq.setParameter(1,login);
+        return tq.getResultList();
     }
 }

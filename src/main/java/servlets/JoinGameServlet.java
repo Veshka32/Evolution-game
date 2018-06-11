@@ -41,7 +41,7 @@ public class JoinGameServlet extends HttpServlet {
 
         try {
             if (!gameManager.isValidId(gameId)) {
-                req.setAttribute("message", "Wrong game id");
+                req.setAttribute("joinError", "Wrong game id");
                 req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
 
             } else if (gameManager.doParticipate(name, gameId)) {  //user already in game
@@ -54,7 +54,7 @@ public class JoinGameServlet extends HttpServlet {
                 resp.sendRedirect("views/socket.html");
             }
         } catch (Exception e) {
-            req.setAttribute("message", "System error, try again.");
+            req.setAttribute("joinError", "System error, try again.");
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         }
 

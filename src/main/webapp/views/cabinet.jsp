@@ -13,15 +13,15 @@
  if (session.getAttribute("gameId")==null ) id="no game";
  else id=String.valueOf(session.getAttribute("gameId"));%>
 
-Your current game: <span><%=id%></span><br/>
-Your saved games:<span><%=gh.loadSavedGames(name)%></span><br/>
-${message}<br>
+Your current game: <div><%=id%></div>
+Your saved games:<div><%=gh.loadSavedGames(name)%></div>
+${loadError}<br>
 <form method="post" action="load">
     Input number of game:<input type="text" name="gameId"><button type="submit">Load game</button>
 </form>
-Games you can join: <span><%=gh.getNewGames(name) %></span><br/>
+Games you can join: <div><%=gh.getNewGames(name) %></div>
 
-${message}<br>
+${joinError}<br>
 <form method="post" action="start">
     Input number of game:<input type="text" name="gameId"><button type="submit">Join game</button>
 </form>

@@ -36,10 +36,6 @@ public class Users implements Serializable {
         this.login=login;
     }
 
-//    public void addGame(Game game){
-//        games.add(game);
-//    }
-
     public String getLogin(){
         return login;
     }
@@ -70,18 +66,6 @@ public class Users implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Users)) return false;
-        Users user=(Users) o;
-        return user.login.equals(this.login);
-    }
-
-    @Override
-    public int hashCode(){
-        return Objects.hash(login); //????
     }
 
     //Аннотация @Column  не является обязательной. По умолчанию все поля класса сохраняются в базе данных.
