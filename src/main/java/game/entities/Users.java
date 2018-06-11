@@ -4,10 +4,7 @@ import game.controller.Game;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 //@Table(name="Users") //by default, table name=Classname
@@ -26,13 +23,6 @@ public class Users implements Serializable {
 
     @Column(length = 8)
     private byte[] salt;
-
-//    @ManyToMany(cascade = CascadeType.MERGE)
-//    @JoinTable(name="users_games",    joinColumns =
-//    @JoinColumn(name = "users_id", referencedColumnName = "id"),
-//    inverseJoinColumns =
-//    @JoinColumn(name = "game_id", referencedColumnName = "id"))
-//    private Set<Game> games=new HashSet<>();
 
     public Users(){}
 
@@ -80,6 +70,18 @@ public class Users implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Users)) return false;
+        Users user=(Users) o;
+        return user.login.equals(this.login);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(login); //????
     }
 
     //Аннотация @Column  не является обязательной. По умолчанию все поля класса сохраняются в базе данных.

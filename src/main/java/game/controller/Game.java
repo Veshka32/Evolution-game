@@ -23,23 +23,21 @@ public class Game implements Serializable {
     private transient String lastLogMessage;
 
     private int numberOfPlayers=2;
-
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    private List<Card> cardList;
-
-    @ManyToMany(cascade = CascadeType.MERGE)
-    private Set<Users> users=new HashSet<>();
-
     private int animalID;
-
-    @ElementCollection(fetch = EAGER)
-    @OrderColumn(name = "order_index")
-    private List<String> playersTurn = new ArrayList<>();
-
     private int round = 0;
     private int playerOnMove = round;
     private String error;
     private StringBuilder log = new StringBuilder();
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private List<Card> cardList;
+
+    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    private Set<Users> users=new HashSet<>();
+
+    @ElementCollection(fetch = EAGER)
+    @OrderColumn(name = "order_index")
+    private List<String> playersTurn = new ArrayList<>();
 
     @Embedded
     private ExtraMessage extraMessage;
@@ -49,19 +47,20 @@ public class Game implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private int food;
+
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START;
 
     @OneToMany(cascade = CascadeType.ALL) //no game - no players //orphanremoval=true
     private Map<String, Player> players = new HashMap<>();
 
-    private int food;
-
     public Game() {
     }
 
     public void addUser(Users user){
         users.add(user);
+        addPlayer(user.getLogin());
     }
 
     void setNumberOfPlayers(int n){
@@ -154,6 +153,7 @@ public class Game implements Serializable {
     public void makeMove(Move move) {
         lastLogMessage="\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
         log.append(lastLogMessage);
+        if (move.getMove().equals("saveGame")) return;
         switch (move.getMove()) {
             case "EndPhase":
                 playerEndsPhase(move.getPlayer());
@@ -397,5 +397,10 @@ public class Game implements Serializable {
 
     public void setPlayers(Map<String, Player> players) {
         this.players = players;
+    }
+
+    @Override
+    public String toString(){
+        return "game id: "+id+", players: "+players.values().stream().map(Player::getName).collect(Collectors.joining(","));
     }
 }

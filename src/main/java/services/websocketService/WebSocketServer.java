@@ -52,6 +52,7 @@ public class WebSocketServer {
     @OnMessage
     public void handleMessage(Move message, Session session) {
         Integer gameId = socketsHandler.getGameId(session);
+        if (message.getMove().equals("saveGame")) gameManager.save(gameId);
         gameManager.getGame(gameId).makeMove(message);
         sendToAll(session);
     }

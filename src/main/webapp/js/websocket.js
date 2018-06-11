@@ -39,8 +39,12 @@ function endPhase() {
     socket.send(json);
 }
 
-function leave() {
-    location.assign("/evo/signIn");
+function saveGame() {
+    move="saveGame";
+    document.getElementById("doing").innerText="saved game";
+    let json=buildMessage();
+    clearFields();
+    socket.send(json);
 }
 
 function onMessage(event) {

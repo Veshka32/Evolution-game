@@ -29,21 +29,18 @@ public class GameManager {
     public String loadSavedGames(String login){
         List<Game> savedGames=gameDAO.getSavedGames(login);
         if (savedGames.isEmpty()) return " no games";
-        return savedGames.stream().map(game->String.valueOf(game.getId())).collect(Collectors.joining(","));
+        return savedGames.stream().map(Game::toString).collect(Collectors.joining("/n"));
     }
 
     public String getNewGames(String login) {
         //get all the games those are not full or are full but contain this player
-        return games.values().stream().filter(game -> !game.onProgress() || game.containsPlayer(login)).map(game->String.valueOf(game.getId())).collect(Collectors.joining(","));
+        return games.values().stream().filter(game -> !game.onProgress() || game.containsPlayer(login)).map(Game::toString).collect(Collectors.joining("/n"));
     }
 
     public int createGame(String name, Integer number) {
         Game game=new Game();
         game.setNumberOfPlayers(number);
-        //game.setCardList(deck.getCards());
-        game.addPlayer(name);
-        Users user=usersDAO.get(name);
-        game.addUser(user);
+        game.addUser(usersDAO.get(name));
         game=gameDAO.save(game);
         games.put(game.getId(), game); //not in user
         return game.getId();
