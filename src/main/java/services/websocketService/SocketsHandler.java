@@ -4,29 +4,35 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @ApplicationScoped
 public class SocketsHandler {
     private Map<Session, String> sessions = new HashMap<>(); //session and name
     private Map<Session,Integer> gamesId=new HashMap<>();//session and gameId
-    private Map<Session,HttpSession> httpSessions=new HashMap<>();
+   private Map<Integer,Set<Session>> gamesSessions=new HashMap<>();//sessions in game
 
 
-    void addSession(Session session, String name,HttpSession httpSession,Integer gameId) {
+
+    void addSession(Session session, String name,Integer gameId) {
         sessions.put(session,name);
         gamesId.put(session,gameId);
-        httpSessions.put(session,httpSession);
+        if (!gamesSessions.containsKey(gameId)) gamesSessions.put(gameId, new HashSet<>());
+        gamesSessions.get(gameId).add(session);
+
     }
 
     void removeSession(Session session) {
         sessions.remove(session);
+        Integer gameId=gamesId.get(session);
         gamesId.remove(session);
-        httpSessions.remove(session);
+        gamesSessions.get(gameId).remove(session);
     }
 
-    HttpSession  getHttpSession(Session session){
-        return httpSessions.get(session);
+    Set<Session> getGameSessions(Integer gameId){
+        return gamesSessions.get(gameId);
     }
 
     String getName(Session session){

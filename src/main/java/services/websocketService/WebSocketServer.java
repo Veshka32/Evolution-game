@@ -26,16 +26,15 @@ public class WebSocketServer {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         String player = (String) httpSession.getAttribute("player");
         Integer gameId = (Integer) httpSession.getAttribute("gameId");
-        socketsHandler.addSession(session, player, httpSession, gameId);
+        socketsHandler.addSession(session, player, gameId);
         sendToAll(session,true);
     }
 
     private void sendToAll(Session session,boolean sendFullGame) {
         Integer gameId=socketsHandler.getGameId(session);
         Game game = gameManager.getGame(gameId);
-        for (Session s : session.getOpenSessions()) {
+        for (Session s : socketsHandler.getGameSessions(gameId)) {
             try {
-                if ((socketsHandler.getGameId(s)).intValue() != gameId.intValue()) continue;
                 String name = socketsHandler.getName(s);
                 String message;
                 if (sendFullGame) message = game.getFullJson(name);
