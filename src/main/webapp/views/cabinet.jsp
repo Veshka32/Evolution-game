@@ -14,7 +14,11 @@
  else id=String.valueOf(session.getAttribute("gameId"));%>
 
 Your current game: <span><%=id%></span><br/>
-Games you participate:<span><%=gh.getUserGames(name)%></span><br/>
+Your saved games:<span><%=gh.loadSavedGames(name)%></span><br/>
+${message}<br>
+<form method="post" action="load">
+    Input number of game:<input type="text" name="gameId"><button type="submit">Load game</button>
+</form>
 Games you can join: <span><%=gh.getNewGames(name) %></span><br/>
 
 ${message}<br>

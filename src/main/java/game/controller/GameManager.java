@@ -1,6 +1,8 @@
 package game.controller;
 
+import game.entities.Users;
 import services.dataBaseService.GameDAO;
+import services.dataBaseService.UsersDAO;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -17,28 +19,52 @@ public class GameManager {
     private GameDAO gameDAO;
 
     @Inject
+    private UsersDAO usersDAO;
+
+    @Inject
     private Deck deck;
 
-    private Map<Integer, Game> games;
+    private Map<Integer, Game> games=new HashMap<>();
 
-    @PostConstruct
-    public void loadGames() {
-        List<Game> allGames = gameDAO.getAllGames();
-        games = allGames.stream().collect(Collectors.toMap(Game::getId, item -> item));
+    public String loadSavedGames(String login){
+        List<Game> savedGames=gameDAO.getSavedGames(login);
+        if (savedGames.isEmpty()) return " no games";
+        return savedGames.stream().map(game->String.valueOf(game.getId())).collect(Collectors.joining(","));
+    }
+
+    public String getNewGames(String login) {
+        //get all the games those are not full or are full but contain this player
+        return games.values().stream().filter(game -> !game.onProgress() || game.containsPlayer(login)).map(game->String.valueOf(game.getId())).collect(Collectors.joining(","));
     }
 
     public int createGame(String name, Integer number) {
-        Game game=gameDAO.create();
+        Game game=new Game();
         game.setNumberOfPlayers(number);
         //game.setCardList(deck.getCards());
         game.addPlayer(name);
-        games.put(game.getId(), game);
+        Users user=usersDAO.get(name);
+        game.addUser(user);
+        game=gameDAO.save(game);
+        games.put(game.getId(), game); //not in user
         return game.getId();
     }
 
-    public void update(int gameId) {
-        gameDAO.commit();
-        //gameDAO.update(games.get(gameId));
+    public void joinPlayer(String name, int gameId) {
+        Game game = games.get(gameId);
+        game.addPlayer(name);
+        Users user=usersDAO.get(name);
+        game.addUser(user);
+        if (game.isFull()) {
+            game.setCardList(deck.getCards());
+            game.start();
+        }
+    }
+
+    public boolean loadGame(int gameId,String login){
+        Game game=gameDAO.load(gameId,login);
+        if (game==null) return false;
+        games.put(gameId,game);
+        return true;
     }
 
     public void remove(int gameId) {
@@ -50,15 +76,6 @@ public class GameManager {
         }
     }
 
-    public void joinPlayer(String name, int gameId) {
-        Game game = games.get(gameId);
-        game.addPlayer(name);
-        if (game.isFull()) {
-            game.setCardList(deck.getCards());
-            game.start();
-        }
-    }
-
     public Game getGame(Integer i) {
         return games.get(i);
     }
@@ -67,22 +84,13 @@ public class GameManager {
         return (games.get(i).containsPlayer(name));
     }
 
-    public boolean isValidId(Integer i) {
-        return games.containsKey(i);
+    public boolean isValidId(Integer gameId) {
+        return games.containsKey(gameId);
     }
 
-    public String getUserGames(String name) {
-        List<Integer> result = new ArrayList<>();
-        for (Game g : games.values())
-            if (g.containsPlayer(name)) result.add(g.getId());
-        return result.toString();
+    public void save(Integer gameId){
+        Game game=gameDAO.save(games.get(gameId));
+        games.put(gameId,game);
     }
 
-    public String getNewGames(String name) {
-        List<Integer> notFullGames = new ArrayList<>();
-        for (Game g : games.values())
-            if (!(g.onProgress() || g.containsPlayer(name)))
-                notFullGames.add(g.getId()); //games that not full and not user's game
-        return notFullGames.toString();
-    }
 }

@@ -1,0 +1,40 @@
+package servlets;
+
+import game.controller.GameManager;
+
+import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+@WebServlet(urlPatterns = "/load")
+public class LoadGameServlet extends HttpServlet {
+    @Inject
+    private GameManager gameManager;
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        String login = (String) session.getAttribute("player");
+        Integer gameId = Integer.valueOf(req.getParameter("gameId"));
+
+        try {
+            if (!gameManager.loadGame(gameId,login)) {
+                req.setAttribute("message", "Wrong game id");
+                req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
+
+            } else {
+                session.setAttribute("gameId", gameId);
+                resp.sendRedirect("views/socket.html");
+            }
+        } catch (Exception e) {
+            req.setAttribute("message", "System error, try again.");
+            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
+        }
+
+    }
+}

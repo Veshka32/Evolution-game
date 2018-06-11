@@ -27,6 +27,9 @@ public class Game implements Serializable {
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cardList;
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private Set<Users> users=new HashSet<>();
+
     private int animalID;
 
     @ElementCollection(fetch = EAGER)
@@ -55,6 +58,10 @@ public class Game implements Serializable {
     private int food;
 
     public Game() {
+    }
+
+    public void addUser(Users user){
+        users.add(user);
     }
 
     void setNumberOfPlayers(int n){

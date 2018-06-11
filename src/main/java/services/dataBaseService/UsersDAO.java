@@ -1,5 +1,6 @@
 package services.dataBaseService;
 
+import game.controller.Game;
 import game.entities.Users;
 
 import javax.ejb.Stateful;
@@ -55,11 +56,11 @@ public class UsersDAO {
         List<Long> sameLogin = tq.getResultList();
         return sameLogin.size() == 0;
     }
-//
-//    public Users getUser(String login){
-//        TypedQuery<Users> tq = em.createQuery("SELECT c FROM Users c where c.login=?1", Users.class);
-//        tq.setParameter(1, login);
-//        Users user = tq.getSingleResult();
-//        return user;
-//    }
+
+    public Users get(String login){
+        TypedQuery<Users> tq = em.createQuery("SELECT c FROM Users c where c.login=?1", Users.class);
+        tq.setParameter(1, login);
+        Users user = tq.getSingleResult();
+        return user;
+    }
 }

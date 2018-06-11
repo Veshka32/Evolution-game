@@ -53,11 +53,6 @@ public class WebSocketServer {
     public void handleMessage(Move message, Session session) {
         Integer gameId = socketsHandler.getGameId(session);
         gameManager.getGame(gameId).makeMove(message);
-        try {
-            gameManager.update(gameId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         sendToAll(session);
     }
 
