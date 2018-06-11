@@ -29,10 +29,9 @@ public class GameDAO {
     }
 
     public List<Game> getSavedGames(String login){
-        TypedQuery<Game> tq = em.createQuery("SELECT g from Game g join g.users us where us.login=?1", Game.class);
+        TypedQuery<Game> tq = em.createQuery("SELECT g from Game g join g.players p where p.name=?1", Game.class);
         tq.setParameter(1, login);
-        List<Game> savedGames = tq.getResultList();
-        return savedGames;
+        return tq.getResultList();
     }
 
     public Game save(Game game){
@@ -40,7 +39,7 @@ public class GameDAO {
     }
 
     public Game load(int gameId,String login){
-        TypedQuery<Game> tq = em.createQuery("SELECT g FROM Game g join g.users us where g.id=?1 and us.login=?2", Game.class);
+        TypedQuery<Game> tq = em.createQuery("SELECT g FROM Game g join g.players p where g.id=?1 and p.name=?2", Game.class);
         tq.setParameter(1, gameId);
         tq.setParameter(2, login);
         Game game;

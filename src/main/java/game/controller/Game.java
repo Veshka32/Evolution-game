@@ -32,8 +32,8 @@ public class Game implements Serializable {
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cardList;
 
-    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-    private Set<Users> users=new HashSet<>();
+//    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+//    private Set<Users> users=new HashSet<>();
 
     @ElementCollection(fetch = EAGER)
     @OrderColumn(name = "order_index")
@@ -56,11 +56,6 @@ public class Game implements Serializable {
     private Map<String, Player> players = new HashMap<>();
 
     public Game() {
-    }
-
-    public void addUser(Users user){
-        users.add(user);
-        addPlayer(user.getLogin());
     }
 
     void setNumberOfPlayers(int n){

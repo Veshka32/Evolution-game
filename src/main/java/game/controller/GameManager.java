@@ -19,9 +19,6 @@ public class GameManager {
     private GameDAO gameDAO;
 
     @Inject
-    private UsersDAO usersDAO;
-
-    @Inject
     private Deck deck;
 
     private Map<Integer, Game> games=new HashMap<>();
@@ -40,7 +37,7 @@ public class GameManager {
     public int createGame(String name, Integer number) {
         Game game=new Game();
         game.setNumberOfPlayers(number);
-        game.addUser(usersDAO.get(name));
+        game.addPlayer(name);
         game=gameDAO.save(game);
         games.put(game.getId(), game); //not in user
         return game.getId();
@@ -49,8 +46,6 @@ public class GameManager {
     public void joinPlayer(String name, int gameId) {
         Game game = games.get(gameId);
         game.addPlayer(name);
-        Users user=usersDAO.get(name);
-        game.addUser(user);
         if (game.isFull()) {
             game.setCardList(deck.getCards());
             game.start();
