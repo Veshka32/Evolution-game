@@ -22,7 +22,7 @@ public class Player implements Serializable {
     //include json
     @Expose
     private String name;
-    @Expose
+    //@Expose
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cards = new ArrayList<>();
     @Expose

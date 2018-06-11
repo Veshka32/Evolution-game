@@ -50,7 +50,7 @@ public class Card implements Serializable {
 //        return Objects.hash(id,property,extraProperty);
 //    }
 
-//    public String convertToJsonString() {
+//    public String getFullJson() {
 //        JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
 //        builder.add("id", id)
 //                .add("property", property);

@@ -27,7 +27,7 @@ public class GameTest {
         Player pl=game.getPlayer("test");
         pl.addAnimal(new Animal(1,pl));
         pl.addAnimal(new Animal(2,pl));
-        String gamejson=game.convertToJsonString("test");
+        String gamejson=game.getFullJson("test");
     }
 
     @Test

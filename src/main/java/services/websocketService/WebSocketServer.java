@@ -6,9 +6,7 @@ import game.controller.Game;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
-import javax.transaction.*;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -29,17 +27,19 @@ public class WebSocketServer {
         String player = (String) httpSession.getAttribute("player");
         Integer gameId = (Integer) httpSession.getAttribute("gameId");
         socketsHandler.addSession(session, player, httpSession, gameId);
-        sendToAll(session);
+        sendToAll(session,true);
     }
 
-    private void sendToAll(Session session) {
+    private void sendToAll(Session session,boolean sendFullGame) {
         Integer gameId=socketsHandler.getGameId(session);
         Game game = gameManager.getGame(gameId);
         for (Session s : session.getOpenSessions()) {
             try {
                 if ((socketsHandler.getGameId(s)).intValue() != gameId.intValue()) continue;
                 String name = socketsHandler.getName(s);
-                String message = game.convertToJsonString(name);
+                String message;
+                if (sendFullGame) message = game.getFullJson(name);
+                else message=game.getLightWeightJson(name);
                 if (message != null) s.getBasicRemote().sendText(message); //null means error for one of the players
             } catch (IOException e) {
                 e.printStackTrace();
@@ -54,14 +54,14 @@ public class WebSocketServer {
         Integer gameId = socketsHandler.getGameId(session);
         if (message.getMove().equals("saveGame")) gameManager.save(gameId);
         gameManager.getGame(gameId).makeMove(message);
-        sendToAll(session);
+        sendToAll(session,false);
     }
 
     @OnClose
     public void close(Session session) {
         Move message=new Move(socketsHandler.getName(session),0,0,0,"Leave game",null," leave game");
         gameManager.getGame(socketsHandler.getGameId(session)).makeMove(message);
-        sendToAll(session);
+        sendToAll(session,false);
         socketsHandler.removeSession(session);
     }
 

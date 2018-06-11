@@ -13,6 +13,7 @@
  if (session.getAttribute("gameId")==null ) id="no game";
  else id=String.valueOf(session.getAttribute("gameId"));%>
 
+
 Your current game: <div><%=id%></div>
 Your saved games:<div><%=gh.loadSavedGames(name)%></div>
 ${loadError}<br>

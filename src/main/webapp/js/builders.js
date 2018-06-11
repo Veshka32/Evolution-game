@@ -19,6 +19,16 @@ function buildFat() {
     return img;
 }
 
+function buildCards(cards){
+    let personal = document.getElementById("personal");
+    personal.innerHTML = "";
+
+    for (let k = 0; k < cards.length; k++) {
+        let card = cards[k];
+        personal.appendChild(buildCard(card));
+    }
+}
+
 function buildPlayerBlock(player) {
     let playerBlock = document.createElement("div");
     playerBlock.id = player.name;
@@ -29,13 +39,7 @@ function buildPlayerBlock(player) {
     if (player.name == this.playerName) {
         doEat = player.doEat;
         playerName.innerText = 'Your animals:';
-        var personal = document.getElementById("personal");
-        personal.innerHTML = "";
 
-        for (let k = 0; k < player.cards.length; k++) {
-            var card = player.cards[k];
-            personal.appendChild(buildCard(card));
-        }
         for (let id in player.animals) {
             let animal = player.animals[id];
             playerBlock.appendChild(buildAnimal(animal, true));

@@ -56,13 +56,9 @@ function onMessage(event) {
         return;
     }
 
-    playerName = game.player;
-    document.getElementById("player").innerText = playerName;
-    document.getElementById("gameId").innerText=game.id;
+    //build always
     document.getElementById("phase").innerText = game.phase;
     document.getElementById("log").innerText += game.log;
-    document.getElementById("players").innerText = game.playersList;
-
     var common = document.getElementById("common");
     common.innerText = "";
 
@@ -71,13 +67,17 @@ function onMessage(event) {
         common.appendChild(buildPlayerBlock(player));
     }
 
+    //build occasionally
+    if (game.hasOwnProperty("player")) {playerName = game.player;document.getElementById("player").innerText = playerName;}
+    if (game.hasOwnProperty("id")) document.getElementById("gameId").innerText=game.id;
+    if (game.hasOwnProperty("playersList")) document.getElementById("players").innerText = game.playersList;
+    if (game.hasOwnProperty("cards")) buildCards(game.cards);
+
     if (game.phase == "FEED") {
         document.getElementById("End move").style.display='inline-block'; //show button
         document.getElementById("feedPanel").style.display = 'block'; //show panel
         setFood(game);
-
-    }
-    else if (game.phase == "EVOLUTION"){
+    } else if (game.phase == "EVOLUTION"){
         document.getElementById("movePanel").style.display = 'block'; //evolution phase
         document.getElementById("feedPanel").style.display = 'none'; //hide panel
         document.getElementById("End move").style.display='none'; //hide button
@@ -86,17 +86,14 @@ function onMessage(event) {
     if (game.status == true) {
         document.getElementById("status").innerText = "It's your turn!";
         document.getElementById("wrapper").style.pointerEvents = "auto"; //clickable whole page
-    }
-    else {
+    } else {
         document.getElementById("status").innerText = "Please, wait...";
         document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
     }
 
     if (game.hasOwnProperty("tailLoss")) {
         let message = game.tailLoss;
-
         if (message.playerOnAttack === playerName) wait();
-
         else if (message.playerUnderAttack === playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
             tailLoss = true;

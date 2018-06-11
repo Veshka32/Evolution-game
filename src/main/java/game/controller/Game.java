@@ -89,15 +89,19 @@ public class Game implements Serializable {
         error = null;
     }
 
-    public String convertToJsonString(String name) {
+    public String errorToJson(String name,JsonElement element,Gson gson){
+        if (playersTurn.get(playerOnMove).equals(name)) {
+            element.getAsJsonObject().addProperty("error", error);
+            return gson.toJson(element);
+        } else return null;
+    }
+
+    public String getFullJson(String name) {
         Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
-            if (playersTurn.get(playerOnMove).equals(name)) {
-                element.getAsJsonObject().addProperty("error", error);
-                return gson.toJson(element);
-            } else return null;
+            return errorToJson(name,element,gson);
         }
 
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
@@ -106,7 +110,8 @@ public class Game implements Serializable {
         element.getAsJsonObject().addProperty("id", id);
         element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
-        element.getAsJsonObject().addProperty("log", lastLogMessage);
+        element.getAsJsonObject().addProperty("log", log.toString());
+        element.getAsJsonObject().add("cards",gson.toJsonTree(players.get(name).getCards()));
 
         if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
@@ -118,6 +123,32 @@ public class Game implements Serializable {
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
 
+        return gson.toJson(element);
+    }
+
+    public String getLightWeightJson(String name) {
+        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new Gson();
+        JsonElement element = new JsonObject();
+        if (error != null) {
+            return errorToJson(name,element,gson);
+        }
+        element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
+        element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
+        element.getAsJsonObject().addProperty("log", lastLogMessage);
+
+        if (phase.equals(Phase.EVOLUTION)) element.getAsJsonObject().add("cards",gson.toJsonTree(players.get(name).getCards()));
+        if (phase.equals(Phase.FEED)) element.getAsJsonObject().addProperty("food", food); //add primitive
+
+        if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
+            element.getAsJsonObject().addProperty("status", true);
+        else element.getAsJsonObject().addProperty("status", false);
+
+        if (extraMessage != null)
+            element.getAsJsonObject().add(extraMessage.getType(), gson.toJsonTree(extraMessage));
+
+        if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
+        if (round == -1) element.getAsJsonObject().addProperty("last", 0);
         return gson.toJson(element);
     }
 
