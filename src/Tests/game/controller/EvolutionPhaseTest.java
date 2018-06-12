@@ -32,13 +32,13 @@ public class EvolutionPhaseTest {
         //player test ends phase
         game.makeMove(new Move("test", 0, 0, 0, "EndPhase", null, null));
         assert (game.getPlayerOnMove() == 0);
-        assert (game.getPlayersTurn().get(game.getPlayerOnMove()).equals(player1));
+        assert (game.getPlayersOrder().get(game.getPlayerOnMove()).equals(player1));
         assert (game.getPhase().equals(Phase.EVOLUTION));
 
         game.makeMove(new Move("pop", 0, 0, 0, "EndPhase", null, null));
         assert (game.getPlayerOnMove() == 0);
-        assert (game.getPlayersTurn().size()==2);
-        assert (game.getPlayersTurn().get(game.getPlayerOnMove()).equals(player1));
+        assert (game.getPlayersOrder().size()==2);
+        assert (game.getPlayersOrder().get(game.getPlayerOnMove()).equals(player1));
         assert (game.getPhase().equals(Phase.FEED));
     }
 }

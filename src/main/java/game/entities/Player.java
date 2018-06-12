@@ -13,10 +13,15 @@ public class Player implements Serializable {
 
     transient private int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
     transient private int points;
+    transient private boolean leftGame=false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+
+
+    private int order;
     private int usedCards;
 
     //include json
@@ -32,8 +37,12 @@ public class Player implements Serializable {
 
     public Player(){}
 
-    public Player(String login) {
-        this.name = login;
+    public Player(String login,int order) {
+        this.name = login;this.order=order;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     public String getName() {
@@ -49,6 +58,18 @@ public class Player implements Serializable {
 
     public void resetGrazing() {
         animals.forEach((k,v)->v.setDoGrazing(false));
+    }
+
+    public void leftGame(){
+        leftGame=true;
+    }
+
+    public void backToGame(){
+        leftGame=false;
+    }
+
+    public boolean isLeftGame(){
+        return leftGame;
     }
 
     public boolean isDoEat() {

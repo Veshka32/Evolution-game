@@ -24,7 +24,7 @@ public class GameDAO {
 //        return game;
 //    }
 
-    public void remove(int gameId){
+    public void remove(Integer gameId){
         Game game=em.find(Game.class,gameId);
         em.remove(game);
     }
@@ -39,7 +39,7 @@ public class GameDAO {
         return em.merge(game);
     }
 
-    public Game load(int gameId,String login){
+    public Game load(Integer gameId,String login){
         TypedQuery<Game> tq = em.createQuery("SELECT g FROM Game g join g.players p where g.id=?1 and p.name=?2", Game.class);
         tq.setParameter(1, gameId);
         tq.setParameter(2, login);
@@ -48,7 +48,7 @@ public class GameDAO {
         return game;
     }
 
-    public List<Users> getUsers(String login, int gameId){
+    public List<Users> getUsers(String login, long gameId){
         TypedQuery<Users> tq=em.createQuery("select u from Users u join Game g join g.players p where g.id=?1 and p.name=?2",Users.class);
         tq.setParameter(1,gameId);
         tq.setParameter(2,login);

@@ -63,7 +63,7 @@ class FeedPhase {
         if (canMimicry(victim, predator)) return;
         predator.setAttackFlag(true);
         predator.getOwner().resetFedFlag();
-        if (game.getPlayersTurn().size() > 1) predator.getOwner().setDoEat(true);
+        if (game.getPlayersOrder().size() > 1) predator.getOwner().setDoEat(true);
         predator.eatFish(1);
         game.afterTailLoss();
     }
@@ -90,7 +90,7 @@ class FeedPhase {
             if (!isSuccessful) {
                 game.addLogMessage("Animal #",String.valueOf(victim.getId())," run away from predator");
                 predator.setAttackFlag(true);
-                if (game.getPlayersTurn().size() > 1) player.setDoEat(true);
+                if (game.getPlayersOrder().size() > 1) player.setDoEat(true);
                 return;
             } else
                 game.addLogMessage("Predator #",String.valueOf(predator.getId())," run up animal #",String.valueOf(victim.getId()));
@@ -109,7 +109,7 @@ class FeedPhase {
         if (victim.hasProperty("Poisonous")) predator.poison();
         predator.setAttackFlag(true);
         player.resetFedFlag();
-        if (game.getPlayersTurn().size() > 1) player.setDoEat(true);
+        if (game.getPlayersOrder().size() > 1) player.setDoEat(true);
         predator.eatFish(2);
         victim.die();
         victim.getOwner().deleteAnimal(victim.getId());
@@ -156,7 +156,7 @@ class FeedPhase {
         if (animal == null) throw new GameException("Feeding stranger animal is danger!");
         animal.eatMeet(player, game);
         player.resetFedFlag();
-        if (game.getPlayersTurn().size() > 1) player.setDoEat(true);
+        if (game.getPlayersOrder().size() > 1) player.setDoEat(true);
     }
 
     private void graze() throws GameException {

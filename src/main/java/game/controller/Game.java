@@ -37,14 +37,14 @@ public class Game implements Serializable {
 
     @ElementCollection(fetch = EAGER)
     @OrderColumn(name = "order_index")
-    private List<String> playersTurn = new ArrayList<>();
+    private List<String> playersOrder = new ArrayList<>();
 
     @Embedded
     private ExtraMessage extraMessage;
 
     //include in json
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id //created by IdGenerator
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private int food;
@@ -58,13 +58,18 @@ public class Game implements Serializable {
     public Game() {
     }
 
+    public int getId(){
+        return id;
+    }
+
     void setNumberOfPlayers(int n){
         numberOfPlayers =n;
     }
 
-    void addPlayer(String userName) {
-        players.put(userName, new Player(userName));
-        lastLogMessage=userName + " joined game at " + new Date() + "\n";
+    void addPlayer(String login) {
+        Player player=new Player(login,players.size());
+        players.put(login, player);
+        lastLogMessage=login + " joined game at " + new Date() + "\n";
         log.append(lastLogMessage);
     }
 
@@ -74,15 +79,15 @@ public class Game implements Serializable {
 
     void start() {
         animalID = Constants.START_CARD_INDEX.getValue();
-        resetPlayersTurn();
+        resetPlayersOrder();
         players.forEach((k, v) -> addCardsOnStart(v));
         playerOnMove = 0;
         phase = Phase.EVOLUTION;
     }
 
-    private void resetPlayersTurn() {
-        playersTurn = new ArrayList<>(players.keySet());
-        playersTurn.sort(Comparator.comparingInt(s -> players.get(s).getId()));
+    private void resetPlayersOrder() {
+        playersOrder = new ArrayList<>(players.keySet());
+        playersOrder.sort(Comparator.comparingInt(s -> players.get(s).getOrder())); //important to keep order of players
     }
 
     public void clearError() {
@@ -90,7 +95,7 @@ public class Game implements Serializable {
     }
 
     public String errorToJson(String name,JsonElement element,Gson gson){
-        if (playersTurn.get(playerOnMove).equals(name)) {
+        if (playersOrder.get(playerOnMove).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
             return gson.toJson(element);
         } else return null;
@@ -113,7 +118,7 @@ public class Game implements Serializable {
         element.getAsJsonObject().addProperty("log", log.toString());
         element.getAsJsonObject().add("cards",gson.toJsonTree(players.get(name).getCards()));
 
-        if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
+        if (playersOrder.size() > 0 && playersOrder.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
         else element.getAsJsonObject().addProperty("status", false);
 
@@ -140,7 +145,7 @@ public class Game implements Serializable {
         if (phase.equals(Phase.EVOLUTION)) element.getAsJsonObject().add("cards",gson.toJsonTree(players.get(name).getCards()));
         if (phase.equals(Phase.FEED)) element.getAsJsonObject().addProperty("food", food); //add primitive
 
-        if (playersTurn.size() > 0 && playersTurn.get(playerOnMove).equals(name))
+        if (playersOrder.size() > 0 && playersOrder.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
         else element.getAsJsonObject().addProperty("status", false);
 
@@ -162,7 +167,7 @@ public class Game implements Serializable {
 
     void afterTailLoss() {
         String pl = extraMessage.getPlayerOnAttack();
-        playerOnMove = playersTurn.indexOf(pl);
+        playerOnMove = playersOrder.indexOf(pl);
         extraMessage = null;
     }
 
@@ -172,8 +177,19 @@ public class Game implements Serializable {
 
     void afterMimicry() {
         String pl = extraMessage.getPlayerOnAttack();
-        playerOnMove = playersTurn.indexOf(pl);
+        playerOnMove = playersOrder.indexOf(pl);
         extraMessage = null;
+    }
+
+    public void playerBack(String name){
+        players.get(name).backToGame();
+    }
+
+    public boolean isLeft(){
+        for (Player player:players.values()){
+            if (!player.isLeftGame()) return false;
+        }
+        return true;
     }
 
     public void makeMove(Move move) {
@@ -185,6 +201,7 @@ public class Game implements Serializable {
                 playerEndsPhase(move.getPlayer());
                 return;
             case "Leave game": //only log updates
+                players.get(move.getPlayer()).leftGame();
                 return;
         }
         try {
@@ -206,14 +223,14 @@ public class Game implements Serializable {
     }
 
     private void playerEndsPhase(String name) {
-        playersTurn.remove(name);
-        if (playersTurn.isEmpty())
+        playersOrder.remove(name);
+        if (playersOrder.isEmpty())
             goToNextPhase();
         else switchPlayerOnMove();
     }
 
     void switchPlayerOnMove() {
-        playerOnMove = (playerOnMove + 1) % playersTurn.size(); // circular array;
+        playerOnMove = (playerOnMove + 1) % playersOrder.size(); // circular array;
     }
 
     void goToNextPhase() {
@@ -239,7 +256,7 @@ public class Game implements Serializable {
                 if (cardList.isEmpty()) round = -1;//last round
                 break;
         }
-        resetPlayersTurn();
+        resetPlayersOrder();
         playerOnMove = round % players.size(); //circular array; each round starts next player
     }
 
@@ -337,8 +354,8 @@ public class Game implements Serializable {
         return players.containsKey(name);
     }
 
-    List<String> getPlayersTurn() {
-        return playersTurn;
+    List<String> getPlayersOrder() {
+        return playersOrder;
     }
 
     int getPlayerOnMove() {
@@ -355,10 +372,6 @@ public class Game implements Serializable {
 
     void setCardList(List<Card> cardList) {
         this.cardList = cardList;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void setId(int id) {
@@ -385,8 +398,8 @@ public class Game implements Serializable {
         this.animalID = animalID;
     }
 
-    public void setPlayersTurn(List<String> playersTurn) {
-        this.playersTurn = playersTurn;
+    public void setPlayersOrder(List<String> playersOrder) {
+        this.playersOrder = playersOrder;
     }
 
     public void setRound(int round) {

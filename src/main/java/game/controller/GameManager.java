@@ -1,19 +1,20 @@
 package game.controller;
 
-import game.entities.Users;
 import services.dataBaseService.GameDAO;
-import services.dataBaseService.UsersDAO;
 
-import javax.annotation.PostConstruct;
+import javax.ejb.*;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.naming.NamingException;
-import javax.transaction.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GameManager {
+
+    @Inject
+    private IdGenerator generator;
 
     @Inject
     private GameDAO gameDAO;
@@ -23,22 +24,27 @@ public class GameManager {
 
     private Map<Integer, Game> games=new HashMap<>();
 
+    @Schedule(minute="*/2") //every 2 minutes
+    public void removeGames(){
+        games.values().removeIf(Game::isLeft); //safety removing from map
+    }
+
     public String loadSavedGames(String login){
         List<Game> savedGames=gameDAO.getSavedGames(login);
         if (savedGames.isEmpty()) return " no games";
-        return savedGames.stream().map(Game::toString).collect(Collectors.joining("/n"));
+        return savedGames.stream().map(Game::toString).collect(Collectors.joining("\n"));
     }
 
     public String getNewGames(String login) {
         //get all the games those are not full or are full but contain this player
-        return games.values().stream().filter(game -> !game.onProgress() || game.containsPlayer(login)).map(Game::toString).collect(Collectors.joining("/n"));
+        return games.values().stream().filter(game -> !game.onProgress() || game.containsPlayer(login)).map(Game::toString).collect(Collectors.joining("\n"));
     }
 
-    public int createGame(String name, Integer number) {
+    public Integer createGame(String name, Integer number) {
         Game game=new Game();
+        game.setId(generator.getGame_next_id());
         game.setNumberOfPlayers(number);
         game.addPlayer(name);
-        game=gameDAO.save(game);
         games.put(game.getId(), game); //not in user
         return game.getId();
     }
@@ -52,14 +58,18 @@ public class GameManager {
         }
     }
 
-    public boolean loadGame(int gameId,String login){
+    public void playerBack(String name,Integer gameId){
+        games.get(gameId).playerBack(name);
+    }
+
+    public boolean loadGame(Integer gameId,String login){
         Game game=gameDAO.load(gameId,login);
         if (game==null) return false;
         games.put(gameId,game);
         return true;
     }
 
-    public void remove(int gameId) {
+    public void remove(Integer gameId) {
         games.remove(gameId);
         try {
             gameDAO.remove(gameId);

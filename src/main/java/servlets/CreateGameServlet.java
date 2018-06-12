@@ -19,7 +19,7 @@ public class CreateGameServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         HttpSession session = req.getSession();
         String name=(String) session.getAttribute("player");
-        int gameId;
+        Integer gameId;
         try {
             gameId = gameManager.createGame(name,2);
             session.setAttribute("gameId",gameId);
@@ -35,7 +35,7 @@ public class CreateGameServlet extends HttpServlet {
         HttpSession session = req.getSession();
         String name=(String) session.getAttribute("player");
         Integer number=Integer.valueOf(req.getParameter("number"));
-        int gameId;
+        Integer gameId;
         try {
             gameId = gameManager.createGame(name,number);
             session.setAttribute("gameId",gameId);

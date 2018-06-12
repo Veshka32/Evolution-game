@@ -46,6 +46,7 @@ public class JoinGameServlet extends HttpServlet {
 
             } else if (gameManager.doParticipate(name, gameId)) {  //user already in game
                 session.setAttribute("gameId", gameId);
+                gameManager.playerBack(name,gameId);
                 resp.sendRedirect("views/socket.html");
 
             } else {
