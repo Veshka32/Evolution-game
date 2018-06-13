@@ -1,6 +1,7 @@
 package game.entities;
 
 import com.google.gson.annotations.Expose;
+import game.constants.Property;
 import game.controller.Game;
 
 import javax.json.JsonObjectBuilder;
@@ -14,26 +15,28 @@ import java.util.Objects;
 public class Card implements Serializable {
     @Expose
     @Column(updatable = false,nullable = false)
-    private String property;
+    private Property property;
 
     @Expose
     @Column(updatable = false)
-    private String extraProperty; //use in Game.json
+    @Enumerated(EnumType.STRING)
+    private Property extraProperty; //use in Game.json
 
     @Id
     @Expose
     @Column(updatable = false)
+    @Enumerated(EnumType.STRING)
     private int id;
 
     public Card(){}
 
-    public Card(int id,String property,String extraProperty){
+    public Card(int id,Property property,Property extraProperty){
         this.id=id;
         this.property=property;
         this.extraProperty=extraProperty;
     }
 
-    public Card(int id,String property){
+    public Card(int id,Property property){
         this.id=id;
         this.property=property;
     }
@@ -59,10 +62,6 @@ public class Card implements Serializable {
 //
 //        return builder.build().toString();
 //    }
-
-    public String getProperty() {
-        return property;
-    }
 
     public int getId(){
         return id;

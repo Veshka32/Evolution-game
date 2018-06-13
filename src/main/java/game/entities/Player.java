@@ -2,6 +2,7 @@ package game.entities;
 
 import com.google.gson.annotations.Expose;
 import game.constants.Constants;
+import game.constants.Property;
 import game.controller.GameException;
 
 import javax.persistence.*;
@@ -110,7 +111,7 @@ public class Player implements Serializable {
     public boolean feedScavenger() {
         for (Animal animal : animals.values()
                 ) {
-            if (animal.hasProperty("Scavenger") && animal.hungry > 0) {
+            if (animal.hasProperty(Property.SCAVENGER) && animal.hungry > 0) {
                 animal.eatFish(1);
                 return true;
             }
@@ -119,7 +120,7 @@ public class Player implements Serializable {
     }
 
 
-    public void connectAnimal(int id1, int id2, String property) throws GameException {
+    public void connectAnimal(int id1, int id2, Property property) throws GameException {
 
         if (animals.size() < 2) throw new GameException("You don't have enough animals");
 
@@ -136,7 +137,7 @@ public class Player implements Serializable {
         Animal animal2 = animals.get(id2);
 
         switch (property) {
-            case "Communication":
+            case COMMUNICATION:
                 if (animal.isCommunicate(id2) || animal.isCooperate(id2))
                     throw new GameException("These animals are already helping each other");
                 else {
@@ -146,7 +147,7 @@ public class Player implements Serializable {
                     animal2.addProperty(property);
                 }
                 break;
-            case "Cooperation":
+            case COOPERATION:
                 if (animal.isCommunicate(id2) || animal.isCooperate(id2))
                     throw new GameException("These animals are already helping each other");
                 else {
@@ -156,7 +157,7 @@ public class Player implements Serializable {
                     animal2.addProperty(property);
                 }
                 break;
-            case "Symbiosis":
+            case SYMBIOSIS:
                 if (animal.isInSymbiosis(id2) || animal.isSymbiontFor(id2))
                     throw new GameException("Animal #" + id1 + " is already in symbiosisWith with animal #" + id2);
                 else {
@@ -201,7 +202,7 @@ public class Player implements Serializable {
         ArrayList<Integer> canAttack = new ArrayList<>();
 
         for (Animal an : animals.values()) {
-            if (an.getId() == victim || an.hasProperty("Mimicry")) continue;
+            if (an.getId() == victim || an.hasProperty(Property.MIMICRY)) continue;
             try {
                 predator.attack(an);
                 canAttack.add(an.getId());

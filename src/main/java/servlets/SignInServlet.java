@@ -18,6 +18,7 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         if (req.getSession().getAttribute("player")==null) resp.sendRedirect("/index.jsp");
         req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
     }

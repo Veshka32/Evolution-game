@@ -1,6 +1,7 @@
 package game.controller;
 
 import game.constants.Constants;
+import game.constants.Property;
 import game.entities.Card;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,27 +16,27 @@ public class Deck {
     public Deck() {
         int startId = Constants.START_CARD_INDEX.getValue();
         for (int i = 0; i < 4; i++) {
-            cards.add(new Card(startId++, "Symbiosis"));
-            cards.add(new Card(startId++, "Piracy"));
-            cards.add(new Card(startId++, "Grazing"));
-            cards.add(new Card(startId++, "Tail loss", "DeleteProperty"));
-            cards.add(new Card(startId++, "Hibernation"));
-            cards.add(new Card(startId++, "Poisonous"));
-            cards.add(new Card(startId++, "Communication", "Predator"));
-            cards.add(new Card(startId++, "Scavenger"));
-            cards.add(new Card(startId++, "Running"));
-            cards.add(new Card(startId++, "Mimicry"));
-            cards.add(new Card(startId++, "Camouflage"));
-            cards.add(new Card(startId++, "Burrowing"));
-            cards.add(new Card(startId++, "Sharp Vision"));
-            cards.add(new Card(startId++, "Parasite", "Predator"));
-            cards.add(new Card(startId++, "Parasite", "Fat"));
-            cards.add(new Card(startId++, "Cooperation", "Predator"));
-            cards.add(new Card(startId++, "Cooperation", "Fat"));
-            cards.add(new Card(startId++, "Big", "Predator"));
-            cards.add(new Card(startId++, "Big", "Fat"));
-            cards.add(new Card(startId++, "Swimming"));
-            cards.add(new Card(startId++, "Swimming"));
+            cards.add(new Card(startId++, Property.SYMBIOSIS));
+            cards.add(new Card(startId++, Property.PIRACY));
+            cards.add(new Card(startId++, Property.GRAZING));
+            cards.add(new Card(startId++, Property.TAIL_LOSS, Property.DELETE_PROPERTY));
+            cards.add(new Card(startId++, Property.HIBERNATION));
+            cards.add(new Card(startId++, Property.POISONOUS));
+            cards.add(new Card(startId++, Property.COMMUNICATION, Property.PREDATOR));
+            cards.add(new Card(startId++, Property.SCAVENGER));
+            cards.add(new Card(startId++, Property.RUNNING));
+            cards.add(new Card(startId++, Property.MIMICRY));
+            cards.add(new Card(startId++, Property.CAMOUFLAGE));
+            cards.add(new Card(startId++, Property.BURROWING));
+            cards.add(new Card(startId++, Property.SHARP_VISION));
+            cards.add(new Card(startId++, Property.PARASITE, Property.PREDATOR));
+            cards.add(new Card(startId++, Property.PARASITE, Property.FAT));
+            cards.add(new Card(startId++, Property.COOPERATION, Property.PREDATOR));
+            cards.add(new Card(startId++, Property.COOPERATION, Property.FAT));
+            cards.add(new Card(startId++, Property.BIG, Property.PREDATOR));
+            cards.add(new Card(startId++, Property.BIG, Property.FAT));
+            cards.add(new Card(startId++, Property.SWIMMING));
+            cards.add(new Card(startId++, Property.SWIMMING));
         }
     }
 
@@ -45,7 +46,7 @@ public class Deck {
         return all;
     }
 
-    public static boolean isPropertyDouble(String property) {
-        return property.equals("Cooperation") || property.equals("Communication") || property.equals("Symbiosis");
+    public static boolean isPropertyDouble(Property property) {
+        return property.equals(Property.COOPERATION) || property.equals(Property.COMMUNICATION) || property.equals(Property.SYMBIOSIS);
     }
 }

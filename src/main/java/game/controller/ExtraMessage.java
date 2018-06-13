@@ -1,5 +1,7 @@
 package game.controller;
 
+import game.constants.Property;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -9,11 +11,7 @@ class ExtraMessage implements Serializable {
     private int predator;
     private String playerUnderAttack;
     private int victim;
-    private String type;
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int id;
+    private Property type;
 
     public void setPlayerOnAttack(String playerOnAttack) {
         this.playerOnAttack = playerOnAttack;
@@ -39,14 +37,14 @@ class ExtraMessage implements Serializable {
         this.victim = victim;
     }
 
-    public void setType(String type) {
+    public void setType(Property type) {
         this.type = type;
     }
 
     public ExtraMessage() {
     }
 
-    public ExtraMessage(String name, int id, String name1, int id1, String type) {
+    ExtraMessage(String name, int id, String name1, int id1, Property type) {
         playerOnAttack = name;
         predator = id;
         playerUnderAttack = name1;
@@ -62,7 +60,7 @@ class ExtraMessage implements Serializable {
         return playerOnAttack;
     }
 
-    public String getType() {
+    public Property getType() {
         return type;
     }
 

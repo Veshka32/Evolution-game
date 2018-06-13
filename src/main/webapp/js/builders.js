@@ -161,7 +161,7 @@ function playProperty(property, cardId) {
         if (property === "MakeAnimal") {
             move = "MakeAnimal";
             document.getElementById("doing").innerText = "Make animal from card # " + cardId;
-        } else if (property === "DeleteProperty") {
+        } else if (property === "DELETE_PROPERTY") {
             tailLoss = true;
             move = "DeleteProperty";
         }
@@ -191,7 +191,7 @@ function buildCard(card) {
     cardDiv.appendChild(buildButton(card.property, card.id));
 
     if (card.hasOwnProperty("extraProperty")) {
-        if (card.extraProperty == "DeleteProperty")
+        if (card.extraProperty == "DELETE_PROPERTY")
             cardDiv.appendChild(buildButton("DeleteProperty", card.id));
         else
             cardDiv.appendChild(buildButton(card.extraProperty, card.id));

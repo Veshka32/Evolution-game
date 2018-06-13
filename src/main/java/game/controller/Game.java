@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import game.constants.Constants;
 import game.constants.Phase;
+import game.constants.Property;
 import game.entities.*;
 
 import javax.persistence.*;
@@ -123,7 +124,7 @@ public class Game implements Serializable {
         else element.getAsJsonObject().addProperty("status", false);
 
         if (extraMessage != null)
-            element.getAsJsonObject().add(extraMessage.getType(), gson.toJsonTree(extraMessage));
+            element.getAsJsonObject().add(extraMessage.getType().toString(), gson.toJsonTree(extraMessage));
 
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
@@ -150,7 +151,7 @@ public class Game implements Serializable {
         else element.getAsJsonObject().addProperty("status", false);
 
         if (extraMessage != null)
-            element.getAsJsonObject().add(extraMessage.getType(), gson.toJsonTree(extraMessage));
+            element.getAsJsonObject().add(extraMessage.getType().toString(), gson.toJsonTree(extraMessage));
 
         if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
@@ -162,7 +163,7 @@ public class Game implements Serializable {
     }
 
     void playTailLoss(Animal predator, Animal victim) {
-        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), "tailLoss");
+        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), Property.TAIL_LOSS);
     }
 
     void afterTailLoss() {
@@ -172,7 +173,7 @@ public class Game implements Serializable {
     }
 
     void playMimicry(Animal predator, Animal victim, List<Integer> list) {
-        extraMessage = new MimicryMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), "mimicry", list);
+        extraMessage = new MimicryMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), Property.MIMICRY, list);
     }
 
     void afterMimicry() {
@@ -181,11 +182,11 @@ public class Game implements Serializable {
         extraMessage = null;
     }
 
-    public void playerBack(String name){
+    void playerBack(String name){
         players.get(name).backToGame();
     }
 
-    public boolean isLeft(){
+    boolean isLeft(){
         for (Player player:players.values()){
             if (!player.isLeftGame()) return false;
         }

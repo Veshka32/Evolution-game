@@ -1,18 +1,15 @@
 package game.controller;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import java.io.IOException;
+import game.constants.Property;
 
 public class Move {
-    String player;
-    String move;
-    String property;
-    int cardId;
-    int animalId;
-    int secondAnimalId;
-    String log;
+    private String player;
+    private String move;
+    private Property property;
+    private int cardId;
+    private int animalId;
+    private int secondAnimalId;
+    private String log;
 
 
     public Move(String player, int cardId, int animalId, int secondAnimalId, String move, String property, String log){
@@ -21,7 +18,7 @@ public class Move {
         this.animalId=animalId;
         this.secondAnimalId=secondAnimalId;
         this.player = player;
-        this.property=property;
+        this.property=Property.valueOf(property);
         this.log=log;
     }
 
@@ -33,18 +30,19 @@ public class Move {
         return player;
     }
 
-    public String getLog(){
+    String getLog(){
         return log;
     }
 
-    public int getCardId(){return cardId;}
+    int getCardId(){return cardId;}
 
-    public int getAnimalId(){return animalId;}
+    int getAnimalId(){return animalId;}
 
-    public int getSecondAnimalId(){return secondAnimalId;}
+    int getSecondAnimalId(){return secondAnimalId;}
 
-    public String getProperty(){return property;}
+    public Property getProperty(){return property;}
 
+    @Override
     public String toString() {
         return new Gson().toJson(this);
     }

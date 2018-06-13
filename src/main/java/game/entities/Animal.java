@@ -2,6 +2,7 @@
 package game.entities;
 
 import com.google.gson.annotations.Expose;
+import game.constants.Property;
 import game.controller.Deck;
 import game.controller.Game;
 import game.controller.GameException;
@@ -23,33 +24,33 @@ public class Animal implements Serializable {
     boolean attackFlag = false;
     boolean fedFlag = false;
     boolean isPoisoned = false;
-    boolean doPiracy = false;
-    boolean doGrazing = false;
-    int hibernationRound;
+    private boolean doPiracy = false;
+    private boolean doGrazing = false;
+    private int hibernationRound;
     int totalFatSupply;
 
     //include in json
     @Expose
-    int id;
+    private int id;
     @Expose
     @ElementCollection
-    List<String> propertyList = new ArrayList<>();
+    List<Property> propertyList = new ArrayList<>();
     @Expose
     @ElementCollection
     List<Integer> cooperateTo = new ArrayList<>();
     @Expose
     @ElementCollection
-    List<Integer> communicateTo = new ArrayList<>();
+    private List<Integer> communicateTo = new ArrayList<>();
     @Expose
     @ElementCollection
-    List<Integer> symbiontFor = new ArrayList<>();
+    private List<Integer> symbiontFor = new ArrayList<>();
     @Expose
     @ElementCollection
-    List<Integer> symbiosisWith = new ArrayList<>();
+    private List<Integer> symbiosisWith = new ArrayList<>();
     @Expose
     int hungry = MIN_HUNGRY;
     @Expose
-    int currentFatSupply;
+    private int currentFatSupply;
 
     public Animal() {
     }
@@ -59,18 +60,15 @@ public class Animal implements Serializable {
         owner = player;
     }
 
-    public void setHungry() {
-        hungry = MIN_HUNGRY;
-        if (hasProperty("Predator")) hungry++;
-        if (hasProperty("Big")) hungry++;
-        if (hasProperty("Parasite")) hungry += 2;
+    void setHungry() {
+        hungry = calculateHungry();
     }
 
     public int calculateHungry() {
         int result = MIN_HUNGRY;
-        if (hasProperty("Predator")) result++;
-        if (hasProperty("Big")) result++;
-        if (hasProperty("Parasite")) result += 2;
+        if (hasProperty(Property.PREDATOR)) result++;
+        if (hasProperty(Property.BIG)) result++;
+        if (hasProperty(Property.PARASITE)) result += 2;
         return result;
     }
 
@@ -120,28 +118,27 @@ public class Animal implements Serializable {
 
     public void attack(Animal victim) throws GameException {
         //exceptions
-        if (!hasProperty("Predator")) throw new GameException("This animal is not a predator");
+        if (!hasProperty(Property.PREDATOR)) throw new GameException("This animal is not a predator");
         if (attackFlag) throw new GameException("This predator has been used");
 
-        if (victim.hasProperty("Swimming")) {
-            if (!hasProperty("Swimming")) throw new GameException("Not-swimming predator can't eat swimming animal");
+        if (victim.hasProperty(Property.SWIMMING)) {
+            if (!hasProperty(Property.SWIMMING)) throw new GameException("Not-swimming predator can't eat swimming animal");
         }
 
-        if (hasProperty("Swimming")) {
-            if (!victim.hasProperty("Swimming"))
+        if (hasProperty(Property.SWIMMING)) {
+            if (!victim.hasProperty(Property.SWIMMING))
                 throw new GameException("Swimming predator can't eat non-swimming animal");
         }
 
-        if (victim.hasProperty("Big")) {
-            if (!hasProperty("Big")) throw new GameException("You can't eat such a big animal");
-        }
+        if (victim.hasProperty(Property.BIG) && !hasProperty(Property.BIG))
+            throw new GameException("You can't eat such a big animal");
 
         if (!victim.symbiosisWith.isEmpty())
             throw new GameException("You can't eat this animal while its symbiont is alive");
-        if (victim.hasProperty("Burrowing") && victim.hungry == 0)
+        if (victim.hasProperty(Property.BURROWING) && victim.hungry == 0)
             throw new GameException("This animal is fed and in burrow");
-        if (victim.hasProperty("Camouflage")) {
-            if (!hasProperty("Sharp Vision")) throw new GameException("This animal is in camouflage");
+        if (victim.hasProperty(Property.CAMOUFLAGE)) {
+            if (!hasProperty(Property.SHARP_VISION)) throw new GameException("This animal is in camouflage");
         }
     }
 
@@ -149,43 +146,43 @@ public class Animal implements Serializable {
         for (int id : cooperateTo) {
             Animal animal = owner.getAnimal(id);
             animal.cooperateTo.remove(Integer.valueOf(this.id));
-            if (animal.cooperateTo.isEmpty()) animal.propertyList.remove("Cooperation");
+            if (animal.cooperateTo.isEmpty()) animal.propertyList.remove(Property.COOPERATION);
             owner.increaseUsedCards();
         }
 
         for (int id : communicateTo) {
             Animal animal = owner.getAnimal(id);
             animal.communicateTo.remove(Integer.valueOf(this.id));
-            if (animal.communicateTo.isEmpty()) animal.propertyList.remove("Communication");
+            if (animal.communicateTo.isEmpty()) animal.propertyList.remove(Property.COMMUNICATION);
             owner.increaseUsedCards();
         }
 
         for (int id : symbiosisWith) {
             Animal animal = owner.getAnimal(id);
             animal.symbiontFor.remove(Integer.valueOf(this.id));
-            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove("Symbiosis");
+            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove(Property.SYMBIOSIS);
             owner.increaseUsedCards();
         }
 
         for (int id : symbiontFor) {
             Animal animal = owner.getAnimal(id);
             animal.symbiosisWith.remove(Integer.valueOf(this.id));
-            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove("Symbiosis");
+            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove(Property.SYMBIOSIS);
             owner.increaseUsedCards();
         }
     }
 
-    public void addProperty(String property) throws GameException {
+    public void addProperty(Property property) throws GameException {
 
-        if (property.equals("Scavenger") && propertyList.contains("Predator"))
+        if (property.equals(Property.SCAVENGER) && propertyList.contains(Property.PREDATOR))
             throw new GameException("Predator cannot be a scavenger");
 
-        else if (property.equals("Predator") && propertyList.contains("Scavenger"))
+        else if (property.equals(Property.PREDATOR) && propertyList.contains(Property.SCAVENGER))
             throw new GameException("Scavenger cannot be a predator");
 
-        else if (property.equals("Fat")) {
+        else if (property.equals(Property.FAT)) {
             totalFatSupply++;
-        } else if (property.equals("Communication") || property.equals("Cooperation") || property.equals("Symbiosis")) {
+        } else if (Deck.isPropertyDouble(property)) {
             //put in list once, but if already has, do not throw exception
             if (hasProperty(property)) return;
         } else if (propertyList.contains(property))
@@ -193,10 +190,10 @@ public class Animal implements Serializable {
 
         propertyList.add(property);
 
-        if (property.equals("Predator") || property.equals("Big")) {
+        if (property.equals(Property.PREDATOR) || property.equals(Property.BIG)) {
             hungry++;
         }
-        if (property.equals("Parasite")) {
+        if (property.equals(Property.PARASITE)) {
             hungry += 2;
         }
     }
@@ -245,11 +242,11 @@ public class Animal implements Serializable {
         this.id = id;
     }
 
-    public List<String> getPropertyList() {
+    public List<Property> getPropertyList() {
         return propertyList;
     }
 
-    public void setPropertyList(List<String> propertyList) {
+    public void setPropertyList(List<Property> propertyList) {
         this.propertyList = propertyList;
     }
 
@@ -330,7 +327,7 @@ public class Animal implements Serializable {
         }
     }
 
-    public void eatExtraMeet(Player player, Game game) {
+    private void eatExtraMeet(Player player, Game game) {
         if (game.getFood() == 0) return;
         if (hungry == 0 || fedFlag || !(checkSymbiosis(owner)))
             return; //abort dfs if animal is fed, is already visited or can't get fish
@@ -380,75 +377,75 @@ public class Animal implements Serializable {
         return hungry == 0;
     }
 
-    public boolean isCommunicate(int id) {
+    boolean isCommunicate(int id) {
         return communicateTo.contains(id);
     }
 
-    public boolean isCooperate(int id) {
+    boolean isCooperate(int id) {
         return cooperateTo.contains(id);
     }
 
-    public boolean isInSymbiosis(int id) {
+    boolean isInSymbiosis(int id) {
         return symbiosisWith.contains(id);
     }
 
-    public boolean isSymbiontFor(int id) {
+    boolean isSymbiontFor(int id) {
         return symbiontFor.contains(id);
     }
 
-    public void setCommunicateTo(int id) {
+    void setCommunicateTo(int id) {
         communicateTo.add(id);
     }
 
-    public void setCooperateTo(int id) {
+    void setCooperateTo(int id) {
         cooperateTo.add(id);
     }
 
-    public void setSymbiosysWith(int id) {
+    void setSymbiosysWith(int id) {
         symbiosisWith.add(id);
     }
 
-    public void setSymbiontFor(int id) {
+    void setSymbiontFor(int id) {
         symbiontFor.add(id);
     }
 
-    public boolean hasProperty(String property) {
+    public boolean hasProperty(Property property) {
         return propertyList.contains(property);
     }
 
-    public void removeProperty(String property) {
+    public void removeProperty(Property property) {
         switch (property) {
-            case "Parasite":
+            case PARASITE:
                 hungry -= 2;
                 propertyList.remove(property);
                 break;
-            case "Big":
+            case BIG:
                 hungry--;
                 propertyList.remove(property);
                 break;
-            case "Fat":
+            case FAT:
                 totalFatSupply--;
                 if (currentFatSupply > totalFatSupply) currentFatSupply = totalFatSupply;
                 propertyList.remove(property);
                 break;
-            case "Predator":
+            case PREDATOR:
                 hungry--;
                 break;
-            case "Communication":
+            case COMMUNICATION:
                 Animal partner = owner.getAnimal(communicateTo.get(0));
                 communicateTo.remove(Integer.valueOf(partner.id));
                 partner.communicateTo.remove(Integer.valueOf(this.id));
                 if (communicateTo.isEmpty()) propertyList.remove(property);
                 if (partner.communicateTo.isEmpty()) partner.propertyList.remove(property);
                 break;
-            case "Cooperation":
+            case COOPERATION:
                 partner = owner.getAnimal(cooperateTo.get(0));
                 cooperateTo.remove(Integer.valueOf(partner.id));
                 partner.cooperateTo.remove(Integer.valueOf(this.id));
                 if (cooperateTo.isEmpty()) propertyList.remove(property);
                 if (partner.cooperateTo.isEmpty()) partner.propertyList.remove(property);
                 break;
-            case "Symbiosis":
+            case SYMBIOSIS:
                 if (!symbiosisWith.isEmpty()) {
                     partner = owner.getAnimal(symbiosisWith.get(0));
                     symbiosisWith.remove(Integer.valueOf(partner.id));

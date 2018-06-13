@@ -49,7 +49,7 @@ function saveGame() {
 
 function onMessage(event) {
     clearFields();
-    var game = JSON.parse(event.data);
+    let game = JSON.parse(event.data);
     if (game.hasOwnProperty("error")) {
         alert(game.error);
         document.getElementById("wrapper").style.pointerEvents = "auto";
@@ -59,7 +59,7 @@ function onMessage(event) {
     //build always
     document.getElementById("phase").innerText = game.phase;
     document.getElementById("log").innerText += game.log;
-    var common = document.getElementById("common");
+    let common = document.getElementById("common");
     common.innerText = "";
 
     for (let name in game.players) {
@@ -91,22 +91,22 @@ function onMessage(event) {
         document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
     }
 
-    if (game.hasOwnProperty("tailLoss")) {
-        let message = game.tailLoss;
+    if (game.hasOwnProperty("TAIL_LOSS")) {
+        let message = game.TAIL_LOSS;
         if (message.playerOnAttack === playerName) wait();
         else if (message.playerUnderAttack === playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
             tailLoss = true;
             let animals = Array.from(document.getElementsByClassName("animal"));
             let animal = animals.find(x => x.id == message.victim);
-            animal.style.pointerEvents = "auto"; //clikable only animals
+            animal.style.pointerEvents = "auto"; //clickable only animals
             document.getElementById("Make move").style.pointerEvents = "auto";
             document.getElementById("Clear").style.pointerEvents = 'auto';
         }
     }
 
-    if (game.hasOwnProperty("mimicry")) {
-        let message = game.mimicry;
+    if (game.hasOwnProperty("MIMICRY")) {
+        let message = game.MIMICRY;
         if (message.playerOnAttack === playerName) wait();
         else if (message.playerUnderAttack === playerName) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with mimicry property. Choose animal to redirect attack or click animal to die");

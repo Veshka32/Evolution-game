@@ -1,5 +1,7 @@
 package game.controller;
 
+import game.constants.Property;
+
 import javax.persistence.Embeddable;
 import java.util.List;
 
@@ -9,7 +11,7 @@ class MimicryMessage extends ExtraMessage {
 
     public MimicryMessage(){}
 
-    public MimicryMessage(String name, int id, String name1, int id1,String type,List<Integer> victims){
+    MimicryMessage(String name, int id, String name1, int id1, Property type, List<Integer> victims){
         super(name,id,name1,id1,type);
         this.victims=victims;
     }

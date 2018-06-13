@@ -70,7 +70,7 @@ public class GameManager {
             game.start();
         }
     }
-    
+
 
     public void loadGame(Integer gameId, String login) throws IllegalArgumentException {
         Game game = gameDAO.load(gameId, login);

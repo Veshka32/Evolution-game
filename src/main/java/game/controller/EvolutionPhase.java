@@ -1,6 +1,7 @@
 package game.controller;
 
 import game.constants.Phase;
+import game.constants.Property;
 import game.entities.Animal;
 import game.entities.Player;
 
@@ -49,9 +50,9 @@ class EvolutionPhase {
 
         Player player = game.getPlayer(move.getPlayer());
         Animal animal = player.getAnimal(move.getAnimalId());
-        String property=move.getProperty();
+        Property property=move.getProperty();
 
-        if (property.equals("Parasite")) {
+        if (property.equals(Property.PARASITE)) {
             if (animal!=null) throw new GameException("You can't play Parasite on your own animal");
             Animal attackedAnimal=game.getAnimal(move.getAnimalId());
             attackedAnimal.addProperty(property);
