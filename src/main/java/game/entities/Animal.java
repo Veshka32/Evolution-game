@@ -1,4 +1,3 @@
-
 package game.entities;
 
 import com.google.gson.annotations.Expose;
@@ -8,35 +7,36 @@ import game.controller.GameException;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Animal implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long trueId;
-
-    private final int MIN_HUNGRY = 1;
+    private transient final int MIN_HUNGRY = 1;
     @ManyToOne
     Player owner;
     boolean attackFlag = false;
     boolean fedFlag = false;
     boolean isPoisoned = false;
-    private boolean doPiracy = false;
-    private boolean doGrazing = false;
-    private int hibernationRound;
     int totalFatSupply;
-
-    //include in json
-    @Expose
-    private int id;
     @Expose
     @ElementCollection
     List<Property> propertyList = new ArrayList<>();
     @Expose
     @ElementCollection
     List<Integer> cooperateTo = new ArrayList<>();
+    @Expose
+    int hungry = MIN_HUNGRY;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int trueId;
+    private boolean doPiracy = false;
+    private boolean doGrazing = false;
+    private int hibernationRound;
+    //include in json
+    @Expose
+    private int id;
     @Expose
     @ElementCollection
     private List<Integer> communicateTo = new ArrayList<>();
@@ -46,8 +46,6 @@ public class Animal implements Serializable {
     @Expose
     @ElementCollection
     private List<Integer> symbiosisWith = new ArrayList<>();
-    @Expose
-    int hungry = MIN_HUNGRY;
     @Expose
     private int currentFatSupply;
 
@@ -83,24 +81,24 @@ public class Animal implements Serializable {
         isPoisoned = true;
     }
 
-    void setDoPiracy(boolean bool) {
-        doPiracy = bool;
-    }
-
     void setAttackFlag(boolean bool) {
         attackFlag = bool;
-    }
-
-    void setDoGrazing(boolean bool) {
-        doGrazing = bool;
     }
 
     boolean isDoPiracy() {
         return doPiracy;
     }
 
+    void setDoPiracy(boolean bool) {
+        doPiracy = bool;
+    }
+
     boolean isDoGrazing() {
         return doGrazing;
+    }
+
+    void setDoGrazing(boolean bool) {
+        doGrazing = bool;
     }
 
     void hibernate(int round) throws GameException {
@@ -124,25 +122,23 @@ public class Animal implements Serializable {
         if (!hasProperty(Property.PREDATOR)) throw new GameException("This animal is not a predator");
         if (attackFlag) throw new GameException("This predator has been used");
 
-        if (victim.hasProperty(Property.SWIMMING)) {
-            if (!hasProperty(Property.SWIMMING)) throw new GameException("Not-swimming predator can't eat swimming animal");
-        }
+        if (victim.hasProperty(Property.SWIMMING) && !hasProperty(Property.SWIMMING))
+            throw new GameException("Not-swimming predator can't eat swimming animal");
 
-        if (hasProperty(Property.SWIMMING)) {
-            if (!victim.hasProperty(Property.SWIMMING))
-                throw new GameException("Swimming predator can't eat non-swimming animal");
-        }
+        if (hasProperty(Property.SWIMMING) && !victim.hasProperty(Property.SWIMMING))
+            throw new GameException("Swimming predator can't eat non-swimming animal");
 
         if (victim.hasProperty(Property.BIG) && !hasProperty(Property.BIG))
             throw new GameException("You can't eat such a big animal");
 
         if (!victim.symbiosisWith.isEmpty())
             throw new GameException("You can't eat this animal while its symbiont is alive");
+
         if (victim.hasProperty(Property.BURROWING) && victim.hungry == 0)
             throw new GameException("This animal is fed and in burrow");
-        if (victim.hasProperty(Property.CAMOUFLAGE)) {
-            if (!hasProperty(Property.SHARP_VISION)) throw new GameException("This animal is in camouflage");
-        }
+
+        if (victim.hasProperty(Property.CAMOUFLAGE) && !hasProperty(Property.SHARP_VISION))
+            throw new GameException("This animal is in camouflage");
     }
 
     void die() {
@@ -163,14 +159,16 @@ public class Animal implements Serializable {
         for (int id : symbiosisWith) {
             Animal animal = owner.getAnimal(id);
             animal.symbiontFor.remove(Integer.valueOf(this.id));
-            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove(Property.SYMBIOSIS);
+            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty())
+                animal.propertyList.remove(Property.SYMBIOSIS);
             owner.increaseUsedCards();
         }
 
         for (int id : symbiontFor) {
             Animal animal = owner.getAnimal(id);
             animal.symbiosisWith.remove(Integer.valueOf(this.id));
-            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty()) animal.propertyList.remove(Property.SYMBIOSIS);
+            if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty())
+                animal.propertyList.remove(Property.SYMBIOSIS);
             owner.increaseUsedCards();
         }
     }
@@ -183,22 +181,24 @@ public class Animal implements Serializable {
         else if (property.equals(Property.PREDATOR) && propertyList.contains(Property.SCAVENGER))
             throw new GameException("Scavenger cannot be a predator");
 
-        else if (property.equals(Property.FAT)) {
+        else if (property.equals(Property.FAT))
             totalFatSupply++;
-        } else if (Deck.isPropertyDouble(property)) {
-            //put in list once, but if already has, do not throw exception
-            if (hasProperty(property)) return;
-        } else if (propertyList.contains(property))
+
+        else if (Deck.isPropertyDouble(property)) {
+            if (hasProperty(property)) return;  //put in list once, but if already has, do not throw exception
+        }
+
+        else if (propertyList.contains(property))
             throw new GameException("This animal already has property: " + property);
 
         propertyList.add(property);
 
-        if (property.equals(Property.PREDATOR) || property.equals(Property.BIG)) {
+        if (property.equals(Property.PREDATOR) || property.equals(Property.BIG))
             hungry++;
-        }
-        if (property.equals(Property.PARASITE)) {
+
+        if (property.equals(Property.PARASITE))
             hungry += 2;
-        }
+
     }
 
     Player getOwner() {
@@ -232,7 +232,7 @@ public class Animal implements Serializable {
 
     void eatFish(int i) {
         if (hungry == 0 || fedFlag || !(checkSymbiosis(owner)))
-            return; //abort dfs if animal is fed, is already visited or can't get fish
+            return; //abort chain feeding if animal is fed, is already visited or can't get fish
 
         fedFlag = true;
         if (hungry < i) i = 1; // if hungry==1 and fish==2, only one fish goes on

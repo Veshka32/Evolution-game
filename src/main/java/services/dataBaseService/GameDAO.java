@@ -25,18 +25,18 @@ public class GameDAO {
 //    }
 
     public void remove(Integer gameId){
-        Game game=em.find(Game.class,gameId);
-        em.remove(game);
+        Game game=em.find(Game.class,gameId);  //IllegalArgumentException
+        em.remove(game); //IllegalArgumentException ,  TransactionRequiredException
     }
 
     public List<Game> getSavedGames(String login){
-        TypedQuery<Game> tq = em.createQuery("SELECT g from Game g join g.players p where p.name=?1", Game.class);
+        TypedQuery<Game> tq = em.createQuery("SELECT g from Game g join g.players p where p.name=?1", Game.class); //IllegalArgumentException
         tq.setParameter(1, login);
-        return tq.getResultList();
+        return tq.getResultList(); // 6 excs
     }
 
     public Game save(Game game){
-        return em.merge(game);
+        return em.merge(game); //IllegalArgumentException, TransactionRequiredException
     }
 
     public Game load(Integer gameId,String login){
@@ -44,7 +44,7 @@ public class GameDAO {
         tq.setParameter(1, gameId);
         tq.setParameter(2, login);
         Game game;
-        try {game = tq.getSingleResult();} catch (NoResultException e){game= null;}
+        try {game = tq.getSingleResult();} catch (NoResultException e){game= null;} //6 exs
         return game;
     }
 
@@ -52,6 +52,6 @@ public class GameDAO {
         TypedQuery<Users> tq=em.createQuery("select u from Users u join Game g join g.players p where g.id=?1 and p.name=?2",Users.class);
         tq.setParameter(1,gameId);
         tq.setParameter(2,login);
-        return tq.getResultList();
-    }
-}
+        return tq.getResultList(); //6 exs
+    }}
+

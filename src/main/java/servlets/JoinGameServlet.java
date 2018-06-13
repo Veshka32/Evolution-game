@@ -16,12 +16,12 @@ public class JoinGameServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        String name = (String) session.getAttribute("player");
+        String login = (String) session.getAttribute("player");
         Integer gameId = Integer.valueOf(req.getParameter("gameId"));
 
         try {
 
-            gameManager.joinPlayer(name, gameId);
+            gameManager.joinPlayer(gameId,login);
             session.setAttribute("gameId", gameId);
             resp.sendRedirect("views/socket.html");
 

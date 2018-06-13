@@ -50,7 +50,7 @@ public class GameManager {
         return games.values().stream().filter(game -> !game.onProgress() || game.containsPlayer(login)).map(Game::toString).collect(Collectors.joining("\n"));
     }
 
-    public Integer createGame(String name, Integer number) {
+    public Integer createGame(String name, int number) {
         Game game = new Game();
         game.setId(generator.getGame_next_id());
         game.setNumberOfPlayers(number);
@@ -59,12 +59,12 @@ public class GameManager {
         return game.getId();
     }
 
-    public void joinPlayer(String name, int gameId) throws IllegalArgumentException {
+    public void joinPlayer(Integer gameId,String login) throws IllegalArgumentException {
         if (!games.containsKey(gameId)) throw new IllegalArgumentException();
         Game game = games.get(gameId);
-        if (game.containsPlayer(name))
-            game.playerBack(name);
-        else game.addPlayer(name);
+        if (game.containsPlayer(login))
+            game.playerBack(login);
+        else game.addPlayer(login);
 
         if (game.isFull()) {
             game.setCardList(deck.getCards());
@@ -88,8 +88,8 @@ public class GameManager {
         }
     }
 
-    public Game getGame(Integer i) {
-        return games.get(i);
+    public Game getGame(Integer id) {
+        return games.get(id);
     }
 
     public void save(Integer gameId) {

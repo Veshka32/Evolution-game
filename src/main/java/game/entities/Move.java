@@ -44,7 +44,6 @@ public class Move {
     int getSecondAnimalId(){return secondAnimalId;}
 
 
-
     @Override
     public String toString() {
         return new Gson().toJson(this);

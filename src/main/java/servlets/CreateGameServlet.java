@@ -15,29 +15,29 @@ public class CreateGameServlet extends HttpServlet {
     @Inject
     private GameManager gameManager;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        HttpSession session = req.getSession();
-        String name=(String) session.getAttribute("player");
-        Integer gameId;
-        try {
-            gameId = gameManager.createGame(name,2);
-            session.setAttribute("gameId",gameId);
-            resp.sendRedirect("views/socket.html");
-        } catch (Exception e){
-            req.setAttribute("createError","System error, try again.");
-            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
-        }
-    }
+//    @Override
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+//        HttpSession session = req.getSession();
+//        String name=(String) session.getAttribute("player");
+//        Integer gameId;
+//        try {
+//            gameId = gameManager.createGame(name,2);
+//            session.setAttribute("gameId",gameId);
+//            resp.sendRedirect("views/socket.html");
+//        } catch (Exception e){
+//            req.setAttribute("createError","System error, try again.");
+//            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
+//        }
+//    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         HttpSession session = req.getSession();
-        String name=(String) session.getAttribute("player");
-        Integer number=Integer.valueOf(req.getParameter("number"));
+        String login=(String) session.getAttribute("player");
+        int number=Integer.valueOf(req.getParameter("number"));
         Integer gameId;
         try {
-            gameId = gameManager.createGame(name,number);
+            gameId = gameManager.createGame(login,number);
             session.setAttribute("gameId",gameId);
             resp.sendRedirect("views/socket.html");
         } catch (Exception e){
