@@ -2,12 +2,11 @@ package game.controller;
 
 import services.dataBaseService.GameDAO;
 
-import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
-import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,15 +26,20 @@ public class GameManager {
     @Inject
     private Deck deck;
 
-    private Map<Integer, Game> games=new HashMap<>();
+    private Map<Integer, Game> games = new HashMap<>();
 
     @Schedule(hour = "*") //every minute
-    public void removeGames(){
+    public void removeGames() {
         games.values().removeIf(Game::isLeft); //safety removing from map
     }
 
-    public String loadSavedGames(String login){
-        List<Game> savedGames=gameDAO.getSavedGames(login);
+    public String loadSavedGames(String login) {
+        List<Game> savedGames;
+        try {
+            savedGames = gameDAO.getSavedGames(login);
+        } catch (Exception e) {
+            savedGames = new ArrayList<>();
+        }
         if (savedGames.isEmpty()) return " no games";
         return savedGames.stream().map(Game::toString).collect(Collectors.joining("\n"));
     }
@@ -46,7 +50,7 @@ public class GameManager {
     }
 
     public Integer createGame(String name, Integer number) {
-        Game game=new Game();
+        Game game = new Game();
         game.setId(generator.getGame_next_id());
         game.setNumberOfPlayers(number);
         game.addPlayer(name);
@@ -54,24 +58,24 @@ public class GameManager {
         return game.getId();
     }
 
-    public void joinPlayer(String name, int gameId) {
+    public void joinPlayer(String name, int gameId) throws IllegalArgumentException {
+        if (!games.containsKey(gameId)) throw new IllegalArgumentException();
         Game game = games.get(gameId);
-        game.addPlayer(name);
+        if (game.containsPlayer(name))
+            game.playerBack(name);
+        else game.addPlayer(name);
+
         if (game.isFull()) {
             game.setCardList(deck.getCards());
             game.start();
         }
     }
+    
 
-    public void playerBack(String name,Integer gameId){
-        games.get(gameId).playerBack(name);
-    }
-
-    public boolean loadGame(Integer gameId,String login){
-        Game game=gameDAO.load(gameId,login);
-        if (game==null) return false;
-        games.put(gameId,game);
-        return true;
+    public void loadGame(Integer gameId, String login) throws IllegalArgumentException {
+        Game game = gameDAO.load(gameId, login);
+        if (game == null) throw new IllegalArgumentException();
+        games.put(gameId, game);
     }
 
     public void remove(Integer gameId) {
@@ -87,17 +91,9 @@ public class GameManager {
         return games.get(i);
     }
 
-    public boolean doParticipate(String name, int i) {
-        return (games.get(i).containsPlayer(name));
-    }
-
-    public boolean isValidId(Integer gameId) {
-        return games.containsKey(gameId);
-    }
-
-    public void save(Integer gameId){
-        Game game=gameDAO.save(games.get(gameId));
-        games.put(gameId,game);
+    public void save(Integer gameId) {
+        Game game = gameDAO.save(games.get(gameId));
+        games.put(gameId, game);
     }
 
 }

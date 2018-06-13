@@ -12,26 +12,6 @@ import java.io.IOException;
 public class JoinGameServlet extends HttpServlet {
     @Inject
     private GameManager gameManager;
-    //private Game game;
-
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        HttpSession session = req.getSession();
-//        String name=(String) session.getAttribute("player");
-//
-//        if (game.getPlayer(name)!=null){req.setAttribute("playersList",game.getAllPlayers());
-//        resp.sendRedirect("views/socket.html");}
-//
-//        else if (game.onProgress()) {
-//            req.setAttribute("message", "Sorry,game is full");
-//            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
-//        }
-//        else {
-//            game.addPlayer(name);
-//            req.setAttribute("playersList",game.getAllPlayers());
-//            resp.sendRedirect("views/socket.html");
-//        }
-//    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,20 +20,15 @@ public class JoinGameServlet extends HttpServlet {
         Integer gameId = Integer.valueOf(req.getParameter("gameId"));
 
         try {
-            if (!gameManager.isValidId(gameId)) {
-                req.setAttribute("joinError", "Wrong game id");
-                req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
 
-            } else if (gameManager.doParticipate(name, gameId)) {  //user already in game
-                session.setAttribute("gameId", gameId);
-                gameManager.playerBack(name,gameId);
-                resp.sendRedirect("views/socket.html");
+            gameManager.joinPlayer(name, gameId);
+            session.setAttribute("gameId", gameId);
+            resp.sendRedirect("views/socket.html");
 
-            } else {
-                gameManager.joinPlayer(name, gameId); //new player
-                session.setAttribute("gameId", gameId);
-                resp.sendRedirect("views/socket.html");
-            }
+        } catch (IllegalArgumentException e) {
+            req.setAttribute("joinError", "Wrong game id");
+            req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
+
         } catch (Exception e) {
             req.setAttribute("joinError", "System error, try again.");
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
