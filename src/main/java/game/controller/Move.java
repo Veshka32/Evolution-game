@@ -14,12 +14,12 @@ public class Move {
 
 
     public Move(String player, int cardId, int animalId, int secondAnimalId, String move, String property, String log){
-        this.move = MoveType.valueOf(move);
+        this.player = player;
         this.cardId = cardId;
         this.animalId=animalId;
         this.secondAnimalId=secondAnimalId;
-        this.player = player;
-        this.property=Property.valueOf(property);
+        if (move!=null) this.move = MoveType.valueOf(move);
+        if (property!=null) this.property=Property.valueOf(property);
         this.log=log;
     }
 

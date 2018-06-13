@@ -1,5 +1,6 @@
 package game.entities;
 
+import game.constants.Property;
 import game.controller.GameException;
 import org.junit.Test;
 
@@ -15,21 +16,21 @@ public class PlayerTest {
     public void connectAnimal() throws GameException {
         player.addAnimal(an1);
         player.addAnimal(an2);
-        player.connectAnimal(1,2,"Cooperation");
+        player.connectAnimal(1,2,Property.COOPERATION);
 
         assertThrows(GameException.class, ()->{
-            player.connectAnimal(1,2,"Cooperation");
+            player.connectAnimal(1,2,Property.COOPERATION);
         }, "These animals are already cooperating");
 
         assertThrows(GameException.class,()->{
-            player.connectAnimal(1,3,"Communication"); //not throw any
+            player.connectAnimal(1,3,Property.COMMUNICATION); //not throw any
         },"It's not your animal(s)");
 
         player.addAnimal(an3);
-        player.connectAnimal(1,3,"Communication");
+        player.connectAnimal(1,3,Property.COMMUNICATION);
 
         assertThrows(GameException.class, ()->{
-            player.connectAnimal(1,3,"Communication");
+            player.connectAnimal(1,3,Property.COMMUNICATION);
         }, "These animals are already communicating");
 
         player.animalsDie();

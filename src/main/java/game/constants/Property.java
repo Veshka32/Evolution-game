@@ -20,5 +20,5 @@ public enum Property {
     COOPERATION,
     BIG,
     SWIMMING,
-    DELETE_PROPERTY;
+    DELETE_PROPERTY
 }
