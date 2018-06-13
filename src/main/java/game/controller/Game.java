@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import game.constants.Constants;
+import game.constants.MoveType;
 import game.constants.Phase;
 import game.constants.Property;
 import game.entities.*;
@@ -199,12 +200,13 @@ public class Game implements Serializable {
     public void makeMove(Move move) {
         lastLogMessage="\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
         log.append(lastLogMessage);
-        if (move.getMove().equals("saveGame")) return;
         switch (move.getMove()) {
-            case "EndPhase":
+            case SAVE_GAME:
+                return;
+            case END_PHASE:
                 playerEndsPhase(move.getPlayer());
                 return;
-            case "Leave game": //only log updates
+            case LEAVE_GAME: //only log updates
                 players.get(move.getPlayer()).leftGame();
                 return;
         }

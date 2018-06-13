@@ -18,27 +18,27 @@ class FeedPhase {
 
     void processMove() throws GameException {
         switch (move.getMove()) {
-            case "eatFood":
+            case EAT_FOOD:
                 eatFood();
                 break;
-            case "attack":
+            case ATTACK:
                 attack();
                 break;
-            case "playAnimalProperty":
+            case PLAY_ANIMAL_PROPERTY:
                 playAnimalProperty();
                 break;
-            case "endMove":
+            case END_MOVE:
                 game.switchPlayerOnMove();
                 game.getPlayer(move.getPlayer()).setDoEat(false);
                 game.getPlayer(move.getPlayer()).resetGrazing();
                 break;
-            case "eatFat":
+            case EAT_FAT:
                 eatFat();
                 break;
-            case "DeleteProperty":
+            case DELETE_PROPERTY:
                 processTailLoss();
                 break;
-            case "playMimicry":
+            case PLAY_MIMICRY:
                 processMimicry();
                 break;
         }

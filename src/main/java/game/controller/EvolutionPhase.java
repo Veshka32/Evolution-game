@@ -16,16 +16,16 @@ class EvolutionPhase {
     void processMove() throws GameException {
 
         switch (move.getMove()) {
-            case "MakeAnimal":
+            case MAKE_ANIMAL:
                 game.makeAnimal(move);
                 break;
-            case "DeleteProperty":
+            case DELETE_PROPERTY:
                 Player player=game.getPlayer(move.getPlayer());
                 Animal animal=player.getAnimal(move.getAnimalId());
                 animal.removeProperty(move.getProperty());
                 player.deleteCard(move.getCardId());
                 break;
-            case "PlayProperty":
+            case PLAY_PROPERTY:
                 if (Deck.isPropertyDouble(move.getProperty()))
                     processDoubleProperty();
                 else {

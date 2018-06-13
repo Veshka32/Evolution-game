@@ -82,7 +82,7 @@ function buildAnimal(animal, flag) {
                 span.appendChild(buildFat());
             }
             span.addEventListener("click", function () {
-                move = "eatFat";
+                move = "EAT_FAT";
                 firstAnimalId = animal.id;
                 document.getElementById("doing").innerText = "animal #" + firstAnimalId + " eats fat supply";
             });
@@ -107,7 +107,7 @@ function buildAnimal(animal, flag) {
 
     animDiv.addEventListener("click", function () {
         if (mimicry) {
-            move = "playMimicry";
+            move = "PLAY_MIMICRY";
             if (mimicryVictims.includes(animal.id)) {
                 document.getElementById("doing").innerText = "Redirect predator to animal #" + animal.id;
                 firstAnimalId = animal.id;
@@ -145,11 +145,11 @@ function playAnimalProperty(property, animalId) {
     draggedProperty = property;
     firstAnimalId = animalId;
     if (tailLoss) {
-        move = "DeleteProperty";
+        move = "DELETE_PROPERTY";
         document.getElementById("doing").innerText = "Delete property  ";
     }
     else {
-        move = "playAnimalProperty";
+        move = "PLAY_ANIMAL_PROPERTY";
         document.getElementById("doing").innerText = "Play property "
     }
     document.getElementById("doing").innerText += draggedProperty + " from animal #" + animalId;
@@ -159,14 +159,14 @@ function playProperty(property, cardId) {
     if (document.getElementById("phase").innerText == "EVOLUTION") {
         playedCardId = cardId;
         if (property === "MakeAnimal") {
-            move = "MakeAnimal";
+            move = "MAKE_ANIMAL";
             document.getElementById("doing").innerText = "Make animal from card # " + cardId;
         } else if (property === "DELETE_PROPERTY") {
             tailLoss = true;
-            move = "DeleteProperty";
+            move = "DELETE_PROPERTY";
         }
         else {
-            move = "PlayProperty";
+            move = "PLAY_PROPERTY";
             draggedProperty = property;
             document.getElementById("doing").innerText = "play property " + draggedProperty + " from card #" + cardId;
         }

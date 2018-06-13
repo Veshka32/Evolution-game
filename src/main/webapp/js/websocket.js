@@ -19,12 +19,12 @@ function eatFood() {
         alert("You can't eat/attack twice during one move");
         return;
     }
-    move = "eatFood";
+    move = "EAT_FOOD";
     document.getElementById("doing").innerText = "Feed ";// set firstAnimalId
 }
 
 function endMove() {
-    move = "endMove";
+    move = "END_MOVE";
     document.getElementById("doing").innerText = "end move";
     let json = buildMessage();
     clearFields();
@@ -32,7 +32,7 @@ function endMove() {
 }
 
 function endPhase() {
-    move = "EndPhase";
+    move = "END_PHASE";
     document.getElementById("doing").innerText = "end " + document.getElementById("phase").innerText;
     let json = buildMessage();
     clearFields(); //clear fields after message is built!
@@ -40,7 +40,7 @@ function endPhase() {
 }
 
 function saveGame() {
-    move="saveGame";
+    move = "SAVE_GAME";
     document.getElementById("doing").innerText="saved game";
     let json=buildMessage();
     clearFields();
@@ -141,7 +141,7 @@ function makeMove() {
                 alert("You haven't made any move");
                 return;
             }
-            move = "attack";
+            move = "ATTACK";
             if (doEat) {
                 alert("You can't eat/attack twice during one move");
                 return;
@@ -162,6 +162,12 @@ function clearFields() {
     tailLoss = false;
     document.getElementById("doing").innerText = "";
     document.getElementById("wrapper").style.pointerEvents = "none";
+}
+
+
+function wait() {
+    document.getElementById("status").innerText = "Please, wait for victim answer...";
+    document.getElementById("wrapper").style.pointerEvents = "none"; //disable whole page
 }
 
 

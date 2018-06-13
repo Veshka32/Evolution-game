@@ -1,10 +1,11 @@
 package game.controller;
 import com.google.gson.Gson;
+import game.constants.MoveType;
 import game.constants.Property;
 
 public class Move {
     private String player;
-    private String move;
+    private MoveType move;
     private Property property;
     private int cardId;
     private int animalId;
@@ -13,7 +14,7 @@ public class Move {
 
 
     public Move(String player, int cardId, int animalId, int secondAnimalId, String move, String property, String log){
-        this.move = move;
+        this.move = MoveType.valueOf(move);
         this.cardId = cardId;
         this.animalId=animalId;
         this.secondAnimalId=secondAnimalId;
@@ -22,7 +23,7 @@ public class Move {
         this.log=log;
     }
 
-    public String getMove() {
+    public MoveType getMove() {
         return move;
     }
 
