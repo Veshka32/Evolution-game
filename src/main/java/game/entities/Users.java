@@ -1,10 +1,7 @@
 package game.entities;
 
-import game.controller.Game;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
 
 @Entity
 //@Table(name="Users") //by default, table name=Classname

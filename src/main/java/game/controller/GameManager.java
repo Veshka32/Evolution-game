@@ -1,5 +1,6 @@
 package game.controller;
 
+import game.entities.Game;
 import services.dataBaseService.GameDAO;
 
 import javax.ejb.Schedule;

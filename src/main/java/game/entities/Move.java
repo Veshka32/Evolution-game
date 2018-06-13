@@ -1,4 +1,4 @@
-package game.controller;
+package game.entities;
 import com.google.gson.Gson;
 import game.constants.MoveType;
 import game.constants.Property;
@@ -31,6 +31,8 @@ public class Move {
         return player;
     }
 
+    public Property getProperty(){return property;}
+
     String getLog(){
         return log;
     }
@@ -41,7 +43,7 @@ public class Move {
 
     int getSecondAnimalId(){return secondAnimalId;}
 
-    public Property getProperty(){return property;}
+
 
     @Override
     public String toString() {

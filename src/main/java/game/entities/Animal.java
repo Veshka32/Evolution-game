@@ -4,7 +4,6 @@ package game.entities;
 import com.google.gson.annotations.Expose;
 import game.constants.Property;
 import game.controller.Deck;
-import game.controller.Game;
 import game.controller.GameException;
 
 import javax.persistence.*;
@@ -60,11 +59,15 @@ public class Animal implements Serializable {
         owner = player;
     }
 
+    public int getId() {
+        return id;
+    }
+
     void setHungry() {
         hungry = calculateHungry();
     }
 
-    public int calculateHungry() {
+    int calculateHungry() {
         int result = MIN_HUNGRY;
         if (hasProperty(Property.PREDATOR)) result++;
         if (hasProperty(Property.BIG)) result++;
@@ -72,35 +75,35 @@ public class Animal implements Serializable {
         return result;
     }
 
-    public void deleteFood() {
+    void deleteFood() {
         hungry++;
     }
 
-    public void poison() {
+    void poison() {
         isPoisoned = true;
     }
 
-    public void setDoPiracy(boolean bool) {
+    void setDoPiracy(boolean bool) {
         doPiracy = bool;
     }
 
-    public void setAttackFlag(boolean bool) {
+    void setAttackFlag(boolean bool) {
         attackFlag = bool;
     }
 
-    public void setDoGrazing(boolean bool) {
+    void setDoGrazing(boolean bool) {
         doGrazing = bool;
     }
 
-    public boolean isDoPiracy() {
+    boolean isDoPiracy() {
         return doPiracy;
     }
 
-    public boolean isDoGrazing() {
+    boolean isDoGrazing() {
         return doGrazing;
     }
 
-    public void hibernate(int round) throws GameException {
+    void hibernate(int round) throws GameException {
         if (round == -1) throw new GameException("You can't hibernate in last round");
         else if (round != 0 && round == hibernationRound)
             throw new GameException("This animal is already in hibernation");//can hibernate in 0 round
@@ -109,14 +112,14 @@ public class Animal implements Serializable {
         hungry = 0;
     }
 
-    public void eatFat() throws GameException {
+    void eatFat() throws GameException {
         if (currentFatSupply < 1) throw new GameException("You have no fat supply");
         if (hungry < 1) throw new GameException("Animal is fed");
         hungry--;
         currentFatSupply--;
     }
 
-    public void attack(Animal victim) throws GameException {
+    void attack(Animal victim) throws GameException {
         //exceptions
         if (!hasProperty(Property.PREDATOR)) throw new GameException("This animal is not a predator");
         if (attackFlag) throw new GameException("This predator has been used");
@@ -142,7 +145,7 @@ public class Animal implements Serializable {
         }
     }
 
-    public void die() {
+    void die() {
         for (int id : cooperateTo) {
             Animal animal = owner.getAnimal(id);
             animal.cooperateTo.remove(Integer.valueOf(this.id));
@@ -172,7 +175,7 @@ public class Animal implements Serializable {
         }
     }
 
-    public void addProperty(Property property) throws GameException {
+    void addProperty(Property property) throws GameException {
 
         if (property.equals(Property.SCAVENGER) && propertyList.contains(Property.PREDATOR))
             throw new GameException("Predator cannot be a scavenger");
@@ -198,111 +201,11 @@ public class Animal implements Serializable {
         }
     }
 
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
-    public boolean isAttackFlag() {
-        return attackFlag;
-    }
-
-    public boolean isFedFlag() {
-        return fedFlag;
-    }
-
-    public void setFedFlag(boolean fedFlag) {
-        this.fedFlag = fedFlag;
-    }
-
-    public boolean isPoisoned() {
-        return isPoisoned;
-    }
-
-    public void setPoisoned(boolean poisoned) {
-        isPoisoned = poisoned;
-    }
-
-    public int getHibernationRound() {
-        return hibernationRound;
-    }
-
-    public void setHibernationRound(int hibernationRound) {
-        this.hibernationRound = hibernationRound;
-    }
-
-    public int getTotalFatSupply() {
-        return totalFatSupply;
-    }
-
-    public void setTotalFatSupply(int totalFatSupply) {
-        this.totalFatSupply = totalFatSupply;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List<Property> getPropertyList() {
-        return propertyList;
-    }
-
-    public void setPropertyList(List<Property> propertyList) {
-        this.propertyList = propertyList;
-    }
-
-    public List<Integer> getCooperateTo() {
-        return cooperateTo;
-    }
-
-    public void setCooperateTo(ArrayList<Integer> cooperateTo) {
-        this.cooperateTo = cooperateTo;
-    }
-
-    public List<Integer> getCommunicateTo() {
-        return communicateTo;
-    }
-
-    public void setCommunicateTo(ArrayList<Integer> communicateTo) {
-        this.communicateTo = communicateTo;
-    }
-
-    public List<Integer> getSymbiontFor() {
-        return symbiontFor;
-    }
-
-    public void setSymbiontFor(ArrayList<Integer> symbiontFor) {
-        this.symbiontFor = symbiontFor;
-    }
-
-    public List<Integer> getSymbiosisWith() {
-        return symbiosisWith;
-    }
-
-    public void setSymbiosisWith(ArrayList<Integer> symbiosisWith) {
-        this.symbiosisWith = symbiosisWith;
-    }
-
-    public int getHungry() {
-        return hungry;
-    }
-
-    public void setHungry(int hungry) {
-        this.hungry = hungry;
-    }
-
-    public int getCurrentFatSupply() {
-        return currentFatSupply;
-    }
-
-    public void setCurrentFatSupply(int currentFatSupply) {
-        this.currentFatSupply = currentFatSupply;
-    }
-
-    public Player getOwner() {
+    Player getOwner() {
         return owner;
     }
 
-    public void eatMeet(Player player, Game game) throws GameException {
+    void eatMeet(Player player, Game game) throws GameException {
 
         if (hungry == 0) {
             if (currentFatSupply == totalFatSupply) throw new GameException("This animal is fed!");
@@ -327,25 +230,7 @@ public class Animal implements Serializable {
         }
     }
 
-    private void eatExtraMeet(Player player, Game game) {
-        if (game.getFood() == 0) return;
-        if (hungry == 0 || fedFlag || !(checkSymbiosis(owner)))
-            return; //abort dfs if animal is fed, is already visited or can't get fish
-
-        fedFlag = true;
-        hungry--;
-        game.deleteFood();
-        for (int id : communicateTo) {
-            player.getAnimal(id).eatExtraMeet(player, game);
-        }
-
-        for (int id : cooperateTo) {
-            player.getAnimal(id).eatFish(1);
-        }
-
-    }
-
-    public void eatFish(int i) {
+    void eatFish(int i) {
         if (hungry == 0 || fedFlag || !(checkSymbiosis(owner)))
             return; //abort dfs if animal is fed, is already visited or can't get fish
 
@@ -358,7 +243,7 @@ public class Animal implements Serializable {
         }
     }
 
-    public boolean checkSymbiosis(Player player) { //return false if not all of the symbionts are fed;
+    boolean checkSymbiosis(Player player) { //return false if not all of the symbionts are fed;
         if (!symbiosisWith.isEmpty()) {
             for (int id : symbiosisWith
                     ) {
@@ -369,11 +254,7 @@ public class Animal implements Serializable {
         return true;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public boolean notHungry() {
+    boolean notHungry() {
         return hungry == 0;
     }
 
@@ -409,11 +290,11 @@ public class Animal implements Serializable {
         symbiontFor.add(id);
     }
 
-    public boolean hasProperty(Property property) {
+    boolean hasProperty(Property property) {
         return propertyList.contains(property);
     }
 
-    public void removeProperty(Property property) {
+    void removeProperty(Property property) {
         switch (property) {
             case PARASITE:
                 hungry -= 2;
@@ -467,4 +348,23 @@ public class Animal implements Serializable {
         owner.increaseUsedCards();
 
     }
+
+    private void eatExtraMeet(Player player, Game game) {
+        if (game.getFood() == 0) return;
+        if (hungry == 0 || fedFlag || !(checkSymbiosis(owner)))
+            return; //abort dfs if animal is fed, is already visited or can't get fish
+
+        fedFlag = true;
+        hungry--;
+        game.deleteFood();
+        for (int id : communicateTo) {
+            player.getAnimal(id).eatExtraMeet(player, game);
+        }
+
+        for (int id : cooperateTo) {
+            player.getAnimal(id).eatFish(1);
+        }
+
+    }
+
 }

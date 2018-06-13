@@ -29,86 +29,89 @@ public class Player implements Serializable {
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cards = new ArrayList<>();
     @Expose
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "owner") //no player - no animals //orphanRemoval=true
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner") //no player - no animals //orphanRemoval=true
     private Map<Integer, Animal> animals = new HashMap<>();
     private boolean doEat;
 
-    public Player(){}
-
-    public Player(String login,int order) {
-        this.name = login;this.orderInMove =order;
+    public Player() {
     }
 
-    public int getOrderInMove() {
+    public Player(String login, int order) {
+        this.name = login;
+        this.orderInMove = order;
+    }
+
+    int getOrderInMove() {
         return orderInMove;
     }
 
     public String getName() {
         return name;
     }
-    public void setName(String name){
-        this.name=name;
+
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDoEat(boolean bool) {
+    void setDoEat(boolean bool) {
         doEat = bool;
     }
 
-    public void resetGrazing() {
-        animals.forEach((k,v)->v.setDoGrazing(false));
+    void resetGrazing() {
+        animals.forEach((k, v) -> v.setDoGrazing(false));
     }
 
-    public void leftGame(){
-        leftGame=true;
+    void leftGame() {
+        leftGame = true;
     }
 
-    public void backToGame(){
-        leftGame=false;
+    void backToGame() {
+        leftGame = false;
     }
 
-    public boolean isLeftGame(){
+    boolean isLeftGame() {
         return leftGame;
     }
 
-    public boolean isDoEat() {
+    boolean isDoEat() {
         return doEat;
     }
 
-    public void addCard(Card card) {
+    void addCard(Card card) {
         cards.add(card);
         cardNumber--;
     }
 
-    public void deleteCard(int id) {
-        for (int i = 0; i < cards.size(); i++) {
-            if (cards.get(i).getId() == id) {
-                cards.remove(i);
+    void deleteCard(int id) {
+        for (Card card : cards) {
+            if (card.getId() == id) {
+                cards.remove(card);
                 break;
             }
         }
     }
 
-    public void setCardNumber() {
+    void setCardNumber() {
         if (!hasAnimals() && !hasCards())
             cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
         else cardNumber = animals.size() + Constants.NUMBER_OF_EXTRA_CARD.getValue();
     }
 
-    public int getPoints() {
-        animals.forEach((k,v)->points+=v.hungry); //how to calculate double cards?
+    int getPoints() {
+        animals.forEach((k, v) -> points += v.hungry); //how to calculate double cards?
         return points;
     }
 
-    public String finalPoints(){
-        return name+": "+points+" points, "+usedCards+" cards used.";
+    String finalPoints() {
+        return name + ": " + points + " points, " + usedCards + " cards used.";
     }
 
-    public void addAnimal(Animal animal) {
+    void addAnimal(Animal animal) {
         animals.put(animal.getId(), animal);
     }
 
     //return true if player has any scavenger that can be fed; feed only one of them. Player should choose which one, actually
-    public boolean feedScavenger() {
+    boolean feedScavenger() {
         for (Animal animal : animals.values()
                 ) {
             if (animal.hasProperty(Property.SCAVENGER) && animal.hungry > 0) {
@@ -120,7 +123,7 @@ public class Player implements Serializable {
     }
 
 
-    public void connectAnimal(int id1, int id2, Property property) throws GameException {
+    void connectAnimal(int id1, int id2, Property property) throws GameException {
 
         if (animals.size() < 2) throw new GameException("You don't have enough animals");
 
@@ -169,7 +172,7 @@ public class Player implements Serializable {
         }
     }
 
-    public void animalsDie() {
+    void animalsDie() {
         Collection<Animal> all = animals.values();
         Iterator<Animal> it = all.iterator(); //to remove animal safety;
         while (it.hasNext()) {
@@ -182,11 +185,11 @@ public class Player implements Serializable {
         }
     }
 
-    public void resetFedFlag() {
-        animals.forEach((k,v)->v.fedFlag=false);
+    void resetFedFlag() {
+        animals.forEach((k, v) -> v.fedFlag = false);
     }
 
-    public void resetFields() {
+    void resetFields() {
         for (Animal an : animals.values()
                 ) {
             an.setHungry();
@@ -198,7 +201,7 @@ public class Player implements Serializable {
         }
     }
 
-    public List<Integer> canRedirect(Animal predator, int victim) {
+    List<Integer> canRedirect(Animal predator, int victim) {
         ArrayList<Integer> canAttack = new ArrayList<>();
 
         for (Animal an : animals.values()) {
@@ -212,20 +215,31 @@ public class Player implements Serializable {
         }
         return canAttack;
     }
-    void increaseUsedCards(){
+
+    void increaseUsedCards() {
         usedCards++;
     }
 
-    public Animal getAnimal(int id) {
+    Animal getAnimal(int id) {
         return animals.get(id);
     }
 
-    public void deleteAnimal(int id) {
+    boolean hasAnimal(int id){return animals.containsKey(id);}
+
+    void deleteAnimal(int id) {
         animals.remove(id);
     }
 
-    public int getUsedCards() {
+    int getUsedCards() {
         return usedCards;
+    }
+
+    int getCardNumber() {
+        return cardNumber;
+    }
+
+    List<Card> getCards() {
+        return cards;
     }
 
     private boolean hasCards() {
@@ -234,41 +248,5 @@ public class Player implements Serializable {
 
     private boolean hasAnimals() {
         return !animals.isEmpty();
-    }
-
-    public int getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(int cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public void setUsedCards(int usedCards) {
-        this.usedCards = usedCards;
-    }
-
-    public List<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
-    }
-
-    public Map<Integer, Animal> getAnimals() {
-        return animals;
-    }
-
-    public void setAnimals(Map<Integer, Animal> animals) {
-        this.animals = animals;
-    }
-
-    public int getId() {
-        return id;
     }
 }

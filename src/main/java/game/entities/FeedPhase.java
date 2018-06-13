@@ -1,8 +1,7 @@
-package game.controller;
+package game.entities;
 
 import game.constants.Property;
-import game.entities.Animal;
-import game.entities.Player;
+import game.controller.GameException;
 
 import java.util.List;
 import java.util.Random;

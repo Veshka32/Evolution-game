@@ -1,9 +1,10 @@
 package game.entities;
 
 import game.constants.Property;
-import game.controller.Game;
 import game.controller.GameException;
 import org.junit.Test;
+
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -38,10 +39,12 @@ public class AnimalTest {
     }
 
     @Test
-    public void eatMeet() throws GameException {
+    public void eatMeet() throws GameException, NoSuchFieldException, IllegalAccessException {
         //set up player with 5 connected animals
         Game game=new Game();
-        game.setFood(8);
+        Field food=game.getClass().getDeclaredField("food");
+        food.setAccessible(true);
+        food.setInt(game,8);
         Player player=new Player("test",1);
         int index=1;
         Animal[] animals={new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player)};
@@ -66,7 +69,7 @@ public class AnimalTest {
         //feed animal 3 first
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(8);
+        food.setInt(game,8);
         animals[2].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
@@ -78,7 +81,7 @@ public class AnimalTest {
         //feed animal 5 first
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(8);
+        food.setInt(game,8);
         animals[4].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
@@ -90,7 +93,7 @@ public class AnimalTest {
         //feed animal 5 first, game has less food
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(2);
+        food.setInt(game,2);
         animals[4].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[4].eatMeet(player,game);},"This animal is fed!");
@@ -102,7 +105,7 @@ public class AnimalTest {
         //feed animal 3 first, game has less food
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(2);
+        food.setInt(game,2);
         animals[2].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
@@ -114,7 +117,7 @@ public class AnimalTest {
         //feed big animal
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(8);
+        food.setInt(game,8);
         animals[0].addProperty(Property.BIG);
         animals[2].addProperty(Property.BIG);
         player.resetFields();

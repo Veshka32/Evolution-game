@@ -16,8 +16,6 @@ public class DeckTest {
         List<Card> pop=holder.getCards();
         assert (pop.size()==84);
         assert (test.containsAll(pop));
-
-
     }
 
 }

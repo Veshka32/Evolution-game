@@ -1,9 +1,9 @@
-package game.controller;
+package game.entities;
 
 import game.constants.Phase;
 import game.constants.Property;
-import game.entities.Animal;
-import game.entities.Player;
+import game.controller.Deck;
+import game.controller.GameException;
 
 class EvolutionPhase {
     private Game game;

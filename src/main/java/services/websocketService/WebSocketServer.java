@@ -1,9 +1,9 @@
 package services.websocketService;
 
 import game.constants.MoveType;
+import game.entities.Move;
+import game.entities.Game;
 import game.controller.GameManager;
-import game.controller.Move;
-import game.controller.Game;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,8 +16,8 @@ import java.io.IOException;
 @ServerEndpoint(value = "/views/socket", configurator = SocketConfigurator.class, decoders = {Decoder.class})
 public class WebSocketServer {
 
-    @Inject
-    private GameManager gameManager;
+   @Inject
+   private GameManager gameManager;
 
     @Inject
     private SocketsHandler socketsHandler;

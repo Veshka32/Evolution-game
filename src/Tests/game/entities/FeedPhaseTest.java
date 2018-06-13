@@ -1,14 +1,20 @@
-package game.controller;
+package game.entities;
 
 import game.constants.Phase;
 import game.constants.Property;
+import game.controller.Deck;
+import game.controller.GameException;
 import game.entities.Animal;
+import game.entities.Game;
+import game.entities.Move;
 import game.entities.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.lang.reflect.Method;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FeedPhaseTest {
@@ -26,7 +32,9 @@ public class FeedPhaseTest {
     public void tailLoss() throws GameException {
         game.addPlayer(player1);
         game.addPlayer(player2);
-        game.setPhase(Phase.EVOLUTION);
+        game.setCardList(deck.getCards());
+        game.start();
+        assert(game.getPhase().equals(Phase.EVOLUTION));
         Player pop=game.getPlayer(player1);
         Player test=game.getPlayer(player2);
         Animal tailLoss=new Animal(1,test);
@@ -35,9 +43,10 @@ public class FeedPhaseTest {
         predator.addProperty(Property.PREDATOR);
         test.addAnimal(tailLoss);
         pop.addAnimal(predator);
-        game.goToNextPhase();
-        game.makeMove(new Move("pop",0,2,1,"ATTACK",null,null));
+        game.makeMove(new Move("pop",0,0,0,"END_PHASE",null,null));
+        game.makeMove(new Move("test",0,0,0,"END_PHASE",null,null));
         assert(game.getPhase().equals(Phase.FEED));
+        game.makeMove(new Move("pop",0,2,1,"ATTACK",null,null));
         assert (game.getExtraMessage().getPlayerOnAttack().equals("pop"));
         assert (game.getExtraMessage().getPredator()==2);
         game.makeMove(new Move("test",0,1,0,"DELETE_PROPERTY","TAIL_LOSS",null));

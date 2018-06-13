@@ -1,14 +1,13 @@
-package game.controller;
+package game.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import game.constants.Constants;
-import game.constants.MoveType;
 import game.constants.Phase;
 import game.constants.Property;
-import game.entities.*;
+import game.controller.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,7 +23,7 @@ public class Game implements Serializable {
     private transient String winners;
     private transient String lastLogMessage;
 
-    private int numberOfPlayers=2;
+    private int numberOfPlayers = 2;
     private int animalID;
     private int round = 0;
     private int playerOnMove = round;
@@ -45,8 +44,7 @@ public class Game implements Serializable {
     private ExtraMessage extraMessage;
 
     //include in json
-    @Id //created by IdGenerator
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id //set manually in GameManager with IdGenerator
     private int id;
 
     private int food;
@@ -60,26 +58,30 @@ public class Game implements Serializable {
     public Game() {
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-    void setNumberOfPlayers(int n){
-        numberOfPlayers =n;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    void addPlayer(String login) {
-        Player player=new Player(login,players.size());
+    public void setNumberOfPlayers(int n) {
+        numberOfPlayers = n;
+    }
+
+    public void addPlayer(String login) {
+        Player player = new Player(login, players.size());
         players.put(login, player);
-        lastLogMessage=login + " joined game at " + new Date() + "\n";
+        lastLogMessage = login + " joined game at " + new Date() + "\n";
         log.append(lastLogMessage);
     }
 
-    boolean isFull() {
+    public boolean isFull() {
         return players.size() == numberOfPlayers;
     }
 
-    void start() {
+    public void start() {
         animalID = Constants.START_CARD_INDEX.getValue();
         resetPlayersOrder();
         players.forEach((k, v) -> addCardsOnStart(v));
@@ -87,20 +89,8 @@ public class Game implements Serializable {
         phase = Phase.EVOLUTION;
     }
 
-    private void resetPlayersOrder() {
-        playersOrder = new ArrayList<>(players.keySet());
-        playersOrder.sort(Comparator.comparingInt(s -> players.get(s).getOrderInMove())); //important to keep order of players
-    }
-
     public void clearError() {
         error = null;
-    }
-
-    private String errorToJson(String name,JsonElement element,Gson gson){
-        if (playersOrder.get(playerOnMove).equals(name)) {
-            element.getAsJsonObject().addProperty("error", error);
-            return gson.toJson(element);
-        } else return null;
     }
 
     public String getFullJson(String name) {
@@ -108,7 +98,7 @@ public class Game implements Serializable {
         Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
-            return errorToJson(name,element,gson);
+            return errorToJson(name, element, gson);
         }
 
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
@@ -118,7 +108,7 @@ public class Game implements Serializable {
         element.getAsJsonObject().addProperty("player", name);
         element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
         element.getAsJsonObject().addProperty("log", log.toString());
-        element.getAsJsonObject().add("cards",gson.toJsonTree(players.get(name).getCards()));
+        element.getAsJsonObject().add("cards", gson.toJsonTree(players.get(name).getCards()));
 
         if (playersOrder.size() > 0 && playersOrder.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
@@ -138,13 +128,14 @@ public class Game implements Serializable {
         Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
-            return errorToJson(name,element,gson);
+            return errorToJson(name, element, gson);
         }
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
         element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
         element.getAsJsonObject().addProperty("log", lastLogMessage);
 
-        if (phase.equals(Phase.EVOLUTION)) element.getAsJsonObject().add("cards",gson.toJsonTree(players.get(name).getCards()));
+        if (phase.equals(Phase.EVOLUTION))
+            element.getAsJsonObject().add("cards", gson.toJsonTree(players.get(name).getCards()));
         if (phase.equals(Phase.FEED)) element.getAsJsonObject().addProperty("food", food); //add primitive
 
         if (playersOrder.size() > 0 && playersOrder.get(playerOnMove).equals(name))
@@ -159,46 +150,36 @@ public class Game implements Serializable {
         return gson.toJson(element);
     }
 
-    public void deleteFood() {
-        food--;
-    }
 
-    void playTailLoss(Animal predator, Animal victim) {
-        List<Integer> victims=new ArrayList<>(victim.getId());
-                extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), Property.TAIL_LOSS);
-                extraMessage.setVictims(victims);
-    }
-
-    void afterTailLoss() {
-        String pl = extraMessage.getPlayerOnAttack();
-        playerOnMove = playersOrder.indexOf(pl);
-        extraMessage = null;
-    }
-
-    void playMimicry(Animal predator, Animal victim, List<Integer> list) {
-        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), Property.MIMICRY);
-        extraMessage.setVictims(list);
-    }
-
-    void afterMimicry() {
-        String pl = extraMessage.getPlayerOnAttack();
-        playerOnMove = playersOrder.indexOf(pl);
-        extraMessage = null;
-    }
-
-    void playerBack(String name){
+    public void playerBack(String name) {
         players.get(name).backToGame();
     }
 
-    boolean isLeft(){
-        for (Player player:players.values()){
+    public boolean isEnd() {
+        return phase.equals(Phase.END);
+    }
+
+    public boolean onProgress() {
+        return !phase.equals(Phase.START);
+    }
+
+    public boolean containsPlayer(String name) {
+        return players.containsKey(name);
+    }
+
+    public void setCardList(List<Card> cardList) {
+        this.cardList = cardList;
+    }
+
+    public boolean isLeft() {
+        for (Player player : players.values()) {
             if (!player.isLeftGame()) return false;
         }
         return true;
     }
 
     public void makeMove(Move move) {
-        lastLogMessage="\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
+        lastLogMessage = "\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
         log.append(lastLogMessage);
         switch (move.getMove()) {
             case SAVE_GAME:
@@ -228,85 +209,39 @@ public class Game implements Serializable {
         }
     }
 
-    private void playerEndsPhase(String name) {
-        playersOrder.remove(name);
-        if (playersOrder.isEmpty())
-            goToNextPhase();
-        else switchPlayerOnMove();
+    void deleteFood() {
+        food--;
+    }
+
+    void playTailLoss(Animal predator, Animal victim) {
+        List<Integer> victims = new ArrayList<>(victim.getId());
+        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), Property.TAIL_LOSS);
+        extraMessage.setVictims(victims);
+    }
+
+    void afterTailLoss() {
+        String pl = extraMessage.getPlayerOnAttack();
+        playerOnMove = playersOrder.indexOf(pl);
+        extraMessage = null;
+    }
+
+    void playMimicry(Animal predator, Animal victim, List<Integer> list) {
+        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), Property.MIMICRY);
+        extraMessage.setVictims(list);
+    }
+
+    void afterMimicry() {
+        String pl = extraMessage.getPlayerOnAttack();
+        playerOnMove = playersOrder.indexOf(pl);
+        extraMessage = null;
     }
 
     void switchPlayerOnMove() {
         playerOnMove = (playerOnMove + 1) % playersOrder.size(); // circular array;
     }
 
-    void goToNextPhase() {
-        switch (phase) {
-            case EVOLUTION:
-                food = ThreadLocalRandom.current().nextInt(Constants.FOOD.minFoodFor(numberOfPlayers), Constants.FOOD.maxFoodFor(numberOfPlayers) + 1);
-                phase = Phase.FEED;
-                break;
-            case FEED:
-                if (cardList.isEmpty()) endGame();
-                else {
-                    for (Player pl : players.values()
-                            ) {
-                        pl.animalsDie();
-                        pl.resetFields();
-                        pl.setCardNumber();
-                    }
-                    addCards();
-                    phase = Phase.EVOLUTION;
-                    round++;
-
-                }
-                if (cardList.isEmpty()) round = -1;//last round
-                break;
-        }
-        resetPlayersOrder();
-        playerOnMove = round % players.size(); //circular array; each round starts next player
-    }
-
-    private void endGame() {
-        phase = Phase.END;
-        List<Player> sorted=new ArrayList<>(players.values());
-        sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
-        winners=sorted.stream().map(Player::finalPoints).collect(Collectors.joining("\n"));
-    }
-
-    public boolean isEnd(){
-        return phase.equals(Phase.END);
-    }
-
-    private void addCards() {
-
-        while (!cardList.isEmpty()) {
-            int flag = players.size();
-            for (Player player : players.values()) {
-                if (player.getCardNumber() == 0) flag--;
-                else
-                    player.addCard(cardList.remove(cardList.size() - 1));
-                if (cardList.isEmpty()) break;
-            }
-            if (flag == 0) break;
-        }
-    }
-
-    boolean onProgress() {
-        return !phase.equals(Phase.START);
-    }
-
-    public int getFood() {
+    int getFood() {
         return food;
-    }
-
-    public void setFood(int i) {
-        food = i;
-    }
-
-    private void addCardsOnStart(Player player) {
-        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++)
-            player.addCard(cardList.remove(cardList.size() - 1));
-
     }
 
     void feedScavenger(String name) {
@@ -340,15 +275,12 @@ public class Game implements Serializable {
         Animal animal = new Animal(animalID++, player);
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
-        //animalList.put(animal.getId(), animal);
     }
 
-    Animal getAnimal(int i) {
-        for (Player player : players.values()
-                ) {
-            if (player.getAnimals().containsKey(i))
-                return player.getAnimals().get(i);
-        }
+    Animal getAnimal(int id) {
+        for (Player player : players.values())
+            if (player.hasAnimal(id))
+                return player.getAnimal(id);
         return null;
     }
 
@@ -356,36 +288,12 @@ public class Game implements Serializable {
         return players.get(name);
     }
 
-    boolean containsPlayer(String name) {
-        return players.containsKey(name);
-    }
-
     List<String> getPlayersOrder() {
         return playersOrder;
     }
 
-    int getPlayerOnMove() {
-        return playerOnMove;
-    }
-
     Phase getPhase() {
         return phase;
-    }
-
-    void setPhase(Phase phase) {
-        this.phase = phase;
-    }
-
-    void setCardList(List<Card> cardList) {
-        this.cardList = cardList;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    List<Card> getCardList() {
-        return cardList;
     }
 
     int getRound() {
@@ -396,56 +304,82 @@ public class Game implements Serializable {
         return extraMessage;
     }
 
-    public int getAnimalID() {
-        return animalID;
+    private String errorToJson(String name, JsonElement element, Gson gson) {
+        if (playersOrder.get(playerOnMove).equals(name)) {
+            element.getAsJsonObject().addProperty("error", error);
+            return gson.toJson(element);
+        } else return null;
     }
 
-    public void setAnimalID(int animalID) {
-        this.animalID = animalID;
+    private void resetPlayersOrder() {
+        playersOrder = new ArrayList<>(players.keySet());
+        playersOrder.sort(Comparator.comparingInt(s -> players.get(s).getOrderInMove())); //important to keep order of players
     }
 
-    public void setPlayersOrder(List<String> playersOrder) {
-        this.playersOrder = playersOrder;
+    private void playerEndsPhase(String name) {
+        playersOrder.remove(name);
+        if (playersOrder.isEmpty())
+            goToNextPhase();
+        else switchPlayerOnMove();
     }
 
-    public void setRound(int round) {
-        this.round = round;
+    private void goToNextPhase() {
+        switch (phase) {
+            case EVOLUTION:
+                food = ThreadLocalRandom.current().nextInt(Constants.FOOD.minFoodFor(numberOfPlayers), Constants.FOOD.maxFoodFor(numberOfPlayers) + 1);
+                phase = Phase.FEED;
+                break;
+            case FEED:
+                if (cardList.isEmpty()) endGame();
+                else {
+                    for (Player pl : players.values()
+                            ) {
+                        pl.animalsDie();
+                        pl.resetFields();
+                        pl.setCardNumber();
+                    }
+                    addCards();
+                    phase = Phase.EVOLUTION;
+                    round++;
+
+                }
+                if (cardList.isEmpty()) round = -1;//last round
+                break;
+        }
+        resetPlayersOrder();
+        playerOnMove = round % players.size(); //circular array; each round starts by next player
     }
 
-    public void setPlayerOnMove(int playerOnMove) {
-        this.playerOnMove = playerOnMove;
+    private void endGame() {
+        phase = Phase.END;
+        List<Player> sorted = new ArrayList<>(players.values());
+        sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
+        winners = sorted.stream().map(Player::finalPoints).collect(Collectors.joining("\n"));
     }
 
-    public String getError() {
-        return error;
+    private void addCards() {
+
+        while (!cardList.isEmpty()) {
+            int flag = players.size();
+            for (Player player : players.values()) {
+                if (player.getCardNumber() == 0) flag--;
+                else
+                    player.addCard(cardList.remove(cardList.size() - 1));
+                if (cardList.isEmpty()) break;
+            }
+            if (flag == 0) break;
+        }
     }
 
-    public void setError(String error) {
-        this.error = error;
-    }
 
-    public String getWinners() {
-        return winners;
-    }
+    private void addCardsOnStart(Player player) {
+        for (int i = 0; i < Constants.START_NUMBER_OF_CARDS.getValue(); i++)
+            player.addCard(cardList.remove(cardList.size() - 1));
 
-    public void setWinners(String winners) {
-        this.winners = winners;
-    }
-
-    public void setExtraMessage(ExtraMessage extraMessage) {
-        this.extraMessage = extraMessage;
-    }
-
-    public Map<String, Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(Map<String, Player> players) {
-        this.players = players;
     }
 
     @Override
-    public String toString(){
-        return "#"+id+", players: "+players.values().stream().map(Player::getName).collect(Collectors.joining(", "));
+    public String toString() {
+        return "#" + id + ", players: " + players.values().stream().map(Player::getName).collect(Collectors.joining(", "));
     }
 }

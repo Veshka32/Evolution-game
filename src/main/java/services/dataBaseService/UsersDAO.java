@@ -1,6 +1,6 @@
 package services.dataBaseService;
 
-import game.controller.Game;
+import game.entities.Game;
 import game.entities.Users;
 
 import javax.ejb.Stateless;

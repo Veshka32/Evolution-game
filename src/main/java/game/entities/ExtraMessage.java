@@ -1,4 +1,4 @@
-package game.controller;
+package game.entities;
 
 import game.constants.Property;
 
@@ -12,7 +12,7 @@ class ExtraMessage implements Serializable {
     private int predator;
     private String playerUnderAttack;
     private Property type;
-    List<Integer> victims;
+    private List<Integer> victims;
 
     public ExtraMessage(){
     }

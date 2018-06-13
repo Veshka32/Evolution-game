@@ -2,19 +2,15 @@ package game.entities;
 
 import com.google.gson.annotations.Expose;
 import game.constants.Property;
-import game.controller.Game;
 
-import javax.json.JsonObjectBuilder;
-import javax.json.spi.JsonProvider;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 public class Card implements Serializable {
     @Expose
     @Column(updatable = false,nullable = false)
+    @Enumerated(EnumType.STRING)
     private Property property;
 
     @Expose
@@ -25,7 +21,6 @@ public class Card implements Serializable {
     @Id
     @Expose
     @Column(updatable = false)
-    @Enumerated(EnumType.STRING)
     private int id;
 
     public Card(){}
@@ -39,6 +34,10 @@ public class Card implements Serializable {
     public Card(int id,Property property){
         this.id=id;
         this.property=property;
+    }
+
+    public int getId(){
+        return id;
     }
 
 //    @Override
@@ -63,8 +62,6 @@ public class Card implements Serializable {
 //        return builder.build().toString();
 //    }
 
-    public int getId(){
-        return id;
-    }
+
 }
 
