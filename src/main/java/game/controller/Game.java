@@ -163,7 +163,9 @@ public class Game implements Serializable {
     }
 
     void playTailLoss(Animal predator, Animal victim) {
-        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), Property.TAIL_LOSS);
+        List<Integer> victims=new ArrayList<>(victim.getId());
+                extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), Property.TAIL_LOSS);
+                extraMessage.setVictims(victims);
     }
 
     void afterTailLoss() {
@@ -173,7 +175,8 @@ public class Game implements Serializable {
     }
 
     void playMimicry(Animal predator, Animal victim, List<Integer> list) {
-        extraMessage = new MimicryMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), victim.getId(), Property.MIMICRY, list);
+        extraMessage = new ExtraMessage(predator.getOwner().getName(), predator.getId(), victim.getOwner().getName(), Property.MIMICRY);
+        extraMessage.setVictims(list);
     }
 
     void afterMimicry() {

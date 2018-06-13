@@ -98,7 +98,8 @@ function onMessage(event) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
             tailLoss = true;
             let animals = Array.from(document.getElementsByClassName("animal"));
-            let animal = animals.find(x => x.id == message.victim);
+            let victim_id=message.victims[0];
+            let animal = animals.find(x => x.id == victim_id);
             animal.style.pointerEvents = "auto"; //clickable only animals
             document.getElementById("Make move").style.pointerEvents = "auto";
             document.getElementById("Clear").style.pointerEvents = 'auto';
