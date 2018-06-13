@@ -13,15 +13,12 @@ public class Player implements Serializable {
 
     transient private int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
     transient private int points;
-    transient private boolean leftGame=false;
+    transient private boolean leftGame;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-
-
-    private int order;
+    private int orderInMove;
     private int usedCards;
 
     //include json
@@ -33,16 +30,16 @@ public class Player implements Serializable {
     @Expose
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "owner") //no player - no animals //orphanRemoval=true
     private Map<Integer, Animal> animals = new HashMap<>();
-    private boolean doEat = false;
+    private boolean doEat;
 
     public Player(){}
 
     public Player(String login,int order) {
-        this.name = login;this.order=order;
+        this.name = login;this.orderInMove =order;
     }
 
-    public int getOrder() {
-        return order;
+    public int getOrderInMove() {
+        return orderInMove;
     }
 
     public String getName() {

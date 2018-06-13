@@ -1,19 +1,13 @@
 package servlets;
 
-import game.controller.Game;
-import services.dataBaseService.GameDAO;
 import services.dataBaseService.UsersDAO;
 
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.transaction.*;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 @WebServlet(urlPatterns = "/signUp")
 public class SignUpServlet extends HttpServlet {

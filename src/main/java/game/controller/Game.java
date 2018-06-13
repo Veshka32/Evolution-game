@@ -87,14 +87,14 @@ public class Game implements Serializable {
 
     private void resetPlayersOrder() {
         playersOrder = new ArrayList<>(players.keySet());
-        playersOrder.sort(Comparator.comparingInt(s -> players.get(s).getOrder())); //important to keep order of players
+        playersOrder.sort(Comparator.comparingInt(s -> players.get(s).getOrderInMove())); //important to keep order of players
     }
 
     public void clearError() {
         error = null;
     }
 
-    public String errorToJson(String name,JsonElement element,Gson gson){
+    private String errorToJson(String name,JsonElement element,Gson gson){
         if (playersOrder.get(playerOnMove).equals(name)) {
             element.getAsJsonObject().addProperty("error", error);
             return gson.toJson(element);

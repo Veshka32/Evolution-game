@@ -10,7 +10,7 @@ public class AnimalTest {
 
     @Test
    public void addProperty() throws GameException {
-        Player owner1=new Player("test");
+        Player owner1=new Player("test",1);
         int index=1;
         Animal scavenger=new Animal(index++,owner1);
         Animal predator=new Animal(index++,owner1);
@@ -41,7 +41,7 @@ public class AnimalTest {
         //set up player with 5 connected animals
         Game game=new Game();
         game.setFood(8);
-        Player player=new Player("test");
+        Player player=new Player("test",1);
         int index=1;
         Animal[] animals={new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player)};
 
@@ -133,8 +133,8 @@ public class AnimalTest {
     @Test
     public void attack() throws GameException {
         //build animals for players;
-        Player test=new Player("test");
-        Player pop=new Player("pop");
+        Player test=new Player("test",1);
+        Player pop=new Player("pop",2);
 
         //create predator
         final Animal predator=new Animal(1,test);
@@ -189,7 +189,7 @@ public class AnimalTest {
 
     @Test
     public void playAnimalProperty() throws GameException {
-        Animal animal=new Animal(1,new Player("test"));
+        Animal animal=new Animal(1,new Player("test",1));
         animal.addProperty("Hibernation");
         animal.hibernate(0);
         assert(animal.notHungry());
@@ -201,7 +201,7 @@ public class AnimalTest {
 
     @Test
     public void removeProperty() throws GameException {
-        Player owner=new Player("test");
+        Player owner=new Player("test",2);
         String communication="Communication";
         Animal first=new Animal(1,owner);
         Animal second=new Animal(2,owner);

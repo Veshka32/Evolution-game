@@ -11,26 +11,14 @@ public class IdDAO {
     @PersistenceContext
     private EntityManager em;
 
-    public int getGameLastId() {
-        TypedQuery<Integer> typedQuery = em.createQuery("select max(id) from Game", Integer.class);
-        Integer maxId = 0;
-        try {
-            maxId = typedQuery.getSingleResult();
-        } catch (NoResultException e) {
-        } finally {
-            return maxId;
-        }
+    public Integer getGameLastId() {
+        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(u.id),1) from Game u", Integer.class);
+        return typedQuery.getSingleResult();
     }
 
     public int getPlayerLastId() {
-        TypedQuery<Integer> typedQuery = em.createQuery("select max(id) from Player", Integer.class);
-        Integer maxId = 0;
-        try {
-            maxId = typedQuery.getSingleResult();
-        } catch (NoResultException e) {
-        } finally {
-            return maxId;
-        }
+        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(u.id),1) from Player u", Integer.class);
+        return typedQuery.getSingleResult();
     }
 
 }

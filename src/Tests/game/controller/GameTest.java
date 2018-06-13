@@ -40,8 +40,8 @@ public class GameTest {
     @Test
     public void linkedMap(){
         Map<String,Player> map=new LinkedHashMap<>();
-        map.put("test",new Player("test"));
-        map.put("pop",new Player("pop"));
+        map.put("test",new Player("test",1));
+        map.put("pop",new Player("pop",2));
         map.forEach((k,v)->System.out.println(k));
         LinkedList<String> list=new LinkedList<>(map.keySet());
         list.forEach(v->System.out.println(v));
@@ -50,13 +50,13 @@ public class GameTest {
     @Test
     public void winners(){
         Map players=new HashMap();
-        Player one=new Player("one");
+        Player one=new Player("one",1);
         one.setPoints(10);
         one.setUsedCards(20);
-        Player two=new Player("two");
+        Player two=new Player("two",2);
         two.setPoints(10);
         two.setUsedCards(22);
-        Player three=new Player("three");
+        Player three=new Player("three",3);
         three.setPoints(12);
         three.setUsedCards(25);
         players.put("one",one);

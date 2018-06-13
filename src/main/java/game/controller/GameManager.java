@@ -2,7 +2,10 @@ package game.controller;
 
 import services.dataBaseService.GameDAO;
 
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Schedule;
+import javax.ejb.Singleton;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -10,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//https://docs.oracle.com/cd/E19798-01/821-1841/gipsz/index.html - singleton concurrency
+@Singleton
 @ApplicationScoped
 public class GameManager {
 
@@ -24,7 +29,7 @@ public class GameManager {
 
     private Map<Integer, Game> games=new HashMap<>();
 
-    @Schedule(minute="*/2") //every 2 minutes
+    @Schedule(hour = "*") //every minute
     public void removeGames(){
         games.values().removeIf(Game::isLeft); //safety removing from map
     }

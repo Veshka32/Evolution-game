@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PlayerTest {
-    Player player=new Player("test");
+    Player player=new Player("test",1);
     Animal an1=new Animal(1,player);
     Animal an2=new Animal(2,player);
     Animal an3=new Animal(3,player);
