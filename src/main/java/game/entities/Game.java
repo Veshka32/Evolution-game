@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
-public class Game implements Serializable {
+public class Game implements Observer, Serializable {
 
     private transient String winners; //game has winners=>game end=>never saved
     private transient String lastLogMessage;
@@ -29,7 +29,6 @@ public class Game implements Serializable {
     private int playerOnMove;
     private String error;
     private StringBuilder log = new StringBuilder();
-
 
     //include in json
     @Id //set manually in GameManager with IdGenerator
@@ -55,6 +54,9 @@ public class Game implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START;
+
+    transient Set<Animal> changedAnimals=new HashSet<>();
+    transient Set<Integer> deletedAnimalsId=new HashSet<>();
 
     public Game() {
     }
@@ -274,6 +276,9 @@ public class Game implements Serializable {
     void makeAnimal(Move move) {
         Player player = players.get(move.getPlayer());
         Animal animal = new Animal(animalID++, player);
+        animal.addObserver(this);
+        changedAnimals.add(animal);
+
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
     }
@@ -382,5 +387,14 @@ public class Game implements Serializable {
     @Override
     public String toString() {
         return "#" + id + ", players: " + players.values().stream().map(Player::getName).collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if ("change".equals(o)) changedAnimals.add((Animal)observable);
+        else if("delete".equals(o)) {
+            observable.deleteObserver(this);
+            deletedAnimalsId.add(((Animal)observable).getId());
+        }
     }
 }

@@ -82,7 +82,7 @@ class FeedPhase {
             throw new GameException("You must play this property on two different animals");
 
         Animal victim = game.getAnimal(move.getSecondAnimalId());
-        predator.attack(victim);
+        predator.attack(victim); //checking exceptions only;
 
         //probability 50/50
         if (victim.hasProperty(Property.RUNNING)) {

@@ -67,5 +67,4 @@ public class GameTest {
         assert (sorted.get(1)==two);
         assert (sorted.get(2)==one);
     }
-
 }

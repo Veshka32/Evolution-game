@@ -9,9 +9,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 @Entity
-public class Animal implements Serializable {
+public class Animal extends Observable implements Serializable {
 
     private transient final int MIN_HUNGRY = 1;
 
@@ -64,13 +65,14 @@ public class Animal implements Serializable {
         return id;
     }
 
-
     Player getOwner() {
         return owner;
     }
 
     void setHungry() {
         hungry = calculateHungry();
+        setChanged();
+        notifyObservers("change");
     }
 
     int calculateHungry() {
@@ -83,6 +85,8 @@ public class Animal implements Serializable {
 
     void deleteFood() {
         hungry++;
+        setChanged();
+        notifyObservers("change");
     }
 
     void poison() {
@@ -116,6 +120,8 @@ public class Animal implements Serializable {
         else if (round - hibernationRound == 1) throw new GameException("You can't hibernate 2 rounds in a row");
         hibernationRound = round;
         hungry = 0;
+        setChanged();
+        notifyObservers("change");
     }
 
     void eatFat() throws GameException {
@@ -123,6 +129,8 @@ public class Animal implements Serializable {
         if (hungry < 1) throw new GameException("Animal is fed");
         hungry--;
         currentFatSupply--;
+        setChanged();
+        notifyObservers("change");
     }
 
     void attack(Animal victim) throws GameException {
@@ -154,6 +162,8 @@ public class Animal implements Serializable {
             Animal animal = owner.getAnimal(id);
             animal.cooperateTo.remove(Integer.valueOf(this.id));
             if (animal.cooperateTo.isEmpty()) animal.propertyList.remove(Property.COOPERATION);
+            animal.setChanged();
+            animal.notifyObservers("change");
             owner.increaseUsedCards();
         }
 
@@ -161,6 +171,8 @@ public class Animal implements Serializable {
             Animal animal = owner.getAnimal(id);
             animal.communicateTo.remove(Integer.valueOf(this.id));
             if (animal.communicateTo.isEmpty()) animal.propertyList.remove(Property.COMMUNICATION);
+            animal.setChanged();
+            animal.notifyObservers("change");
             owner.increaseUsedCards();
         }
 
@@ -169,6 +181,8 @@ public class Animal implements Serializable {
             animal.symbiontFor.remove(Integer.valueOf(this.id));
             if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty())
                 animal.propertyList.remove(Property.SYMBIOSIS);
+            animal.setChanged();
+            animal.notifyObservers("change");
             owner.increaseUsedCards();
         }
 
@@ -177,8 +191,13 @@ public class Animal implements Serializable {
             animal.symbiosisWith.remove(Integer.valueOf(this.id));
             if (animal.symbiontFor.isEmpty() && animal.symbiosisWith.isEmpty())
                 animal.propertyList.remove(Property.SYMBIOSIS);
+            animal.setChanged();
+            animal.notifyObservers("change");
             owner.increaseUsedCards();
         }
+
+        setChanged();
+        notifyObservers("delete");
     }
 
     void addProperty(Property property) throws GameException {
@@ -207,6 +226,8 @@ public class Animal implements Serializable {
         if (property.equals(Property.PARASITE))
             hungry += 2;
 
+        setChanged();
+        notifyObservers("change");
     }
 
     void eatMeet(Player player, Game game) throws GameException {
@@ -232,6 +253,9 @@ public class Animal implements Serializable {
         for (int id : communicateTo) {
             player.getAnimal(id).eatExtraMeet(player, game);
         }
+
+        setChanged();
+        notifyObservers("change");
     }
 
     void eatFish(int i) {
@@ -245,6 +269,9 @@ public class Animal implements Serializable {
                 ) {
             owner.getAnimal(id).eatFish(i);
         }
+
+        setChanged();
+        notifyObservers("change");
     }
 
     boolean checkSymbiosis(Player player) { //return false if not all of the symbionts are fed;
@@ -288,6 +315,7 @@ public class Animal implements Serializable {
 
     void setSymbiosisWith(int id) {
         symbiosisWith.add(id);
+
     }
 
     void setSymbiontFor(int id) {
@@ -322,6 +350,7 @@ public class Animal implements Serializable {
                 partner.communicateTo.remove(Integer.valueOf(this.id));
                 if (communicateTo.isEmpty()) propertyList.remove(property);
                 if (partner.communicateTo.isEmpty()) partner.propertyList.remove(property);
+                partner.notifyObservers("change");
                 break;
             case COOPERATION:
                 partner = owner.getAnimal(cooperateTo.get(0));
@@ -329,18 +358,21 @@ public class Animal implements Serializable {
                 partner.cooperateTo.remove(Integer.valueOf(this.id));
                 if (cooperateTo.isEmpty()) propertyList.remove(property);
                 if (partner.cooperateTo.isEmpty()) partner.propertyList.remove(property);
+                partner.notifyObservers("change");
                 break;
             case SYMBIOSIS:
                 if (!symbiosisWith.isEmpty()) {
                     partner = owner.getAnimal(symbiosisWith.get(0));
                     symbiosisWith.remove(Integer.valueOf(partner.id));
                     partner.symbiontFor.remove(Integer.valueOf(this.id));
+                    partner.notifyObservers("change");
                     if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty())
                         partner.propertyList.remove(property);
                 } else if (!symbiontFor.isEmpty()) {
                     partner = owner.getAnimal(symbiontFor.get(0));
                     symbiontFor.remove(Integer.valueOf(partner.id));
                     partner.symbiosisWith.remove(Integer.valueOf(this.id));
+                    partner.notifyObservers("change");
                     if (partner.symbiosisWith.isEmpty() && partner.symbiontFor.isEmpty())
                         partner.propertyList.remove(property);
                 }
@@ -350,6 +382,8 @@ public class Animal implements Serializable {
 
         if (!Deck.isPropertyDouble(property)) propertyList.remove(property);
         owner.increaseUsedCards();
+        setChanged();
+        notifyObservers("change");
 
     }
 
@@ -368,6 +402,9 @@ public class Animal implements Serializable {
         for (int id : cooperateTo) {
             player.getAnimal(id).eatFish(1);
         }
+
+        setChanged();
+        notifyObservers("change");
 
     }
 
