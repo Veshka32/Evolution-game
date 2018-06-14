@@ -45,7 +45,7 @@ public class WebSocketServer {
                 e.printStackTrace();
             }
         }
-        game.clearError();
+        game.refresh();
         if (game.isEnd()) gameManager.remove(gameId);
     }
 

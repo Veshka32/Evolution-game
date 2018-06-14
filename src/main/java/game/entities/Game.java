@@ -55,8 +55,8 @@ public class Game implements Observer, Serializable {
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START;
 
-    transient Set<Animal> changedAnimals=new HashSet<>();
-    transient Set<Integer> deletedAnimalsId=new HashSet<>();
+    private transient Set<Animal> changedAnimals=new HashSet<>();
+    private transient Set<Integer> deletedAnimalsId=new HashSet<>();
 
     public Game() {
     }
@@ -92,8 +92,10 @@ public class Game implements Observer, Serializable {
         phase = Phase.EVOLUTION;
     }
 
-    public void clearError() {
+    public void refresh() {
         error = null;
+        changedAnimals.clear();
+        deletedAnimalsId.clear();
     }
 
     public String getFullJson(String name) {
@@ -127,14 +129,16 @@ public class Game implements Observer, Serializable {
     }
 
     public String getLightWeightJson(String name) {
-        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        //Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
             return errorToJson(name, element, gson);
         }
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
-        element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
+        //element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
+        if (!deletedAnimalsId.isEmpty()) element.getAsJsonObject().add("deleteAnimal",gson.toJsonTree(deletedAnimalsId));
+        if (!changedAnimals.isEmpty()) element.getAsJsonObject().add("changedAnimal",gson.toJsonTree(changedAnimals));
         element.getAsJsonObject().addProperty("log", lastLogMessage);
 
         if (phase.equals(Phase.EVOLUTION))
@@ -182,6 +186,7 @@ public class Game implements Observer, Serializable {
     }
 
     public void makeMove(Move move) {
+
         lastLogMessage = "\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
         log.append(lastLogMessage);
         switch (move.getMove()) {

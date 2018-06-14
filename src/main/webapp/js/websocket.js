@@ -6,7 +6,7 @@ const path = window.location.pathname.substring(0, window.location.pathname.last
 const socket = new WebSocket(tcp + host + path);
 socket.onmessage = onMessage;
 
-var playerName, draggedProperty, playedCardId, mimicryVictims;
+let playerName, draggedProperty, playedCardId, mimicryVictims;
 var move = null;
 var firstAnimalId = null;
 var secondAnimalId = null;
@@ -41,8 +41,8 @@ function endPhase() {
 
 function saveGame() {
     move = "SAVE_GAME";
-    document.getElementById("doing").innerText="saved game";
-    let json=buildMessage();
+    document.getElementById("doing").innerText = "saved game";
+    let json = buildMessage();
     clearFields();
     socket.send(json);
 }
@@ -59,28 +59,55 @@ function onMessage(event) {
     //build always
     document.getElementById("phase").innerText = game.phase;
     document.getElementById("log").innerText += game.log;
-    let common = document.getElementById("common");
-    common.innerText = "";
 
-    for (let name in game.players) {
-        let player = game.players[name];
-        common.appendChild(buildPlayerBlock(player));
-    }
 
     //build occasionally
-    if (game.hasOwnProperty("player")) {playerName = game.player;document.getElementById("player").innerText = playerName;}
-    if (game.hasOwnProperty("id")) document.getElementById("gameId").innerText=game.id;
+    if (game.hasOwnProperty("players")) {
+        let common = document.getElementById("common");
+        //common.innerText = "";
+
+        for (let name in game.players) {
+            let player = game.players[name];
+            if (common.getElementById(name)==null) common.appendChild(buildPlayerBlock(player));
+        }
+    }
+
+    if (game.hasOwnProperty("changedAnimal")) {
+        for (let animal in game.changedAnimal) {
+            let id = animal.id;
+            let owner = animal.owner;
+            let playerBlock = document.getElementById(owner.name);
+            playerBlock.removeChild(document.getElementById(id));
+
+            if (owner.name == playerName)
+                playerBlock.replaceChild(buildAnimal(animal, true), playerBlock.getElementById(id));
+            else playerBlock.replaceChild(buildAnimal(animal, false), playerBlock.getElementById(id));
+        }
+    }
+
+    if (game.hasOwnProperty("deleteAnimal")) {
+        for (let id in game.deleteAnimal) {
+            let common = document.getElementById("common");
+            common.removeChild(common.getElementById(id));
+        }
+    }
+
+    if (game.hasOwnProperty("player")) {
+        playerName = game.player;
+        document.getElementById("player").innerText = playerName;
+    }
+    if (game.hasOwnProperty("id")) document.getElementById("gameId").innerText = game.id;
     if (game.hasOwnProperty("playersList")) document.getElementById("players").innerText = game.playersList;
     if (game.hasOwnProperty("cards")) buildCards(game.cards);
 
     if (game.phase == "FEED") {
-        document.getElementById("End move").style.display='inline-block'; //show button
+        document.getElementById("End move").style.display = 'inline-block'; //show button
         document.getElementById("feedPanel").style.display = 'block'; //show panel
         setFood(game);
-    } else if (game.phase == "EVOLUTION"){
+    } else if (game.phase == "EVOLUTION") {
         document.getElementById("movePanel").style.display = 'block'; //evolution phase
         document.getElementById("feedPanel").style.display = 'none'; //hide panel
-        document.getElementById("End move").style.display='none'; //hide button
+        document.getElementById("End move").style.display = 'none'; //hide button
     }
 
     if (game.status == true) {
@@ -98,7 +125,7 @@ function onMessage(event) {
             alert("Animal #" + message.predator + " attack your animal #" + message.victim + " with tail loss property. Choose property to loose or click animal to die");
             tailLoss = true;
             let animals = Array.from(document.getElementsByClassName("animal"));
-            let victim_id=message.victims[0];
+            let victim_id = message.victims[0];
             let animal = animals.find(x => x.id == victim_id);
             animal.style.pointerEvents = "auto"; //clickable only animals
             document.getElementById("Make move").style.pointerEvents = "auto";

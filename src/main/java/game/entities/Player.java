@@ -28,9 +28,11 @@ public class Player implements Serializable {
     //@Expose
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cards = new ArrayList<>();
+
     @Expose
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner") //no player - no animals //orphanRemoval=true
     private Map<Integer, Animal> animals = new HashMap<>();
+    @Expose
     private boolean doEat;
 
     public Player() {

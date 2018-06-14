@@ -24,6 +24,7 @@ public class Animal extends Observable implements Serializable {
     private int hibernationRound;
 
     @ManyToOne
+    @Expose
     Player owner;
     private boolean attack;
     boolean fed;
