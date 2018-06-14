@@ -47,7 +47,7 @@ public class GameManager {
 
     public String getNewGames(String login) {
         //get all the games those are not full or are full but contain this player
-        return games.values().stream().filter(game -> !game.onProgress() || game.containsPlayer(login)).map(Game::toString).collect(Collectors.joining("\n"));
+        return games.values().stream().filter(game -> !game.onProgress() || game.hasPlayer(login)).map(Game::toString).collect(Collectors.joining("\n"));
     }
 
     public Integer createGame(String name, int number) {
@@ -62,7 +62,7 @@ public class GameManager {
     public void joinPlayer(Integer gameId,String login) throws IllegalArgumentException {
         if (!games.containsKey(gameId)) throw new IllegalArgumentException();
         Game game = games.get(gameId);
-        if (game.containsPlayer(login))
+        if (game.hasPlayer(login))
             game.playerBack(login);
         else game.addPlayer(login);
 

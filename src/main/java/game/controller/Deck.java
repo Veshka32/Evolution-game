@@ -11,7 +11,7 @@ import java.util.List;
 
 @ApplicationScoped
 public class Deck {
-    private List<Card> cards = new ArrayList<>(Constants.TOTAL_CARD_NUMBER.getValue());
+    private final List<Card> cards = new ArrayList<>(Constants.TOTAL_CARD_NUMBER.getValue());
 
     public Deck() {
         int startId = Constants.START_CARD_INDEX.getValue();

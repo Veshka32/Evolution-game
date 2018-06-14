@@ -12,7 +12,7 @@ import java.util.*;
 @Entity
 public class Player implements Serializable {
 
-    transient private int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
+    transient private int requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
     transient private int points;
     transient private boolean leftGame;
 
@@ -41,16 +41,16 @@ public class Player implements Serializable {
         this.orderInMove = order;
     }
 
-    int getOrderInMove() {
-        return orderInMove;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    int getOrder() {
+        return orderInMove;
     }
 
     void setDoEat(boolean bool) {
@@ -61,7 +61,7 @@ public class Player implements Serializable {
         animals.forEach((k, v) -> v.setDoGrazing(false));
     }
 
-    void leftGame() {
+    void leaveGame() {
         leftGame = true;
     }
 
@@ -69,17 +69,17 @@ public class Player implements Serializable {
         leftGame = false;
     }
 
-    boolean isLeftGame() {
+    boolean doLeaveGame() {
         return leftGame;
     }
 
-    boolean isDoEat() {
+    boolean doEat() {
         return doEat;
     }
 
     void addCard(Card card) {
         cards.add(card);
-        cardNumber--;
+        requiredCards--;
     }
 
     void deleteCard(int id) {
@@ -91,18 +91,12 @@ public class Player implements Serializable {
         }
     }
 
-    void setCardNumber() {
-        if (!hasAnimals() && !hasCards())
-            cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
-        else cardNumber = animals.size() + Constants.NUMBER_OF_EXTRA_CARD.getValue();
-    }
-
     int getPoints() {
         animals.forEach((k, v) -> points += v.hungry); //how to calculate double cards?
         return points;
     }
 
-    String finalPoints() {
+    String pointsToString() {
         return name + ": " + points + " points, " + usedCards + " cards used.";
     }
 
@@ -127,7 +121,7 @@ public class Player implements Serializable {
 
         if (animals.size() < 2) throw new GameException("You don't have enough animals");
 
-        if (!(animals.containsKey(id1) && animals.containsKey(id2)))
+        if (!animals.containsKey(id1) || !animals.containsKey(id2))
             throw new GameException("It's not your animal(s)");
 
         if (id1 == 0 || id2 == 0)
@@ -164,7 +158,7 @@ public class Player implements Serializable {
                 if (animal.isInSymbiosis(id2) || animal.isSymbiontFor(id2))
                     throw new GameException("Animal #" + id1 + " is already in symbiosisWith with animal #" + id2);
                 else {
-                    animal.setSymbiosysWith(id2);
+                    animal.setSymbiosisWith(id2);
                     animal2.setSymbiontFor(id1);
                     animal.addProperty(property);
                     animal2.addProperty(property);
@@ -177,7 +171,7 @@ public class Player implements Serializable {
         Iterator<Animal> it = all.iterator(); //to remove animal safety;
         while (it.hasNext()) {
             Animal animal = it.next();
-            if (animal.hungry > 0 || animal.isPoisoned) {
+            if (animal.hungry > 0 || animal.poisoned) {
                 animal.die();
                 usedCards += animal.hungry;
                 it.remove();
@@ -186,22 +180,22 @@ public class Player implements Serializable {
     }
 
     void resetFedFlag() {
-        animals.forEach((k, v) -> v.fedFlag = false);
+        animals.forEach((k, v) -> v.fed = false);
     }
 
     void resetFields() {
         for (Animal an : animals.values()
                 ) {
             an.setHungry();
-            an.attackFlag = false;
-            an.fedFlag = false;
+            an.setAttack(false);
+            an.fed = false;
             an.setDoPiracy(false);
             an.setDoGrazing(false);
             doEat = false;
         }
     }
 
-    List<Integer> canRedirect(Animal predator, int victim) {
+    List<Integer> canRedirectAttack(Animal predator, int victim) {
         ArrayList<Integer> canAttack = new ArrayList<>();
 
         for (Animal an : animals.values()) {
@@ -234,8 +228,14 @@ public class Player implements Serializable {
         return usedCards;
     }
 
-    int getCardNumber() {
-        return cardNumber;
+    int getRequiredCards() {
+        return requiredCards;
+    }
+
+    void setRequiredCards() {
+        if (!hasAnimals() && !hasCards())
+            requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
+        else requiredCards = animals.size() + Constants.NUMBER_OF_EXTRA_CARD.getValue();
     }
 
     List<Card> getCards() {

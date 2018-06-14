@@ -14,29 +14,32 @@ import java.util.List;
 public class Animal implements Serializable {
 
     private transient final int MIN_HUNGRY = 1;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int trueId;
+    private boolean doPiracy;
+    private boolean doGrazing;
+    private int hibernationRound;
+
     @ManyToOne
     Player owner;
-    boolean attackFlag = false;
-    boolean fedFlag = false;
-    boolean isPoisoned = false;
+    private boolean attack;
+    boolean fed;
+    boolean poisoned;
     int totalFatSupply;
+
+    //include in json
+    @Expose
+    int hungry = MIN_HUNGRY;
+    @Expose
+    private int id;
     @Expose
     @ElementCollection
     List<Property> propertyList = new ArrayList<>();
     @Expose
     @ElementCollection
     List<Integer> cooperateTo = new ArrayList<>();
-    @Expose
-    int hungry = MIN_HUNGRY;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int trueId;
-    private boolean doPiracy = false;
-    private boolean doGrazing = false;
-    private int hibernationRound;
-    //include in json
-    @Expose
-    private int id;
     @Expose
     @ElementCollection
     private List<Integer> communicateTo = new ArrayList<>();
@@ -61,6 +64,11 @@ public class Animal implements Serializable {
         return id;
     }
 
+
+    Player getOwner() {
+        return owner;
+    }
+
     void setHungry() {
         hungry = calculateHungry();
     }
@@ -78,14 +86,14 @@ public class Animal implements Serializable {
     }
 
     void poison() {
-        isPoisoned = true;
+        poisoned = true;
     }
 
-    void setAttackFlag(boolean bool) {
-        attackFlag = bool;
+    void setAttack(boolean bool) {
+        attack = bool;
     }
 
-    boolean isDoPiracy() {
+    boolean doPiracy() {
         return doPiracy;
     }
 
@@ -93,7 +101,7 @@ public class Animal implements Serializable {
         doPiracy = bool;
     }
 
-    boolean isDoGrazing() {
+    boolean doGrazing() {
         return doGrazing;
     }
 
@@ -103,8 +111,8 @@ public class Animal implements Serializable {
 
     void hibernate(int round) throws GameException {
         if (round == -1) throw new GameException("You can't hibernate in last round");
-        else if (round != 0 && round == hibernationRound)
-            throw new GameException("This animal is already in hibernation");//can hibernate in 0 round
+        else if (round != 0 && round == hibernationRound) //can hibernate in 0 round
+            throw new GameException("This animal is already in hibernation");
         else if (round - hibernationRound == 1) throw new GameException("You can't hibernate 2 rounds in a row");
         hibernationRound = round;
         hungry = 0;
@@ -120,7 +128,7 @@ public class Animal implements Serializable {
     void attack(Animal victim) throws GameException {
         //exceptions
         if (!hasProperty(Property.PREDATOR)) throw new GameException("This animal is not a predator");
-        if (attackFlag) throw new GameException("This predator has been used");
+        if (attack) throw new GameException("This predator has been used");
 
         if (victim.hasProperty(Property.SWIMMING) && !hasProperty(Property.SWIMMING))
             throw new GameException("Not-swimming predator can't eat swimming animal");
@@ -201,10 +209,6 @@ public class Animal implements Serializable {
 
     }
 
-    Player getOwner() {
-        return owner;
-    }
-
     void eatMeet(Player player, Game game) throws GameException {
 
         if (hungry == 0) {
@@ -217,7 +221,7 @@ public class Animal implements Serializable {
         }
         if (!checkSymbiosis(player)) throw new GameException("You should feed the symbiont first");
 
-        fedFlag = true;
+        fed = true;
         hungry--;
         game.deleteFood();
         for (int id : cooperateTo
@@ -231,10 +235,10 @@ public class Animal implements Serializable {
     }
 
     void eatFish(int i) {
-        if (hungry == 0 || fedFlag || !(checkSymbiosis(owner)))
+        if (hungry == 0 || fed || !(checkSymbiosis(owner)))
             return; //abort chain feeding if animal is fed, is already visited or can't get fish
 
-        fedFlag = true;
+        fed = true;
         if (hungry < i) i = 1; // if hungry==1 and fish==2, only one fish goes on
         hungry -= i;
         for (int id : cooperateTo
@@ -282,7 +286,7 @@ public class Animal implements Serializable {
         cooperateTo.add(id);
     }
 
-    void setSymbiosysWith(int id) {
+    void setSymbiosisWith(int id) {
         symbiosisWith.add(id);
     }
 
@@ -351,10 +355,10 @@ public class Animal implements Serializable {
 
     private void eatExtraMeet(Player player, Game game) {
         if (game.getFood() == 0) return;
-        if (hungry == 0 || fedFlag || !(checkSymbiosis(owner)))
+        if (hungry == 0 || fed || !(checkSymbiosis(owner)))
             return; //abort dfs if animal is fed, is already visited or can't get fish
 
-        fedFlag = true;
+        fed = true;
         hungry--;
         game.deleteFood();
         for (int id : communicateTo) {

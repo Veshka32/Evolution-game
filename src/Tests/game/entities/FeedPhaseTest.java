@@ -4,17 +4,11 @@ import game.constants.Phase;
 import game.constants.Property;
 import game.controller.Deck;
 import game.controller.GameException;
-import game.entities.Animal;
-import game.entities.Game;
-import game.entities.Move;
-import game.entities.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.lang.reflect.Method;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FeedPhaseTest {
@@ -53,7 +47,7 @@ public class FeedPhaseTest {
         assert (game.getPhase().equals(Phase.FEED));
         assert (game.getExtraMessage() ==null);
         assert (!predator.notHungry());
-        assert (pop.isDoEat());
+        assert (pop.doEat());
         assert (!tailLoss.hasProperty(Property.TAIL_LOSS));
     }
 }

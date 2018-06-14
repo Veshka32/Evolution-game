@@ -20,18 +20,26 @@ import static javax.persistence.FetchType.EAGER;
 @Entity
 public class Game implements Serializable {
 
-    private transient String winners;
+    private transient String winners; //game has winners=>game end=>never saved
     private transient String lastLogMessage;
 
     private int numberOfPlayers = 2;
     private int animalID;
-    private int round = 0;
-    private int playerOnMove = round;
+    private int round;
+    private int playerOnMove;
     private String error;
     private StringBuilder log = new StringBuilder();
 
+
+    //include in json
+    @Id //set manually in GameManager with IdGenerator
+    private int id;
+
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cardList;
+
+    @OneToMany(cascade = CascadeType.ALL) //no game - no players //orphanremoval=true
+    private Map<String, Player> players = new HashMap<>();
 
 //    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
 //    private Set<Users> users=new HashSet<>();
@@ -43,17 +51,10 @@ public class Game implements Serializable {
     @Embedded
     private ExtraMessage extraMessage;
 
-    //include in json
-    @Id //set manually in GameManager with IdGenerator
-    private int id;
-
     private int food;
 
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START;
-
-    @OneToMany(cascade = CascadeType.ALL) //no game - no players //orphanremoval=true
-    private Map<String, Player> players = new HashMap<>();
 
     public Game() {
     }
@@ -163,7 +164,7 @@ public class Game implements Serializable {
         return !phase.equals(Phase.START);
     }
 
-    public boolean containsPlayer(String name) {
+    public boolean hasPlayer(String name) {
         return players.containsKey(name);
     }
 
@@ -173,7 +174,7 @@ public class Game implements Serializable {
 
     public boolean isLeft() {
         for (Player player : players.values()) {
-            if (!player.isLeftGame()) return false;
+            if (!player.doLeaveGame()) return false;
         }
         return true;
     }
@@ -188,7 +189,7 @@ public class Game implements Serializable {
                 playerEndsPhase(move.getPlayer());
                 return;
             case LEAVE_GAME: //only log updates
-                players.get(move.getPlayer()).leftGame();
+                players.get(move.getPlayer()).leaveGame();
                 return;
         }
         try {
@@ -313,7 +314,7 @@ public class Game implements Serializable {
 
     private void resetPlayersOrder() {
         playersOrder = new ArrayList<>(players.keySet());
-        playersOrder.sort(Comparator.comparingInt(s -> players.get(s).getOrderInMove())); //important to keep order of players
+        playersOrder.sort(Comparator.comparingInt(s -> players.get(s).getOrder())); //important to keep order of players
     }
 
     private void playerEndsPhase(String name) {
@@ -336,9 +337,9 @@ public class Game implements Serializable {
                             ) {
                         pl.animalsDie();
                         pl.resetFields();
-                        pl.setCardNumber();
+                        pl.setRequiredCards();
                     }
-                    addCards();
+                    giveCards();
                     phase = Phase.EVOLUTION;
                     round++;
 
@@ -354,15 +355,15 @@ public class Game implements Serializable {
         phase = Phase.END;
         List<Player> sorted = new ArrayList<>(players.values());
         sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
-        winners = sorted.stream().map(Player::finalPoints).collect(Collectors.joining("\n"));
+        winners = sorted.stream().map(Player::pointsToString).collect(Collectors.joining("\n"));
     }
 
-    private void addCards() {
+    private void giveCards() {
 
         while (!cardList.isEmpty()) {
             int flag = players.size();
             for (Player player : players.values()) {
-                if (player.getCardNumber() == 0) flag--;
+                if (player.getRequiredCards() == 0) flag--;
                 else
                     player.addCard(cardList.remove(cardList.size() - 1));
                 if (cardList.isEmpty()) break;

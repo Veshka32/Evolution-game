@@ -62,7 +62,7 @@ public class GameTest {
         players.put("three",three);
         List<Player> sorted=new ArrayList<>(players.values());
         sorted.sort(Comparator.comparing(Player::getPoints).thenComparing(Player::getUsedCards).reversed());
-        //String winners=sorted.stream().map(x->x.finalPoints()).collect(Collectors.joining("\n"));
+        //String winners=sorted.stream().map(x->x.pointsToString()).collect(Collectors.joining("\n"));
         assert (sorted.get(0)==three);
         assert (sorted.get(1)==two);
         assert (sorted.get(2)==one);
