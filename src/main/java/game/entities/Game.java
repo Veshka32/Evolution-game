@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
-public class Game implements Observer, Serializable {
+public class Game implements  Serializable {
 
     private transient String winners; //game has winners=>game end=>never saved
     private transient String lastLogMessage;
@@ -55,8 +55,8 @@ public class Game implements Observer, Serializable {
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START;
 
-    private transient Set<Animal> changedAnimals=new HashSet<>();
-    private transient Set<Integer> deletedAnimalsId=new HashSet<>();
+    transient Set<Animal> changedAnimals=new HashSet<>();
+    transient Set<Integer> deletedAnimalsId=new HashSet<>();
 
     public Game() {
     }
@@ -129,7 +129,7 @@ public class Game implements Observer, Serializable {
     }
 
     public String getLightWeightJson(String name) {
-        //Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
@@ -137,8 +137,8 @@ public class Game implements Observer, Serializable {
         }
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
         //element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
-        if (!deletedAnimalsId.isEmpty()) element.getAsJsonObject().add("deleteAnimal",gson.toJsonTree(deletedAnimalsId));
-        if (!changedAnimals.isEmpty()) element.getAsJsonObject().add("changedAnimal",gson.toJsonTree(changedAnimals));
+        if (!deletedAnimalsId.isEmpty()) element.getAsJsonObject().add("deleteAnimal",gsonExpose.toJsonTree(deletedAnimalsId));
+        if (!changedAnimals.isEmpty()) element.getAsJsonObject().add("changedAnimal",gsonExpose.toJsonTree(changedAnimals));
         element.getAsJsonObject().addProperty("log", lastLogMessage);
 
         if (phase.equals(Phase.EVOLUTION))
@@ -281,9 +281,8 @@ public class Game implements Observer, Serializable {
     void makeAnimal(Move move) {
         Player player = players.get(move.getPlayer());
         Animal animal = new Animal(animalID++, player);
-        animal.addObserver(this);
+        animal.setObserver(this);
         changedAnimals.add(animal);
-
         player.deleteCard(move.getCardId());
         player.addAnimal(animal);
     }
@@ -394,12 +393,11 @@ public class Game implements Observer, Serializable {
         return "#" + id + ", players: " + players.values().stream().map(Player::getName).collect(Collectors.joining(", "));
     }
 
-    @Override
-    public void update(Observable observable, Object o) {
-        if ("change".equals(o)) changedAnimals.add((Animal)observable);
-        else if("delete".equals(o)) {
-            observable.deleteObserver(this);
-            deletedAnimalsId.add(((Animal)observable).getId());
+    void updateChanges(Animal animal,String type){
+        if ("change".equals(type)) changedAnimals.add(animal);
+        else if("delete".equals(type)) {
+            animal.deleteObserver();
+            deletedAnimalsId.add(animal.getId());
         }
     }
 }

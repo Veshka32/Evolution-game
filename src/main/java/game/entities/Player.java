@@ -166,8 +166,8 @@ public class Player implements Serializable {
                     animal2.addProperty(property);
                 }
         }
-        animal.notifyObservers("change");
-        animal2.notifyObservers("change");
+        animal.notifyObserver("change");
+        animal2.notifyObserver("change");
     }
 
     void animalsDie() {

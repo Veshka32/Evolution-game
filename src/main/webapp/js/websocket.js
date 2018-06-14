@@ -68,20 +68,20 @@ function onMessage(event) {
 
         for (let name in game.players) {
             let player = game.players[name];
-            if (common.getElementById(name)==null) common.appendChild(buildPlayerBlock(player));
+            if (common.querySelector(name)==null) common.appendChild(buildPlayerBlock(player));
         }
     }
 
     if (game.hasOwnProperty("changedAnimal")) {
         for (let animal in game.changedAnimal) {
             let id = animal.id;
-            let owner = animal.owner;
-            let playerBlock = document.getElementById(owner.name);
+            let owner = animal.ownerName;
+            let playerBlock = document.getElementById(owner);
             playerBlock.removeChild(document.getElementById(id));
 
-            if (owner.name == playerName)
-                playerBlock.replaceChild(buildAnimal(animal, true), playerBlock.getElementById(id));
-            else playerBlock.replaceChild(buildAnimal(animal, false), playerBlock.getElementById(id));
+            if (owner == playerName)
+                playerBlock.replaceChild(buildAnimal(animal, true), playerBlock.querySelector(id));
+            else playerBlock.replaceChild(buildAnimal(animal, false), playerBlock.querySelector(id));
         }
     }
 
