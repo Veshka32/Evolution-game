@@ -5,10 +5,11 @@ import services.dataBaseService.IdDAO;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @ApplicationScoped
 public class IdGenerator {
-    private int game_next_id;
+    private AtomicInteger nextGameId;
 
     @Inject
     private IdDAO idDAO;
@@ -18,10 +19,10 @@ public class IdGenerator {
 
     @PostConstruct
     private void setIds(){
-        game_next_id=idDAO.getGameLastId();
+        nextGameId =new AtomicInteger(idDAO.getGameLastId());
     }
 
-    synchronized int getGame_next_id(){
-        return game_next_id++;
+    int getGame_next_id(){
+        return nextGameId.incrementAndGet();
     }
 }
