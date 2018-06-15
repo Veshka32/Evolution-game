@@ -68,7 +68,7 @@ function onMessage(event) {
 
         for (let name in game.players) {
             let player = game.players[name];
-            if (common.querySelector(name)==null) common.appendChild(buildPlayerBlock(player));
+            if (document.getElementById(name)==null) common.appendChild(buildPlayerBlock(player));
         }
     }
 

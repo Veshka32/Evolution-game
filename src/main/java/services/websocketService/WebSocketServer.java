@@ -1,9 +1,9 @@
 package services.websocketService;
 
 import game.constants.MoveType;
-import game.entities.Move;
-import game.entities.Game;
 import game.controller.GameManager;
+import game.entities.Game;
+import game.entities.Move;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,8 +16,8 @@ import java.io.IOException;
 @ServerEndpoint(value = "/views/socket", configurator = SocketConfigurator.class, decoders = {Decoder.class})
 public class WebSocketServer {
 
-   @Inject
-   private GameManager gameManager;
+    @Inject
+    private GameManager gameManager;
 
     @Inject
     private SocketsHandler socketsHandler;
@@ -28,18 +28,18 @@ public class WebSocketServer {
         String player = (String) httpSession.getAttribute("player");
         Integer gameId = (Integer) httpSession.getAttribute("gameId");
         socketsHandler.addSession(session, player, gameId);
-        sendToAll(session,true);
+        sendToAll(session, true);
     }
 
-    private void sendToAll(Session session,boolean sendFullGame) {
-        Integer gameId=socketsHandler.getGameId(session);
+    private void sendToAll(Session session, boolean sendFullGame) {
+        Integer gameId = socketsHandler.getGameId(session);
         Game game = gameManager.getGame(gameId);
         for (Session s : socketsHandler.getGameSessions(gameId)) {
             try {
                 String name = socketsHandler.getName(s);
                 String message;
                 if (sendFullGame) message = game.getFullJson(name);
-                else message=game.getLightWeightJson(name);
+                else message = game.getLightWeightJson(name);
                 if (message != null) s.getBasicRemote().sendText(message); //null means error for one of the players
             } catch (IOException e) {
                 e.printStackTrace();
@@ -49,20 +49,37 @@ public class WebSocketServer {
         if (game.isEnd()) gameManager.remove(gameId);
     }
 
+    private void notifyAboutLeaving(String name, Integer gameId) {
+        Game game = gameManager.getGame(gameId);
+        for (Session s : socketsHandler.getGameSessions(gameId)) {
+            try {
+                String message = game.getLightWeightJson(name);
+                s.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        game.refresh();
+    }
+
     @OnMessage
     public void handleMessage(Move message, Session session) {
         Integer gameId = socketsHandler.getGameId(session);
         if (message.getMove().equals(MoveType.SAVE_GAME)) gameManager.save(gameId);
         gameManager.getGame(gameId).makeMove(message);
-        sendToAll(session,false);
+        sendToAll(session, false);
     }
 
     @OnClose
     public void close(Session session) {
-        Move message=new Move(socketsHandler.getName(session),0,0,0,"LEAVE_GAME",null," leave game");
-        gameManager.getGame(socketsHandler.getGameId(session)).makeMove(message);
-        sendToAll(session,false);
+        Integer gameId = socketsHandler.getGameId(session);
+        String name = socketsHandler.getName(session);
+
+        Move message = new Move(socketsHandler.getName(session), 0, 0, 0, "LEAVE_GAME", null, " leave game");
+        gameManager.getGame(gameId).makeMove(message);
+
         socketsHandler.removeSession(session);
+        notifyAboutLeaving(name, gameId);
     }
 
     @OnError
