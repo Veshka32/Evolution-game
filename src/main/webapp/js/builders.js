@@ -162,7 +162,7 @@ function playProperty(property, cardId) {
         if (property === "MakeAnimal") {
             move = "MAKE_ANIMAL";
             document.getElementById("doing").innerText = "Make animal from card # " + cardId;
-        } else if (property === "DELETE_PROPERTY") {
+        } else if (property === "DeleteProperty") {
             tailLoss = true;
             move = "DELETE_PROPERTY";
         }
