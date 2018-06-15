@@ -60,7 +60,6 @@ function onMessage(event) {
     document.getElementById("phase").innerText = game.phase;
     document.getElementById("log").innerText += game.log;
 
-
     //build occasionally
     if (game.hasOwnProperty("players")) {
         let common = document.getElementById("common");
@@ -77,7 +76,8 @@ function onMessage(event) {
             let animal=game.changedAnimal[k];
             let id = animal.id;
             let owner = animal.ownerName;
-            let flag=(owner == playerName);
+            let flag=false;
+            if (owner == playerName) flag=true;
             let playerBlock=document.getElementById(owner);
             if (document.getElementById(id)==null) playerBlock.appendChild(buildAnimal(animal,flag));
             else

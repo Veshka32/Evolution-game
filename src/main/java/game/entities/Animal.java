@@ -39,9 +39,9 @@ public class Animal implements Serializable {
     @Expose
     private String ownerName;
     @Expose
-    int hungry = MIN_HUNGRY;
-    @Expose
     private int id;
+    @Expose
+    int hungry = MIN_HUNGRY;
     @Expose
     @ElementCollection
     List<Property> propertyList = new ArrayList<>();

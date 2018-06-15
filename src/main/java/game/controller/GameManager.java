@@ -59,16 +59,17 @@ public class GameManager {
         return game.getId();
     }
 
-    public void joinPlayer(Integer gameId,String login) throws IllegalArgumentException {
+    public void joinPlayer(Integer gameId, String login) throws IllegalArgumentException {
         if (!games.containsKey(gameId)) throw new IllegalArgumentException();
         Game game = games.get(gameId);
-        if (game.hasPlayer(login))
-            game.playerBack(login);
-        else game.addPlayer(login);
+        if (game.hasPlayer(login)) game.playerBack(login);
+        else {
+            game.addPlayer(login);
 
-        if (game.isFull()) {
-            game.setCardList(deck.getCards());
-            game.start();
+            if (game.isFull()) {
+                game.setCardList(deck.getCards());
+                game.start();
+            }
         }
     }
 
