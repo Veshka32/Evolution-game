@@ -73,22 +73,22 @@ function onMessage(event) {
     }
 
     if (game.hasOwnProperty("changedAnimal")) {
-        for (let animal in game.changedAnimal) {
+        for (let k=0;k<game.changedAnimal.length;k++){
+            let animal=game.changedAnimal[k];
             let id = animal.id;
             let owner = animal.ownerName;
-            let playerBlock = document.getElementById(owner);
-            playerBlock.removeChild(document.getElementById(id));
-
-            if (owner == playerName)
-                playerBlock.replaceChild(buildAnimal(animal, true), playerBlock.querySelector(id));
-            else playerBlock.replaceChild(buildAnimal(animal, false), playerBlock.querySelector(id));
+            let flag=(owner == playerName);
+            let playerBlock=document.getElementById(owner);
+            if (document.getElementById(id)==null) playerBlock.appendChild(buildAnimal(animal,flag));
+            else
+                playerBlock.replaceChild(buildAnimal(animal, flag),document.getElementById(id));
         }
     }
 
     if (game.hasOwnProperty("deleteAnimal")) {
-        for (let id in game.deleteAnimal) {
-            let common = document.getElementById("common");
-            common.removeChild(common.getElementById(id));
+        for (let k=0;k<game.deleteAnimal.length;k++){
+            let id=game.deleteAnimal[k];
+            document.getElementById(id).remove();
         }
     }
 

@@ -35,8 +35,9 @@ public class Animal implements Serializable {
     int totalFatSupply;
 
     //include in json
+    @Transient
     @Expose
-    private transient String ownerName;
+    private String ownerName;
     @Expose
     int hungry = MIN_HUNGRY;
     @Expose

@@ -75,6 +75,7 @@ function buildAnimal(animal, flag) {
                 animDiv.appendChild(span);
             }
         }
+        else if (key=="ownerName") continue;
         else if (key == "currentFatSupply" && animal[key]>0) {
             let span = document.createElement("span");
             span.setAttribute("class", "fat");
@@ -187,7 +188,7 @@ function buildCard(card) {
     cardDiv.setAttribute("class", "card");
     let number = document.createElement("span");
     number.innerText = card.id;
-    cardDiv.appendChild(number);
+    cardDiv.appendChild(number);``
     cardDiv.appendChild(buildButton(card.property, card.id));
 
     if (card.hasOwnProperty("extraProperty")) {
