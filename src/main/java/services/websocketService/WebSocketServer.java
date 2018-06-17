@@ -66,7 +66,13 @@ public class WebSocketServer {
     public void handleMessage(Move message, Session session) {
         Integer gameId = socketsHandler.getGameId(session);
 
-        if (message.getMove().equals(MoveType.SAVE_GAME)) gameManager.save(gameId);
+        if (message.getMove().equals(MoveType.SAVE_GAME))
+            try {
+                gameManager.save(gameId);
+                gameManager.getGame(gameId).makeMove(message);
+            } catch (Exception e) {
+                gameManager.getGame(gameId).addLogMessage("System error while saving game. Game not saved");
+            }
 
         gameManager.getGame(gameId).makeMove(message);
         sendToAll(session, false);

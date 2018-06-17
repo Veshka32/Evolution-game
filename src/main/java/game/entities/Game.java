@@ -189,6 +189,11 @@ public class Game{
         return true;
     }
 
+    public void addLogMessage(String message){
+        lastLogMessage="\n"+message;
+        log.append(lastLogMessage);
+    }
+
     public void makeMove(Move move) {
 
         lastLogMessage = "\n" + move.getPlayer() + " " + move.getLog() + " at " + new Date();
