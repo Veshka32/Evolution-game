@@ -21,15 +21,5 @@ class JsonAdapter implements JsonSerializer<List<?>> {
 
         return array;
     }
-
-//    public static void main(String[] args) throws GameException {
-//        Animal animal=new Animal(1,new Player("test",1));
-//        animal.setObserver(new Game());
-//        animal.addProperty(Property.PREDATOR);
-//        Gson gson=new GsonBuilder().registerTypeHierarchyAdapter(List.class, new E()).excludeFieldsWithoutExposeAnnotation().create();
-//        System.out.println(gson.toJson(animal));
-//
-//
-//    }
 }
 

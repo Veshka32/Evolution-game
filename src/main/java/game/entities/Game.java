@@ -21,6 +21,9 @@ public class Game{
 
     private transient String winners; //game has winners=>game end=>never saved
     private transient String lastLogMessage;
+    private transient Set<Animal> changedAnimals=new HashSet<>();
+    private transient Set<Integer> deletedAnimalsId=new HashSet<>();
+    private transient JsonElement element;
 
     private int numberOfPlayers = 2;
     private int animalID;
@@ -29,18 +32,15 @@ public class Game{
     private String error;
     private StringBuilder log = new StringBuilder();
 
-    //include in json
-    @Id //set manually in GameManager with IdGenerator
-    private int id;
+    // fields included in json
+    @Id
+    private int id; //set in GameManager with IdGenerator
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Card> cardList;
 
     @OneToMany(cascade = CascadeType.ALL) //no game - no players //orphanremoval=true
     private Map<String, Player> players = new HashMap<>();
-
-//    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-//    private Set<Users> users=new HashSet<>();
 
     @ElementCollection(fetch = EAGER)
     @OrderColumn(name = "order_index")
@@ -49,13 +49,10 @@ public class Game{
     @Embedded
     private ExtraMessage extraMessage;
 
-    private int food;
-
     @Enumerated(EnumType.STRING)
     private Phase phase = Phase.START;
 
-    transient Set<Animal> changedAnimals=new HashSet<>();
-    transient Set<Integer> deletedAnimalsId=new HashSet<>();
+    private int food;
 
     public Game() {
     }
@@ -99,34 +96,38 @@ public class Game{
         error = null;
         changedAnimals.clear();
         deletedAnimalsId.clear();
+        element=null;
     }
 
     public String getFullJson(String name) {
         Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeHierarchyAdapter(List.class,new JsonAdapter()).create();
         Gson gson = new Gson();
-        JsonElement element = new JsonObject();
         if (error != null) {
             return errorToJson(name, element, gson);
         }
 
-        element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
-        element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
-        element.getAsJsonObject().addProperty("food", food); //add primitive
-        element.getAsJsonObject().addProperty("id", id);
-        element.getAsJsonObject().addProperty("player", name);
-        element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
-        element.getAsJsonObject().addProperty("log", log.toString());
-        element.getAsJsonObject().add("cards", gson.toJsonTree(players.get(name).getCards()));
+        if (element==null){
+            element=new JsonObject();
+            element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
+            element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
+            element.getAsJsonObject().addProperty("food", food); //add primitive
+            element.getAsJsonObject().addProperty("id", id);
 
+            element.getAsJsonObject().addProperty("playersList", new ArrayList<>(players.keySet()).toString());
+            element.getAsJsonObject().addProperty("log", log.toString());
+
+            if (extraMessage != null)
+                element.getAsJsonObject().add(extraMessage.getType().toString(), gson.toJsonTree(extraMessage));
+
+            if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
+            if (round == -1) element.getAsJsonObject().addProperty("last", 0);}
+
+        //these json fields are player name sensitive
+        element.getAsJsonObject().addProperty("player", name);
+        element.getAsJsonObject().add("cards", gson.toJsonTree(players.get(name).getCards()));
         if (playersOrder.size() > 0 && playersOrder.get(playerOnMove).equals(name))
             element.getAsJsonObject().addProperty("status", true);
         else element.getAsJsonObject().addProperty("status", false);
-
-        if (extraMessage != null)
-            element.getAsJsonObject().add(extraMessage.getType().toString(), gson.toJsonTree(extraMessage));
-
-        if (phase.equals(Phase.END)) element.getAsJsonObject().addProperty("winners", winners);
-        if (round == -1) element.getAsJsonObject().addProperty("last", 0);
 
         return gson.toJson(element);
     }
@@ -134,7 +135,7 @@ public class Game{
     public String getLightWeightJson(String name) {
         Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeHierarchyAdapter(List.class,new JsonAdapter()).create();
         Gson gson = new Gson();
-        JsonElement element = new JsonObject();
+        element = new JsonObject();
         if (error != null) {
             return errorToJson(name, element, gson);
         }
@@ -163,7 +164,6 @@ public class Game{
         if (round == -1) element.getAsJsonObject().addProperty("last", 0);
         return gson.toJson(element);
     }
-
 
     public void playerBack(String name) {
         players.get(name).backToGame();
@@ -299,6 +299,14 @@ public class Game{
         player.addAnimal(animal);
     }
 
+    void updateChanges(Animal animal,String type){
+        if ("change".equals(type)) changedAnimals.add(animal);
+        else if("delete".equals(type)) {
+            animal.deleteObserver();
+            deletedAnimalsId.add(animal.getId());
+        }
+    }
+
     Animal getAnimal(int id) {
         for (Player player : players.values())
             if (player.hasAnimal(id))
@@ -403,13 +411,5 @@ public class Game{
     @Override
     public String toString() {
         return "#" + id + ", players: " + players.values().stream().map(Player::getName).collect(Collectors.joining(", "));
-    }
-
-    void updateChanges(Animal animal,String type){
-        if ("change".equals(type)) changedAnimals.add(animal);
-        else if("delete".equals(type)) {
-            animal.deleteObserver();
-            deletedAnimalsId.add(animal.getId());
-        }
     }
 }
