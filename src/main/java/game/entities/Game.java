@@ -10,7 +10,6 @@ import game.constants.Property;
 import game.controller.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -103,7 +102,7 @@ public class Game{
     }
 
     public String getFullJson(String name) {
-        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeHierarchyAdapter(List.class,new JsonAdapter()).create();
         Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
@@ -133,20 +132,18 @@ public class Game{
     }
 
     public String getLightWeightJson(String name) {
-        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gsonExpose = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeHierarchyAdapter(List.class,new JsonAdapter()).create();
         Gson gson = new Gson();
         JsonElement element = new JsonObject();
         if (error != null) {
             return errorToJson(name, element, gson);
         }
         element.getAsJsonObject().add("phase", gson.toJsonTree(phase));//add object
-        //element.getAsJsonObject().add("players", gsonExpose.toJsonTree(players));
         if (!deletedAnimalsId.isEmpty()) element.getAsJsonObject().add("deleteAnimal",gsonExpose.toJsonTree(deletedAnimalsId));
         if (!changedAnimals.isEmpty()) element.getAsJsonObject().add("changedAnimal",gsonExpose.toJsonTree(changedAnimals));
         element.getAsJsonObject().addProperty("log", lastLogMessage);
 
         if (phase.equals(Phase.EVOLUTION)){
-            //element.getAsJsonObject().add("cards", gson.toJsonTree(players.get(name).getCards()));
             if (players.get(name).hasNewCards())
                 element.getAsJsonObject().add("newCards", gson.toJsonTree(players.get(name).getNewCards()));
             else if (players.get(name).hasDeletedCard())
