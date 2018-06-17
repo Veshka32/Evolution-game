@@ -3,10 +3,12 @@ package game.controller;
 import game.entities.Game;
 import services.dataBaseService.GameDAO;
 
+import javax.ejb.ApplicationException;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,19 +52,24 @@ public class GameManager {
         return games.values().stream().filter(game -> !game.onProgress() || game.hasPlayer(login)).map(Game::toString).collect(Collectors.joining("\n"));
     }
 
-    public Integer createGame(String name, int number) {
+    public int createGame(String name, int numberOfPlayers) throws IllegalArgumentException {
+
+        //if (name==null || numberOfPlayers<2 || numberOfPlayers>4) throw new IllegalArgumentException();
+
         Game game = new Game();
         game.setId(generator.getGame_next_id());
-        game.setNumberOfPlayers(number);
+        game.setNumberOfPlayers(numberOfPlayers);
         game.addPlayer(name);
-        games.put(game.getId(), game); //not in user
+        games.put(game.getId(), game);  //if (games.containsKey(game.getId())) throw new ????
         return game.getId();
     }
 
     public void joinPlayer(Integer gameId, String login) throws IllegalArgumentException {
-        if (!games.containsKey(gameId)) throw new IllegalArgumentException();
+        if (!games.containsKey(gameId) || login==null) throw new IllegalArgumentException();
+
         Game game = games.get(gameId);
         if (game.hasPlayer(login)) game.playerBack(login);
+
         else {
             game.addPlayer(login);
 
@@ -74,13 +81,16 @@ public class GameManager {
     }
 
 
-    public void loadGame(Integer gameId, String login) throws IllegalArgumentException {
+    public void loadGame(Integer gameId, String login) throws IllegalArgumentException,PersistenceException {
+        if (login==null || gameId==null) throw new IllegalArgumentException();
+        if (games.containsKey(gameId)) return; //do not load again if game is already loaded by another user
         Game game = gameDAO.load(gameId, login);
         if (game == null) throw new IllegalArgumentException();
         games.put(gameId, game);
     }
 
-    public void remove(Integer gameId) {
+    public void remove(Integer gameId) throws IllegalArgumentException{
+        if (gameId==null) return;
         games.remove(gameId);
         try {
             gameDAO.remove(gameId);

@@ -45,7 +45,7 @@ public class SignUpServlet extends HttpServlet {
                 req.getRequestDispatcher("/index.jsp").forward(req, resp);
             }
         }
-        catch (Exception e) { //catch all UserDAO ex
+        catch (Exception e) {
             req.setAttribute("signUpError", "System error, try again");
             req.getRequestDispatcher("/index.jsp").forward(req, resp);
             e.printStackTrace();

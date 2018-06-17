@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 //@Table(name="Users") //by default, table name=Classname
-public class Users implements Serializable {
+public class Users{
 
     @Id //primary key
     @Column //default column name=field name

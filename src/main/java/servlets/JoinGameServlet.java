@@ -20,7 +20,6 @@ public class JoinGameServlet extends HttpServlet {
         Integer gameId = Integer.valueOf(req.getParameter("gameId"));
 
         try {
-
             gameManager.joinPlayer(gameId,login);
             session.setAttribute("gameId", gameId);
             resp.sendRedirect("views/socket.html");
@@ -34,5 +33,10 @@ public class JoinGameServlet extends HttpServlet {
             req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
         }
 
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
     }
 }

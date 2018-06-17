@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-public class Card implements Serializable {
+public class Card{
     @Expose
     @Column(updatable = false,nullable = false)
     @Enumerated(EnumType.STRING)

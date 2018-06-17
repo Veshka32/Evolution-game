@@ -4,10 +4,7 @@ import game.entities.Game;
 import game.entities.Users;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 @Stateless
@@ -24,22 +21,22 @@ public class GameDAO {
 //        return game;
 //    }
 
-    public void remove(Integer gameId){
-        Game game=em.find(Game.class,gameId);  //IllegalArgumentException
-        em.remove(game); //IllegalArgumentException ,  TransactionRequiredException
+    public void remove(Integer gameId) throws IllegalArgumentException,PersistenceException{
+        Game game=em.find(Game.class,gameId);
+        em.remove(game);
     }
 
-    public List<Game> getSavedGames(String login){
+    public List<Game> getSavedGames(String login) throws PersistenceException{
         TypedQuery<Game> tq = em.createQuery("SELECT g from Game g join g.players p where p.name=?1", Game.class); //IllegalArgumentException
         tq.setParameter(1, login);
-        return tq.getResultList(); // 6 excs
+        return tq.getResultList();
     }
 
     public Game save(Game game){
         return em.merge(game); //IllegalArgumentException, TransactionRequiredException
     }
 
-    public Game load(Integer gameId,String login){
+    public Game load(Integer gameId,String login) throws PersistenceException {
         TypedQuery<Game> tq = em.createQuery("SELECT g FROM Game g join g.players p where g.id=?1 and p.name=?2", Game.class);
         tq.setParameter(1, gameId);
         tq.setParameter(2, login);

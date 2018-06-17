@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-public class Player implements Serializable {
+public class Player{
 
     transient private int requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
     transient private int points;

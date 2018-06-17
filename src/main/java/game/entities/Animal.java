@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Observable;
 
 @Entity
-public class Animal implements Serializable {
+public class Animal{
 
     private transient final int MIN_HUNGRY = 1;
 

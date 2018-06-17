@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
-public class Game implements  Serializable {
+public class Game{
 
     private transient String winners; //game has winners=>game end=>never saved
     private transient String lastLogMessage;
@@ -69,11 +69,14 @@ public class Game implements  Serializable {
         this.id = id;
     }
 
-    public void setNumberOfPlayers(int n) {
+    public void setNumberOfPlayers(int n) throws IllegalArgumentException {
+        if (n<Constants.MIN_NUMBER_OF_PLAYERS.getValue() || n>Constants.MAX_NUMBER_PF_PLAYERS.getValue()) throw new IllegalArgumentException();
         numberOfPlayers = n;
     }
 
-    public void addPlayer(String login) {
+    public void addPlayer(String login) throws IllegalArgumentException{
+        if (login==null) throw new IllegalArgumentException();
+
         Player player = new Player(login, players.size());
         players.put(login, player);
         lastLogMessage = login + " joined game at " + new Date() + "\n";
@@ -85,6 +88,7 @@ public class Game implements  Serializable {
     }
 
     public void start() {
+        if (!phase.equals(Phase.START)) return;
         animalID = Constants.START_CARD_INDEX.getValue();
         resetPlayersOrder();
         players.forEach((k, v) -> addCardsOnStart(v));
@@ -175,7 +179,7 @@ public class Game implements  Serializable {
     }
 
     public void setCardList(List<Card> cardList) {
-        this.cardList = cardList;
+        if (this.cardList==null) this.cardList = cardList;
     }
 
     public boolean isLeft() {

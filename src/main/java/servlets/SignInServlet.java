@@ -27,6 +27,12 @@ public class SignInServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").toLowerCase();
         String password = req.getParameter("password");
+
+        if (login.isEmpty() || password.isEmpty()) {
+            req.setAttribute("signInError", "Put both login and password");
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        }
+
         HttpSession session = req.getSession();
 
         try {
