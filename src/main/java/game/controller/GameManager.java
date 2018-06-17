@@ -37,14 +37,14 @@ public class GameManager {
     }
 
     public String loadSavedGames(String login) {
-        List<Game> savedGames;
+        List<Integer> savedGameIds;
         try {
-            savedGames = gameDAO.getSavedGames(login);
+            savedGameIds = gameDAO.getSavedGames(login);
         } catch (Exception e) {
-            savedGames = new ArrayList<>();
+            savedGameIds = new ArrayList<>();
         }
-        if (savedGames.isEmpty()) return " no games";
-        return savedGames.stream().map(Game::toString).collect(Collectors.joining("\n"));
+        if (savedGameIds.isEmpty()) return " no games";
+        return savedGameIds.toString();
     }
 
     public String getNewGames(String login) {

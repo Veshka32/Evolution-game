@@ -26,8 +26,8 @@ public class GameDAO {
         em.remove(game);
     }
 
-    public List<Game> getSavedGames(String login) throws PersistenceException{
-        TypedQuery<Game> tq = em.createQuery("SELECT g from Game g join g.players p where p.name=?1", Game.class); //IllegalArgumentException
+    public List<Integer> getSavedGames(String login) throws PersistenceException{
+        TypedQuery<Integer> tq = em.createQuery("SELECT g.id from Game g join g.players p where p.name=?1", Integer.class); //IllegalArgumentException
         tq.setParameter(1, login);
         return tq.getResultList();
     }
