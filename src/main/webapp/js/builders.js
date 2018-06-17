@@ -29,6 +29,19 @@ function buildCards(cards){
     }
 }
 
+function buildNewCards(cards) {
+    let personal=document.getElementById("personal");
+    for(let k=0;k<cards.length;k++){
+        let card=cards[k];
+        personal.appendChild(buildCard(card));
+    }
+}
+
+function deleteCard(id) {
+        let cardId="card"+id;
+        document.getElementById(cardId).remove();
+}
+
 function buildPlayerBlock(player) {
     let playerBlock = document.createElement("div");
     playerBlock.id = player.name;
@@ -186,9 +199,10 @@ function buildButton(name, cardId) {
 function buildCard(card) {
     let cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "card");
+    cardDiv.setAttribute("id","card"+card.id);
     let number = document.createElement("span");
     number.innerText = card.id;
-    cardDiv.appendChild(number);``
+    cardDiv.appendChild(number);
     cardDiv.appendChild(buildButton(card.property, card.id));
 
     if (card.hasOwnProperty("extraProperty")) {

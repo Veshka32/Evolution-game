@@ -145,8 +145,14 @@ public class Game{
         if (!changedAnimals.isEmpty()) element.getAsJsonObject().add("changedAnimal",gsonExpose.toJsonTree(changedAnimals));
         element.getAsJsonObject().addProperty("log", lastLogMessage);
 
-        if (phase.equals(Phase.EVOLUTION))
-            element.getAsJsonObject().add("cards", gson.toJsonTree(players.get(name).getCards()));
+        if (phase.equals(Phase.EVOLUTION)){
+            //element.getAsJsonObject().add("cards", gson.toJsonTree(players.get(name).getCards()));
+            if (players.get(name).hasNewCards())
+                element.getAsJsonObject().add("newCards", gson.toJsonTree(players.get(name).getNewCards()));
+            else if (players.get(name).hasDeletedCard())
+                element.getAsJsonObject().addProperty("deletedCard",players.get(name).getDeletedCard());
+        }
+
         if (phase.equals(Phase.FEED)) element.getAsJsonObject().addProperty("food", food); //add primitive
 
         if (playersOrder.size() > 0 && playersOrder.get(playerOnMove).equals(name))

@@ -1,5 +1,6 @@
 package services.websocketService;
 
+import javax.ejb.Singleton;
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.Session;
 import java.util.HashMap;

@@ -99,6 +99,8 @@ function onMessage(event) {
     if (game.hasOwnProperty("id")) document.getElementById("gameId").innerText = game.id;
     if (game.hasOwnProperty("playersList")) document.getElementById("players").innerText = game.playersList;
     if (game.hasOwnProperty("cards")) buildCards(game.cards);
+    if (game.hasOwnProperty("newCards")) buildNewCards(game.newCards);
+    if (game.hasOwnProperty("deletedCard")) deleteCard(game.deletedCard);
 
     if (game.phase == "FEED") {
         document.getElementById("End move").style.display = 'inline-block'; //show button

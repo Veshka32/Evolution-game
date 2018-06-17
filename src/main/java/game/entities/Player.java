@@ -12,9 +12,11 @@ import java.util.*;
 @Entity
 public class Player{
 
-    transient private int requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
-    transient private int points;
-    transient private boolean leftGame;
+    private transient int requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
+    private transient int points;
+    private transient boolean leftGame;
+    private transient List<Card> newCards=new ArrayList<>();
+    private transient int deletedCard;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,15 +84,37 @@ public class Player{
     void addCard(Card card) {
         cards.add(card);
         requiredCards--;
+        newCards.add(card);
     }
 
     void deleteCard(int id) {
         for (Card card : cards) {
             if (card.getId() == id) {
                 cards.remove(card);
+                deletedCard=id;
                 break;
             }
         }
+    }
+
+    List<Card> getNewCards(){
+        List<Card> result=new ArrayList<>(newCards);
+        newCards.clear();
+        return new ArrayList<>(result);
+    }
+
+    int getDeletedCard(){
+        int result=deletedCard;
+        deletedCard=0;
+        return result;
+    }
+
+    boolean hasNewCards(){
+        return !newCards.isEmpty();
+    }
+
+    boolean hasDeletedCard(){
+        return deletedCard!=0;
     }
 
     int getPoints() {
@@ -243,6 +267,8 @@ public class Player{
     }
 
     List<Card> getCards() {
+        newCards.clear();
+        deletedCard=0;
         return cards;
     }
 

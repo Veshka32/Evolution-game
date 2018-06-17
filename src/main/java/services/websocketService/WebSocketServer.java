@@ -5,6 +5,7 @@ import game.controller.GameManager;
 import game.entities.Game;
 import game.entities.Move;
 
+import javax.ejb.Singleton;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -42,6 +43,7 @@ public class WebSocketServer {
                 else message = game.getLightWeightJson(name);
                 if (message != null) s.getBasicRemote().sendText(message); //null means error for one of the players
             } catch (IOException e) {
+                socketsHandler.removeSession(session);
                 e.printStackTrace();
             }
         }
@@ -56,6 +58,7 @@ public class WebSocketServer {
                 String message = game.getLightWeightJson(name);
                 s.getBasicRemote().sendText(message);
             } catch (IOException e) {
+                socketsHandler.removeSession(s);
                 e.printStackTrace();
             }
         }
