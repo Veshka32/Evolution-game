@@ -4,15 +4,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table
 //@Table(name="Users") //by default, table name=Classname
-public class Users implements Serializable {
+public class Users{
 
     @Id //primary key
     @Column //default column name=field name
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
 
     @Column(unique = true,nullable = false,updatable = false)
     private String login;

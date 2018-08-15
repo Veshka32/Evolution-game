@@ -1,6 +1,6 @@
 package servlets;
 
-import game.controller.Game;
+import game.controller.GameManager;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -11,7 +11,7 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class ContextConfig implements ServletContextListener {
     @Inject
-    private Game game;
+    private GameManager gameManager;
 
 //    @Inject
 //    DBService dbService;
@@ -19,9 +19,8 @@ public class ContextConfig implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext servletContext = event.getServletContext();
-        servletContext.setAttribute("game", game);
+        servletContext.setAttribute("gameManager", gameManager);
         //dbService.createTable();
-
     }
 
     @Override

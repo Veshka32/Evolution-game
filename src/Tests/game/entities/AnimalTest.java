@@ -1,48 +1,51 @@
 package game.entities;
 
-import game.constants.Constants;
-import game.controller.Game;
+import game.constants.Property;
 import game.controller.GameException;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AnimalTest {
+public class AnimalTest {
 
     @Test
-    void addProperty() throws GameException {
-        Player owner1=new Player("test");
+   public void addProperty() throws GameException {
+        Player owner1=new Player("test",1);
         int index=1;
         Animal scavenger=new Animal(index++,owner1);
         Animal predator=new Animal(index++,owner1);
-        scavenger.addProperty("Scavenger");
+        scavenger.addProperty(Property.SCAVENGER);
 
         assertThrows(GameException.class,()->{
-            scavenger.addProperty("Predator");
+            scavenger.addProperty(Property.PREDATOR);
         },"Scavenger cannot be a predator");
 
-        predator.addProperty("Predator");
+        predator.addProperty(Property.PREDATOR);
 
         assertThrows(GameException.class,()->{
-            predator.addProperty("Scavenger");
+            predator.addProperty(Property.SCAVENGER);
         },"Predator cannot be a scavenger");
 
         assertThrows(GameException.class,()->{
-            predator.addProperty("Predator");
+            predator.addProperty(Property.PREDATOR);
         },"This animal already has property: predator");
 
-        predator.addProperty("Fat");
-        predator.addProperty("Fat");
+        predator.addProperty(Property.FAT);
+        predator.addProperty(Property.FAT);
         assert (predator.totalFatSupply==2);
         assert (predator.hungry ==2);
     }
 
     @Test
-    void eatMeet() throws GameException {
+    public void eatMeet() throws GameException, NoSuchFieldException, IllegalAccessException {
         //set up player with 5 connected animals
         Game game=new Game();
-        game.setFood(Constants.MAX_FOOD.getValue());
-        Player player=new Player("test");
+        Field food=game.getClass().getDeclaredField("food");
+        food.setAccessible(true);
+        food.setInt(game,8);
+        Player player=new Player("test",1);
         int index=1;
         Animal[] animals={new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player),new Animal(index++,player)};
 
@@ -50,10 +53,10 @@ class AnimalTest {
              ) {
             player.addAnimal(an);
         }
-        player.connectAnimal(1,2,"Cooperation");
-        player.connectAnimal(2,3,"Cooperation");
-        player.connectAnimal(3,4, "Communication");
-        player.connectAnimal(4,5,"Communication");
+        player.connectAnimal(1,2,Property.COOPERATION);
+        player.connectAnimal(2,3,Property.COOPERATION);
+        player.connectAnimal(3,4, Property.COMMUNICATION);
+        player.connectAnimal(4,5,Property.COMMUNICATION);
 
         //feed animals 1 first
         animals[0].eatMeet(player,game);
@@ -66,7 +69,7 @@ class AnimalTest {
         //feed animal 3 first
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(Constants.MAX_FOOD.getValue());
+        food.setInt(game,8);
         animals[2].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
@@ -78,7 +81,7 @@ class AnimalTest {
         //feed animal 5 first
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(Constants.MAX_FOOD.getValue());
+        food.setInt(game,8);
         animals[4].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
@@ -90,7 +93,7 @@ class AnimalTest {
         //feed animal 5 first, game has less food
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(2);
+        food.setInt(game,2);
         animals[4].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[3].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[4].eatMeet(player,game);},"This animal is fed!");
@@ -102,7 +105,7 @@ class AnimalTest {
         //feed animal 3 first, game has less food
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(2);
+        food.setInt(game,2);
         animals[2].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[0].eatMeet(player,game);},"This animal is fed!");
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
@@ -114,9 +117,9 @@ class AnimalTest {
         //feed big animal
         player.resetFedFlag();
         player.resetFields();
-        game.setFood(Constants.MAX_FOOD.getValue());
-        animals[0].addProperty("Big");
-        animals[2].addProperty("Big");
+        food.setInt(game,8);
+        animals[0].addProperty(Property.BIG);
+        animals[2].addProperty(Property.BIG);
         player.resetFields();
         animals[0].eatMeet(player,game);
         assertThrows (GameException.class, ()->{animals[1].eatMeet(player,game);},"This animal is fed!");
@@ -134,34 +137,34 @@ class AnimalTest {
     @Test
     public void attack() throws GameException {
         //build animals for players;
-        Player test=new Player("test");
-        Player pop=new Player("pop");
+        Player test=new Player("test",1);
+        Player pop=new Player("pop",2);
 
         //create predator
         final Animal predator=new Animal(1,test);
-        predator.addProperty("Predator");
+        predator.addProperty(Property.PREDATOR);
         test.addAnimal(predator);
 
         //swim animal
         Animal swim=new Animal(2,pop);
-        swim.addProperty("Swimming");
+        swim.addProperty(Property.SWIMMING);
         pop.addAnimal(swim);
 
-        //animal in symbiosis with swim
+        //animal in symbiosisWith with swim
         Animal small=new Animal(3,pop);
         pop.addAnimal(small);
-        pop.connectAnimal(3,2,"Symbiosis");
+        pop.connectAnimal(3,2,Property.SYMBIOSIS);
 
         //simple animal connect with small
         Animal simple=new Animal(4,pop);
         pop.addAnimal(simple);
-        pop.connectAnimal(3,4,"Cooperation");
+        pop.connectAnimal(3,4,Property.COOPERATION);
 
         //Big animal connect with small
         Animal big=new Animal(5,pop);
-        big.addProperty("Big");
+        big.addProperty(Property.BIG);
         pop.addAnimal(big);
-        pop.connectAnimal(3,5,"Cooperation");
+        pop.connectAnimal(3,5,Property.COOPERATION);
 
         //non-swim predator attack swim animal
         assertThrows(GameException.class,()->{predator.attack(swim);},"Not-swimming predator can't eat swimming animal");
@@ -170,7 +173,7 @@ class AnimalTest {
         assertThrows(GameException.class,()->{predator.attack(small);},"You can't eat this animal while its symbiont is alive");
 
         //predator become swimming
-        predator.addProperty("Swimming");
+        predator.addProperty(Property.SWIMMING);
         predator.attack(swim);
         swim.die();
         predator.eatFish(2);
@@ -179,7 +182,7 @@ class AnimalTest {
 
         //new predator eat non-defend small
         Animal predator1=new Animal(6,test);
-        predator1.addProperty("Predator");
+        predator1.addProperty(Property.PREDATOR);
         pop.addAnimal(predator1);
         predator1.attack(small);
         small.die();
@@ -190,13 +193,31 @@ class AnimalTest {
 
     @Test
     public void playAnimalProperty() throws GameException {
-        Animal animal=new Animal(1,new Player("test"));
-        animal.addProperty("Hibernation");
+        Animal animal=new Animal(1,new Player("test",1));
+        animal.addProperty(Property.HIBERNATION);
         animal.hibernate(0);
         assert(animal.notHungry());
         assertThrows(GameException.class,()->{
             animal.hibernate(1);
         },"You can't hibernate 2 rounds in a row");
         animal.hibernate(2);
+    }
+
+    @Test
+    public void removeProperty() throws GameException {
+        Player owner=new Player("test",2);
+        Property communication=Property.COMMUNICATION;
+        Animal first=new Animal(1,owner);
+        Animal second=new Animal(2,owner);
+        Animal third=new Animal(3,owner);
+        owner.addAnimal(first);
+        owner.addAnimal(second);
+        owner.addAnimal(third);
+        owner.connectAnimal(1,2,communication);
+        owner.connectAnimal(2,3,communication);
+        second.removeProperty(communication);
+        assert (first.propertyList.isEmpty());
+        assert (!second.propertyList.isEmpty());
+        assert (!third.propertyList.isEmpty());
     }
 }

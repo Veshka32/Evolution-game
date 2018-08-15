@@ -1,27 +1,29 @@
 package game.entities;
-
 import com.google.gson.Gson;
+import game.constants.MoveType;
+import game.constants.Property;
 
 public class Move {
-    String player;
-    String move;
-    String property;
-    int cardId;
-    int animalId;
-    int secondAnimalId;
-    String log;
+    private String player;
+    private MoveType move;
+    private Property property;
+    private int cardId;
+    private int animalId;
+    private int secondAnimalId;
+    private String log;
 
-    public Move(String player,int cardId,int animalId,int secondAnimalId,String move,String property,String log){
-        this.move = move;
+
+    public Move(String player, int cardId, int animalId, int secondAnimalId, String move, String property, String log){
+        this.player = player;
         this.cardId = cardId;
         this.animalId=animalId;
         this.secondAnimalId=secondAnimalId;
-        this.player = player;
-        this.property=property;
+        if (move!=null) this.move = MoveType.valueOf(move);
+        if (property!=null) this.property=Property.valueOf(property);
         this.log=log;
     }
 
-    public String getMove() {
+    public MoveType getMove() {
         return move;
     }
 
@@ -29,42 +31,21 @@ public class Move {
         return player;
     }
 
-    public String getLog(){
+    public Property getProperty(){return property;}
+
+    String getLog(){
         return log;
     }
 
-    public int getCardId(){return cardId;}
+    int getCardId(){return cardId;}
 
-    public int getAnimalId(){return animalId;}
+    int getAnimalId(){return animalId;}
 
-    public int getSecondAnimalId(){return secondAnimalId;}
-
-    public String getProperty(){return property;}
+    int getSecondAnimalId(){return secondAnimalId;}
 
 
+    @Override
     public String toString() {
-        Gson json = new Gson();
-        String s = json.toJson(this);
-        return s;
+        return new Gson().toJson(this);
     }
-
-//    public static void main(String[] args) throws JsonProcessingException,IOException {
-//        Move test=new Move("pl","move","i55");
-//        Gson gson=new Gson();
-//        String json=gson.toJson(test);
-//        System.out.println(json);
-//
-//        test=gson.fromJson(json,Move.class);
-//        System.out.println(test.getMove());
-//        System.out.println(test.getPlayer());
-//
-////        ObjectMapper mapper=new ObjectMapper();
-////        String jsonToString=mapper.writeValueAsString(test);
-////        System.out.println(jsonToString);
-////
-////        ObjectMapper mapper1=new ObjectMapper();
-////        Move test1=mapper1.readValue(jsonToString,Move.class);
-////        System.out.println(test1.move);
-//
-//    }
 }

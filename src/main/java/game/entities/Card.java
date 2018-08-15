@@ -1,39 +1,67 @@
 package game.entities;
 
-import game.constants.Properties;
+import com.google.gson.annotations.Expose;
+import game.constants.Property;
 
-import javax.json.JsonObjectBuilder;
-import javax.json.spi.JsonProvider;
+import javax.persistence.*;
+import java.io.Serializable;
 
-public class Card {
-    private String extraProperty;
-    private String property;
-    private Properties prop;
-    private final int id;
+@Entity
+public class Card{
+    @Expose
+    @Column(updatable = false,nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Property property;
 
-    public Card(int id,String property,String extraProperty){
+    @Expose
+    @Column(updatable = false)
+    @Enumerated(EnumType.STRING)
+    private Property extraProperty; //use in Game.json
+
+    @Id
+    @Expose
+    @Column(updatable = false)
+    private int id;
+
+    public Card(){}
+
+    public Card(int id,Property property,Property extraProperty){
         this.id=id;
         this.property=property;
         this.extraProperty=extraProperty;
     }
 
-    public Card(int id,String property){
+    public Card(int id,Property property){
         this.id=id;
         this.property=property;
-    }
-
-    public String convertToJsonString() {
-        JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
-        builder.add("id", id)
-                .add("property", property);
-        if (extraProperty != null)
-            builder.add("extraProperty", extraProperty);
-
-        return builder.build().toString();
     }
 
     public int getId(){
         return id;
     }
+
+//    @Override
+//    public boolean equals(Object o){
+//        if (!(o instanceof Card)) return false;
+//        Card card=(Card)o;
+//        return card.id==this.id;
+//    }
+//
+//    @Override
+//    public int hashCode(){
+//        return Objects.hash(id,property,extraProperty);
+//    }
+
+//    public String getFullJson() {
+//        JsonObjectBuilder builder = JsonProvider.provider().createObjectBuilder();
+//        builder.add("id", id)
+//                .add("property", property);
+//        if (extraProperty != null)
+//            builder.add("extraProperty", extraProperty);
+//
+//        return builder.build().toString();
+//    }
+
+
 }
 

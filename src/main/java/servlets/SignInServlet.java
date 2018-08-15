@@ -18,6 +18,7 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         if (req.getSession().getAttribute("player")==null) resp.sendRedirect("/index.jsp");
         req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
     }
@@ -26,6 +27,12 @@ public class SignInServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").toLowerCase();
         String password = req.getParameter("password");
+
+        if (login.isEmpty() || password.isEmpty()) {
+            req.setAttribute("signInError", "Put both login and password");
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        }
+
         HttpSession session = req.getSession();
 
         try {
@@ -35,20 +42,12 @@ public class SignInServlet extends HttpServlet {
                 session.setAttribute("player", login);
                 req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
             } else {
-                sendLoginError(req, resp);
+                req.setAttribute("signInError", "Sorry,invalid login or password");
+                req.getRequestDispatcher("/index.jsp").forward(req, resp);
             }
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            sendSystemError(req, resp);
+        } catch (Exception e) {
+            req.setAttribute("signInError", "System error, try again");
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
         }
-    }
-
-    private void sendSystemError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("signUpError", "System error, try again");
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
-    }
-
-    private void sendLoginError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("signInError", "Sorry,invalid login or password");
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 }

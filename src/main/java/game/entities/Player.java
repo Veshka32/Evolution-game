@@ -1,81 +1,140 @@
 package game.entities;
 
+import com.google.gson.annotations.Expose;
 import game.constants.Constants;
+import game.constants.Property;
 import game.controller.GameException;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
-public class Player {
-    private transient int cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
-    private transient int points;
-    transient int usedCards;
-    //go to json
-    private final String name;
-    List<Card> cards = new ArrayList<>();
-    Map<Integer, Animal> animals = new HashMap<>();
-    boolean doEat = false;
+@Entity
+public class Player{
 
-    public Player(String login) {
+    private transient int requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
+    private transient int points;
+    private transient boolean leftGame;
+    private transient List<Card> newCards=new ArrayList<>();
+    private transient int deletedCard;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private int orderInMove;
+    private int usedCards;
+
+    //include json
+    @Expose
+    private String name;
+    //@Expose
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private List<Card> cards = new ArrayList<>();
+
+    @Expose
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner") //no player - no animals //orphanRemoval=true
+    private Map<Integer, Animal> animals = new HashMap<>();
+    @Expose
+    private boolean doEat;
+
+    public Player() {
+    }
+
+    public Player(String login, int order) {
         this.name = login;
+        this.orderInMove = order;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setDoEat(boolean bool) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    int getOrder() {
+        return orderInMove;
+    }
+
+    void setDoEat(boolean bool) {
         doEat = bool;
     }
 
-    public void resetGrazing() {
-        for (Animal animal : animals.values())
-            animal.setDoGrazing(false);
+    void resetGrazing() {
+        animals.forEach((k, v) -> v.setDoGrazing(false));
     }
 
-    public boolean isDoEat() {
+    void leaveGame() {
+        leftGame = true;
+    }
+
+    void backToGame() {
+        leftGame = false;
+    }
+
+    boolean doLeaveGame() {
+        return leftGame;
+    }
+
+    boolean doEat() {
         return doEat;
     }
 
-    public void addCard(Card card) {
+    void addCard(Card card) {
         cards.add(card);
-        cardNumber--;
+        requiredCards--;
+        newCards.add(card);
     }
 
-    public void deleteCard(int id) {
-        for (int i = 0; i < cards.size(); i++) {
-            if (cards.get(i).getId() == id) {
-                cards.remove(i);
+    void deleteCard(int id) {
+        for (Card card : cards) {
+            if (card.getId() == id) {
+                cards.remove(card);
+                deletedCard=id;
                 break;
             }
         }
     }
 
-    public void setCardNumber() {
-        if (!hasAnimals() && !hasCards())
-            cardNumber = Constants.START_NUMBER_OF_CARDS.getValue();
-        else cardNumber = animals.size() + Constants.NUMBER_OF_EXTRA_CARD.getValue();
+    List<Card> getNewCards(){
+        List<Card> result=new ArrayList<>(newCards);
+        newCards.clear();
+        return new ArrayList<>(result);
     }
 
-    public boolean needCards() {
-        return cardNumber > 0;
+    int getDeletedCard(){
+        int result=deletedCard;
+        deletedCard=0;
+        return result;
     }
 
-    public int getPoints() {
-        for (Animal animal : animals.values()) {
-            points += animal.hungry; //how to calculate double cards?
-        }
+    boolean hasNewCards(){
+        return !newCards.isEmpty();
+    }
+
+    boolean hasDeletedCard(){
+        return deletedCard!=0;
+    }
+
+    int getPoints() {
+        animals.forEach((k, v) -> points += v.hungry); //how to calculate double cards?
         return points;
     }
 
-    public void addAnimal(Animal animal) {
+    String pointsToString() {
+        return name + ": " + points + " points, " + usedCards + " cards used.";
+    }
+
+    void addAnimal(Animal animal) {
         animals.put(animal.getId(), animal);
     }
 
     //return true if player has any scavenger that can be fed; feed only one of them. Player should choose which one, actually
-    public boolean feedScavenger() {
+    boolean feedScavenger() {
         for (Animal animal : animals.values()
                 ) {
-            if (animal.hasProperty("Scavenger") && animal.hungry > 0) {
+            if (animal.hasProperty(Property.SCAVENGER) && animal.hungry > 0) {
                 animal.eatFish(1);
                 return true;
             }
@@ -84,11 +143,11 @@ public class Player {
     }
 
 
-    public void connectAnimal(int id1, int id2, String property) throws GameException {
+    void connectAnimal(int id1, int id2, Property property) throws GameException {
 
         if (animals.size() < 2) throw new GameException("You don't have enough animals");
 
-        if (!(animals.containsKey(id1) && animals.containsKey(id2)))
+        if (!animals.containsKey(id1) || !animals.containsKey(id2))
             throw new GameException("It's not your animal(s)");
 
         if (id1 == 0 || id2 == 0)
@@ -101,7 +160,7 @@ public class Player {
         Animal animal2 = animals.get(id2);
 
         switch (property) {
-            case "Communication":
+            case COMMUNICATION:
                 if (animal.isCommunicate(id2) || animal.isCooperate(id2))
                     throw new GameException("These animals are already helping each other");
                 else {
@@ -111,7 +170,7 @@ public class Player {
                     animal2.addProperty(property);
                 }
                 break;
-            case "Cooperation":
+            case COOPERATION:
                 if (animal.isCommunicate(id2) || animal.isCooperate(id2))
                     throw new GameException("These animals are already helping each other");
                 else {
@@ -121,24 +180,26 @@ public class Player {
                     animal2.addProperty(property);
                 }
                 break;
-            case "Symbiosis":
+            case SYMBIOSIS:
                 if (animal.isInSymbiosis(id2) || animal.isSymbiontFor(id2))
-                    throw new GameException("Animal #" + id1 + " is already in symbiosis with animal #" + id2);
+                    throw new GameException("Animal #" + id1 + " is already in symbiosisWith with animal #" + id2);
                 else {
-                    animal.setSymbiosysWith(id2);
+                    animal.setSymbiosisWith(id2);
                     animal2.setSymbiontFor(id1);
                     animal.addProperty(property);
                     animal2.addProperty(property);
                 }
         }
+        animal.notifyObserver("change");
+        animal2.notifyObserver("change");
     }
 
-    public void animalsDie() {
+    void animalsDie() {
         Collection<Animal> all = animals.values();
         Iterator<Animal> it = all.iterator(); //to remove animal safety;
         while (it.hasNext()) {
             Animal animal = it.next();
-            if (animal.hungry > 0 || animal.isPoisoned) {
+            if (animal.hungry > 0 || animal.poisoned) {
                 animal.die();
                 usedCards += animal.hungry;
                 it.remove();
@@ -146,54 +207,76 @@ public class Player {
         }
     }
 
-    public void resetFedFlag() {
-        for (Animal an : animals.values())
-            an.fedFlag = false;
+    void resetFedFlag() {
+        animals.forEach((k, v) -> v.fed = false);
     }
 
-    public void resetFields() {
+    void resetFields() {
         for (Animal an : animals.values()
                 ) {
             an.setHungry();
-            an.attackFlag = false;
-            an.fedFlag = false;
+            an.setAttack(false);
+            an.fed = false;
             an.setDoPiracy(false);
             an.setDoGrazing(false);
             doEat = false;
         }
     }
 
-    public List<Integer> canRedirect(Animal predator, int victim) {
+    List<Integer> canRedirectAttack(Animal predator, int victim) {
         ArrayList<Integer> canAttack = new ArrayList<>();
 
         for (Animal an : animals.values()) {
-            if (an.getId() == victim || an.hasProperty("Mimicry")) continue;
+            if (an.getId() == victim || an.hasProperty(Property.MIMICRY)) continue;
             try {
                 predator.attack(an);
                 canAttack.add(an.getId());
             } catch (GameException e) {
+                //if catch ex, canAttack won't be increase
             }
         }
         return canAttack;
     }
 
-    public Animal getAnimal(int id) {
+    void increaseUsedCards() {
+        usedCards++;
+    }
+
+    Animal getAnimal(int id) {
         return animals.get(id);
     }
 
-    public void deleteAnimal(int id) {
+    boolean hasAnimal(int id){return animals.containsKey(id);}
+
+    void deleteAnimal(int id) {
         animals.remove(id);
     }
 
-    public int getUsedCards() {
+    int getUsedCards() {
         return usedCards;
     }
 
-    public boolean hasCards() {
+    int getRequiredCards() {
+        return requiredCards;
+    }
+
+    void setRequiredCards() {
+        if (!hasAnimals() && !hasCards())
+            requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
+        else requiredCards = animals.size() + Constants.NUMBER_OF_EXTRA_CARD.getValue();
+    }
+
+    List<Card> getCards() {
+        newCards.clear();
+        deletedCard=0;
+        return cards;
+    }
+
+    private boolean hasCards() {
         return !cards.isEmpty();
     }
 
-    public boolean hasAnimals() {
+    private boolean hasAnimals() {
         return !animals.isEmpty();
     }
 }

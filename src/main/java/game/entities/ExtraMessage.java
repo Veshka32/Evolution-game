@@ -1,29 +1,63 @@
 package game.entities;
 
-public class ExtraMessage {
-    String playerOnAttack;
-    int predator;
-    String playerUnderAttack;
-    int victim;
-    String type;
+import game.constants.Property;
 
-    public ExtraMessage(String name, int id, String name1, int id1, String type){
-        playerOnAttack=name;
-        predator=id;
-        playerUnderAttack=name1;
-        victim=id1;
-        this.type=type;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
+
+@Embeddable
+class ExtraMessage implements Serializable {
+    private String playerOnAttack;
+    private int predator;
+    private String playerUnderAttack;
+    private Property type;
+    private List<Integer> victims;
+
+    public ExtraMessage(){
     }
 
-    public int getPredator(){return predator;}
+    ExtraMessage(String name, int id, String name1, Property type) {
+        playerOnAttack = name;
+        predator = id;
+        playerUnderAttack = name1;
+        this.type = type;
+    }
 
-    public String getPlayerOnAttack(){
+    void setVictims(List<Integer> victims){
+        this.victims=victims;
+    }
+
+    public void setPlayerOnAttack(String playerOnAttack) {
+        this.playerOnAttack = playerOnAttack;
+    }
+
+    public void setPredator(int predator) {
+        this.predator = predator;
+    }
+
+    public String getPlayerUnderAttack() {
+        return playerUnderAttack;
+    }
+
+    public void setPlayerUnderAttack(String playerUnderAttack) {
+        this.playerUnderAttack = playerUnderAttack;
+    }
+
+    public void setType(Property type) {
+        this.type = type;
+    }
+
+    public int getPredator() {
+        return predator;
+    }
+
+    public String getPlayerOnAttack() {
         return playerOnAttack;
     }
-    public String getType(){return type;
+
+    public Property getType() {
+        return type;
     }
-
-
-
 
 }

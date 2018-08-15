@@ -3,14 +3,11 @@ package servlets;
 import services.dataBaseService.UsersDAO;
 
 import javax.inject.Inject;
-import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.transaction.*;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 @WebServlet(urlPatterns = "/signUp")
 public class SignUpServlet extends HttpServlet {
@@ -41,26 +38,17 @@ public class SignUpServlet extends HttpServlet {
                 Cookie cookie = new Cookie("player", login);
                 resp.addCookie(cookie);
                 session.setAttribute("player", login);
-                req.getRequestDispatcher("/views/cabinet.jsp").forward(req, resp);
+                RequestDispatcher r=req.getRequestDispatcher("/views/cabinet.jsp");
+                r.forward(req, resp);
             } else {
-                sendLoginError(req, resp);
+                req.setAttribute("signUpError", "Sorry, this login is already in use.");
+                req.getRequestDispatcher("/index.jsp").forward(req, resp);
             }
         }
-        catch (InvalidKeySpecException | NoSuchAlgorithmException | SystemException | NamingException | NotSupportedException | HeuristicRollbackException | HeuristicMixedException | RollbackException e) {
-            sendError(req, resp);
+        catch (Exception e) {
+            req.setAttribute("signUpError", "System error, try again");
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
             e.printStackTrace();
         }
     }
-
-    private void sendError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("signUpError", "System error, try again");
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
-    }
-
-    private void sendLoginError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("signUpError", "Sorry, this login is already in use.");
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
-    }
-
 }
-//<% response.setIntHeader("Refresh", 5); %>

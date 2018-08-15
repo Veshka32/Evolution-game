@@ -3,12 +3,12 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     <persistence-unit name="test_pu" transaction-type="JTA">
-        <!--<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>-->
         <jta-data-source>java:app/jdbc/h2test</jta-data-source>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
             <property name="eclipselink.logging.level" value="FINE"/>
-            <property name="eclipselink.logging.level.sql" value="FINEST"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <!--<property name="javax.persistence.sql-load-script-source" value="/data.sql" />-->
         </properties>
     </persistence-unit>
 </persistence>
