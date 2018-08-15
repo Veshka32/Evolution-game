@@ -8,6 +8,7 @@ import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.jws.WebService;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class GameManager {
 
     private Map<Integer, Game> games = new HashMap<>();
 
-    @Schedule(hour = "*") //every minute
+    @Schedule(hour = "*") //every hour
     public void removeGames() {
         games.values().removeIf(Game::isLeft); //safety removing from map
     }

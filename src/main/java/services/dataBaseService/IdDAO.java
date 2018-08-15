@@ -12,12 +12,12 @@ public class IdDAO {
     private EntityManager em;
 
     public Integer getGameLastId() {
-        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(u.id),1) from Game u", Integer.class);
+        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(g.id),1) from Game g", Integer.class);
         return typedQuery.getSingleResult();
     }
 
     public int getPlayerLastId() {
-        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(u.id),1) from Player u", Integer.class);
+        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(p.id),1) from Player p", Integer.class);
         return typedQuery.getSingleResult();
     }
 
