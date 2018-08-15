@@ -2,4 +2,3 @@ A online-version of multi-player card game "Evolution" ("Эволюция" https
 - JSP and html+css+javascript for View part of Model-View-Controller Pattern;
 - h2 database and JPA entities to store accounts and unfinished games (model);
 - servlets and websockets, classes with business logic (controller);
-
