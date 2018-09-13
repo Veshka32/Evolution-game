@@ -14,8 +14,7 @@ class ExtraMessage implements Serializable {
     private Property type;
     private List<Integer> victims;
 
-    public ExtraMessage(){
-    }
+    public ExtraMessage(){}
 
     ExtraMessage(String name, int id, String name1, Property type) {
         playerOnAttack = name;

@@ -4,13 +4,13 @@ import game.constants.MoveType;
 import game.constants.Property;
 
 public class Move {
-    private String player;
+    private final String player;
     private MoveType move;
     private Property property;
-    private int cardId;
-    private int animalId;
-    private int secondAnimalId;
-    private String log;
+    private final int cardId;
+    private final int animalId;
+    private final int secondAnimalId;
+    private final String log;
 
 
     public Move(String player, int cardId, int animalId, int secondAnimalId, String move, String property, String log){
@@ -42,7 +42,6 @@ public class Move {
     int getAnimalId(){return animalId;}
 
     int getSecondAnimalId(){return secondAnimalId;}
-
 
     @Override
     public String toString() {

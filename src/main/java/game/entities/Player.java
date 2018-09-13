@@ -15,7 +15,7 @@ public class Player{
     private transient int requiredCards = Constants.START_NUMBER_OF_CARDS.getValue();
     private transient int points;
     private transient boolean leftGame;
-    private transient List<Card> newCards=new ArrayList<>();
+    private final transient List<Card> newCards=new ArrayList<>();
     private transient int deletedCard;
 
     @Id
@@ -29,16 +29,15 @@ public class Player{
     private String name;
     //@Expose
     @ManyToMany(cascade = CascadeType.PERSIST)
-    private List<Card> cards = new ArrayList<>();
+    private final List<Card> cards = new ArrayList<>();
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner") //no player - no animals //orphanRemoval=true
-    private Map<Integer, Animal> animals = new HashMap<>();
+    private final Map<Integer, Animal> animals = new HashMap<>();
     @Expose
     private boolean doEat;
 
-    public Player() {
-    }
+    public Player() {}
 
     public Player(String login, int order) {
         this.name = login;
@@ -132,8 +131,7 @@ public class Player{
 
     //return true if player has any scavenger that can be fed; feed only one of them. Player should choose which one, actually
     boolean feedScavenger() {
-        for (Animal animal : animals.values()
-                ) {
+        for (Animal animal : animals.values()) {
             if (animal.hasProperty(Property.SCAVENGER) && animal.hungry > 0) {
                 animal.eatFish(1);
                 return true;
@@ -141,7 +139,6 @@ public class Player{
         }
         return false;
     }
-
 
     void connectAnimal(int id1, int id2, Property property) throws GameException {
 
@@ -212,8 +209,7 @@ public class Player{
     }
 
     void resetFields() {
-        for (Animal an : animals.values()
-                ) {
+        for (Animal an : animals.values()) {
             an.setHungry();
             an.setAttack(false);
             an.fed = false;

@@ -9,7 +9,6 @@ public enum Constants {
     MIN_NUMBER_OF_PLAYERS(2),
     MAX_NUMBER_PF_PLAYERS(4);
 
-
     private final int id;
 
     Constants(int id) {

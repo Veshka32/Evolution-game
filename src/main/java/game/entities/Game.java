@@ -214,12 +214,10 @@ public class Game{
         try {
             switch (phase) {
                 case EVOLUTION:
-                    EvolutionPhase ep = new EvolutionPhase(this, move);
-                    ep.processMove();
+                    EvolutionPhase.processMove(this,move);
                     break;
                 case FEED:
-                    FeedPhase fp = new FeedPhase(this, move);
-                    fp.processMove();
+                    FeedPhase.processMove(this,move);
                     break;
                 case END:
                     break;

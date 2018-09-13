@@ -47,6 +47,16 @@ public class GameDAO {
         return tq.getResultList(); //6 exs
     }
 
+    public Integer getGameLastId() {
+        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(g.id),1) from Game g", Integer.class);
+        return typedQuery.getSingleResult();
+    }
+
+    public int getPlayerLastId() {
+        TypedQuery<Integer> typedQuery = em.createQuery("select COALESCE(max(p.id),1) from Player p", Integer.class);
+        return typedQuery.getSingleResult();
+    }
+
 
 //    public Game create(Game game) throws SystemException, NotSupportedException, NamingException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
 //        UserTransaction transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction"); //use if class is not ejb bean

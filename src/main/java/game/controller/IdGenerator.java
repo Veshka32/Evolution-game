@@ -1,5 +1,6 @@
 package game.controller;
 
+import services.dataBaseService.GameDAO;
 import services.dataBaseService.IdDAO;
 
 import javax.annotation.PostConstruct;
@@ -12,14 +13,13 @@ public class IdGenerator {
     private AtomicInteger nextGameId;
 
     @Inject
-    private IdDAO idDAO;
+    private GameDAO gameDAO;
 
-    public IdGenerator(){
-    }
+    public IdGenerator(){}
 
     @PostConstruct
     private void setIds(){
-        nextGameId =new AtomicInteger(idDAO.getGameLastId());
+        nextGameId =new AtomicInteger(gameDAO.getGameLastId());
     }
 
     int getGame_next_id(){

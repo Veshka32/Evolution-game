@@ -44,19 +44,19 @@ public class Animal{
     int hungry = MIN_HUNGRY;
     @Expose
     @ElementCollection
-    List<Property> propertyList = new ArrayList<>();
+    final List<Property> propertyList = new ArrayList<>();
     @Expose
     @ElementCollection
-    List<Integer> cooperateTo = new ArrayList<>();
+    final List<Integer> cooperateTo = new ArrayList<>();
     @Expose
     @ElementCollection
-    private List<Integer> communicateTo = new ArrayList<>();
+    final private List<Integer> communicateTo = new ArrayList<>();
     @Expose
     @ElementCollection
-    private List<Integer> symbiontFor = new ArrayList<>();
+    private final List<Integer> symbiontFor = new ArrayList<>();
     @Expose
     @ElementCollection
-    private List<Integer> symbiosisWith = new ArrayList<>();
+    private final List<Integer> symbiosisWith = new ArrayList<>();
     @Expose
     private int currentFatSupply;
 
@@ -132,10 +132,13 @@ public class Animal{
     }
 
     void hibernate(int round) throws GameException {
-        if (round == -1) throw new GameException("You can't hibernate in last round");
+        if (round == -1)
+            throw new GameException("You can't hibernate in last round");
         else if (round != 0 && round == hibernationRound) //can hibernate in 0 round
             throw new GameException("This animal is already in hibernation");
-        else if (round - hibernationRound == 1) throw new GameException("You can't hibernate 2 rounds in a row");
+        else if (round - hibernationRound == 1)
+            throw new GameException("You can't hibernate 2 rounds in a row");
+
         hibernationRound = round;
         hungry = 0;
         observer.updateChanges(this,"change");
@@ -151,8 +154,11 @@ public class Animal{
 
     void attack(Animal victim) throws GameException {
         //exceptions
-        if (!hasProperty(Property.PREDATOR)) throw new GameException("This animal is not a predator");
-        if (attack) throw new GameException("This predator has been used");
+        if (!hasProperty(Property.PREDATOR))
+            throw new GameException("This animal is not a predator");
+
+        if (attack)
+            throw new GameException("This predator has been used");
 
         if (victim.hasProperty(Property.SWIMMING) && !hasProperty(Property.SWIMMING))
             throw new GameException("Not-swimming predator can't eat swimming animal");
@@ -250,13 +256,13 @@ public class Animal{
                 return;
             }
         }
+
         if (!checkSymbiosis(player)) throw new GameException("You should feed the symbiont first");
 
         fed = true;
         hungry--;
         game.deleteFood();
-        for (int id : cooperateTo
-                ) {
+        for (int id : cooperateTo) {
             player.getAnimal(id).eatFish(1);
         }
 
@@ -272,10 +278,10 @@ public class Animal{
             return; //abort chain feeding if animal is fed, is already visited or can't get fish
 
         fed = true;
-        if (hungry < i) i = 1; // if hungry==1 and fish==2, only one fish goes on
+        if (hungry < i)
+            i = 1; // if hungry==1 and fish==2, only one fish goes on
         hungry -= i;
-        for (int id : cooperateTo
-                ) {
+        for (int id : cooperateTo) {
             owner.getAnimal(id).eatFish(i);
         }
 
@@ -284,8 +290,7 @@ public class Animal{
 
     boolean checkSymbiosis(Player player) { //return false if not all of the symbionts are fed;
         if (!symbiosisWith.isEmpty()) {
-            for (int id : symbiosisWith
-                    ) {
+            for (int id : symbiosisWith) {
                 if (player.getAnimal(id).hungry != 0)
                     return false;
             }

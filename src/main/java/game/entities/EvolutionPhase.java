@@ -6,14 +6,8 @@ import game.controller.Deck;
 import game.controller.GameException;
 
 class EvolutionPhase {
-    private Game game;
-    private Move move;
 
-    EvolutionPhase(Game game,Move move){
-        this.game=game; this.move=move;
-    }
-
-    void processMove() throws GameException {
+    static void processMove(Game game,Move move) throws GameException {
 
         switch (move.getMove()) {
             case MAKE_ANIMAL:
@@ -27,15 +21,15 @@ class EvolutionPhase {
                 break;
             case PLAY_PROPERTY:
                 if (Deck.isPropertyDouble(move.getProperty()))
-                    processDoubleProperty();
+                    processDoubleProperty(game,move);
                 else {
-                    processSimpleProperty();
+                    processSimpleProperty(game,move);
                 }
         }
         if (game.getPhase().equals(Phase.EVOLUTION)) game.switchPlayerOnMove(); //if new phase, do not switch player, because playersTurn is update
     }
 
-    private void processDoubleProperty() throws GameException {
+    private static void processDoubleProperty(Game game,Move move) throws GameException {
         Player player = game.getPlayer(move.getPlayer());
         int id1=move.getAnimalId();
         int id2=move.getSecondAnimalId();
@@ -45,7 +39,7 @@ class EvolutionPhase {
 
     }
 
-    private void processSimpleProperty() throws GameException {
+    private static void processSimpleProperty(Game game,Move move) throws GameException {
         if (move.getAnimalId()==0) throw new GameException("You forgot pick an animal");
 
         Player player = game.getPlayer(move.getPlayer());

@@ -7,24 +7,17 @@ import java.util.List;
 import java.util.Random;
 
 class FeedPhase {
-    private Game game;
-    private Move move;
 
-    FeedPhase(Game game, Move move) {
-        this.game = game;
-        this.move = move;
-    }
-
-    void processMove() throws GameException {
+    static void processMove(Game game,Move move) throws GameException {
         switch (move.getMove()) {
             case EAT_FOOD:
-                eatFood();
+                eatFood(game,move);
                 break;
             case ATTACK:
-                attack();
+                attack(game, move);
                 break;
             case PLAY_ANIMAL_PROPERTY:
-                playAnimalProperty();
+                playAnimalProperty(game,move);
                 break;
             case END_MOVE:
                 game.switchPlayerOnMove();
@@ -32,18 +25,18 @@ class FeedPhase {
                 game.getPlayer(move.getPlayer()).resetGrazing();
                 break;
             case EAT_FAT:
-                eatFat();
+                eatFat(game, move);
                 break;
             case DELETE_PROPERTY:
-                processTailLoss();
+                processTailLoss(game,move);
                 break;
             case PLAY_MIMICRY:
-                processMimicry();
+                processMimicry(game,move);
                 break;
         }
     }
 
-    private void processMimicry() {
+    private static void processMimicry(Game game,Move move) {
         Animal victim = game.getAnimal(move.getAnimalId());
         Animal predator = game.getAnimal(game.getExtraMessage().getPredator());
         if (victim.hasProperty(Property.TAIL_LOSS)) {
@@ -51,16 +44,16 @@ class FeedPhase {
             return;
         }
 
-        afterSuccessfulAttack(victim, predator, predator.getOwner());
+        afterSuccessfulAttack(game,move,victim, predator, predator.getOwner());
         game.afterMimicry();
     }
 
-    private void processTailLoss() {
+    private static void processTailLoss(Game game,Move move) {
         Animal victim = game.getAnimal(move.getAnimalId());
         Property property = move.getProperty();
         victim.removeProperty(property);
         Animal predator = game.getAnimal(game.getExtraMessage().getPredator());
-        if (canMimicry(victim, predator)) return;
+        if (canMimicry(game,victim, predator)) return;
         predator.setAttack(true);
         predator.getOwner().resetFedFlag();
         if (game.getPlayersOrder().size() > 1) predator.getOwner().setDoEat(true);
@@ -69,7 +62,7 @@ class FeedPhase {
     }
 
 
-    private void attack() throws GameException {
+    private static void attack(Game game,Move move) throws GameException {
 
         Player player = game.getPlayer(move.getPlayer());
         Animal predator = player.getAnimal(move.getAnimalId());
@@ -100,12 +93,12 @@ class FeedPhase {
             game.playTailLoss(predator, victim);
             return;
         }
-        if (canMimicry(victim, predator)) return;
-        afterSuccessfulAttack(victim, predator, player);
+        if (canMimicry(game,victim, predator)) return;
+        afterSuccessfulAttack(game,move,victim, predator, player);
     }
 
 
-    private void afterSuccessfulAttack(Animal victim, Animal predator, Player player) {
+    private static void afterSuccessfulAttack(Game game, Move move,Animal victim, Animal predator, Player player) {
         if (victim.hasProperty(Property.POISONOUS)) predator.poison();
         predator.setAttack(true);
         player.resetFedFlag();
@@ -116,7 +109,7 @@ class FeedPhase {
         game.feedScavenger(move.getPlayer());
     }
 
-    private boolean canMimicry(Animal victim, Animal predator) {
+    private static boolean canMimicry(Game game,Animal victim, Animal predator) {
         if (victim.hasProperty(Property.MIMICRY)) {
             List<Integer> animalsToRedirect = victim.getOwner().canRedirectAttack(predator, victim.getId());
             if (!animalsToRedirect.isEmpty()) {
@@ -127,12 +120,12 @@ class FeedPhase {
         return false;
     }
 
-    private void eatFat() throws GameException {
+    private static void eatFat(Game game,Move move) throws GameException {
         Animal animal = game.getAnimal(move.getAnimalId());
         animal.eatFat();
     }
 
-    private void playAnimalProperty() throws GameException {
+    private static void playAnimalProperty(Game game,Move move) throws GameException {
         Property property = move.getProperty();
         Animal animal = game.getAnimal(move.getAnimalId());
         switch (property) {
@@ -140,15 +133,15 @@ class FeedPhase {
                 animal.hibernate(game.getRound());
                 break;
             case PIRACY:
-                pirate();
+                pirate(game,move);
                 break;
             case GRAZING:
-                graze();
+                graze(game,move);
                 break;
         }
     }
 
-    private void eatFood() throws GameException {
+    private static void eatFood(Game game,Move move) throws GameException {
         if (game.getFood() == 0) throw new GameException("There is no more food");
         Player player = game.getPlayer(move.getPlayer());
         if (player.doEat()) throw new GameException("You've already taken food");
@@ -159,7 +152,7 @@ class FeedPhase {
         if (game.getPlayersOrder().size() > 1) player.setDoEat(true);
     }
 
-    private void graze() throws GameException {
+    private static void graze(Game game,Move move) throws GameException {
         Animal animal = game.getAnimal(move.getAnimalId());
         if (animal.doGrazing()) throw new GameException("This animal is already grazed");
         if (game.getFood() < 1) throw new GameException("There is no food left");
@@ -167,7 +160,7 @@ class FeedPhase {
         animal.setDoGrazing(true);
     }
 
-    private void pirate() throws GameException {
+    private static void pirate(Game game,Move move) throws GameException {
         Animal animal = game.getAnimal(move.getAnimalId());
         if (animal.doPiracy()) throw new GameException("This animal has already pirated!");
         if (animal.notHungry()) throw new GameException("The animal can't pirate when it's fed");

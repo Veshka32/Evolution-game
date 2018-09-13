@@ -42,10 +42,9 @@ public class GameManager {
         try {
             savedGameIds = gameDAO.getSavedGames(login);
         } catch (Exception e) {
-            savedGameIds = new ArrayList<>();
+            return " no games";
         }
-        if (savedGameIds.isEmpty()) return " no games";
-        return savedGameIds.toString();
+        return savedGameIds.isEmpty()? " no games":savedGameIds.toString();
     }
 
     public String getNewGames(String login) {
@@ -54,9 +53,7 @@ public class GameManager {
     }
 
     public int createGame(String name, int numberOfPlayers) throws IllegalArgumentException {
-
-        //if (name==null || numberOfPlayers<2 || numberOfPlayers>4) throw new IllegalArgumentException();
-
+        if (name==null || numberOfPlayers<2 || numberOfPlayers>4) throw new IllegalArgumentException();
         Game game = new Game();
         game.setId(generator.getGame_next_id());
         game.setNumberOfPlayers(numberOfPlayers);
@@ -80,7 +77,6 @@ public class GameManager {
             }
         }
     }
-
 
     public void loadGame(Integer gameId, String login) throws IllegalArgumentException,PersistenceException {
         if (login==null || gameId==null) throw new IllegalArgumentException();
